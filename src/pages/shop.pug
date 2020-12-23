@@ -1,0 +1,40 @@
+extends /src/templates/website.pug
+
+block append title
+  | Shop | Kamigen | A Tropical Cyberpunk World
+
+block append content
+  .row
+    .column.four.wide
+    .column.eight.wide
+      h2 Clothing and gifts
+      .ui.medium.images
+        a(title='Kamigen Book cover Hoodie' href='https://www.redbubble.com/i/hoodie/Kamigen-Book-Cover-by-openstudios/59794874.O16E3?asc=u')
+          img.ui.image(src='./shop/hoodie.jpg')
+        a(title='Kamigen Issue 1 shirt' href='https://www.redbubble.com/i/t-shirt/Kamigen-Issue-1-Cover-by-openstudios/59957947.UGYPM?asc=u')
+          img.ui.image(src='./shop/issue1shirts.jpg')
+        a(title='Kamigen Issue 2 active shirt' href='https://www.redbubble.com/i/t-shirt/Kamigen-Issue-2-Cover-by-openstudios/59958036.UGYPM?asc=u')
+          img.ui.image(src='./shop/issue2shirt.jpg')
+        a(title='Kamigen Issue 3 active shirt' href='https://www.redbubble.com/i/t-shirt/Kamigen-Issue-3-Cover-by-openstudios/59958436.UGYPM?asc=u')
+          img.ui.image(src='./shop/issue3shirt.jpg')
+        a(title='Kamigen Issue 4 hoodie' href='https://www.redbubble.com/i/hoodie/Kamigen-Issue-4-Cover-by-openstudios/59958787.GQV8B?asc=u')
+          img.ui.image(src='./shop/issue4hoodie.jpg')
+        .ui.image
+          .ui.grid
+            .row
+              .column.two.wide
+              .column.fourteen.wide
+                p Visit our 
+                  a(href='https://www.redbubble.com/people/openstudios/shop?asc=u') RedBubble store
+                  |  to see the full collection.
+              .column.two.wide
+      p
+    .column.four.wide
+  .row
+    .column.four.wide
+    .column.eight.wide
+      h3 Donate to Open Studios
+      p This project needs your support! Head on over to the Open Studios 
+        a(href='https://openstudiox.xyz/donate.html') donate page
+        |  to buy our team a coffee!
+    .column.four.wide

@@ -1,0 +1,67 @@
+extends website.pug
+
+block append title
+  | #{page_title_string} | Comics | Kamigen | A Tropical Cyberpunk World
+
+block append content
+  .row
+    .column.center.aligned
+      h2
+        a(href="/comics.html") Comics
+        |  \ 
+        a(href=`${issue_url}`) #{issue}
+        |  \ #{page_title_string}
+  .row
+    .column
+      .ui.one.column.center.aligned.page.grid
+        .column.eight.wide
+          a.ui.grey.large.labeled.icon.button(href=previous_url)
+            i.icon.reply
+            | Previous
+        .column.eight.wide
+          if next_url
+            a.ui.grey.large.right.labeled.icon.button(href=next_url)
+              i.icon.share
+              | Next
+          else 
+            .ui.grey.large.right.labeled.icon.button Coming soon!
+  .row
+    .column
+      .ui.one.column.stackable.center.aligned.page.grid
+        .column.sixteen.wide
+        if next_url
+          a(href=next_url)
+            img.ui.image.fluid(src=image_url)
+        else
+          a(href=issue_url)
+            img.ui.image.fluid(src=image_url)
+  .row
+    .column
+      .ui.one.column.center.aligned.page.grid
+        .column.eight.wide
+          a.ui.grey.large.labeled.icon.button(href=previous_url)
+            i.icon.reply
+            | Previous
+        .column.eight.wide
+          if next_url
+            a.ui.grey.large.right.labeled.icon.button(href=next_url)
+              i.icon.share
+              | Next
+          else 
+            .ui.grey.large.right.labeled.icon.button Coming soon!
+  .row
+    .column.center.aligned
+      h2
+        a(href="/comics.html") Comics
+        |  \ 
+        a(href=`${issue_url}`) #{issue}
+        |  \ #{page_title_string}
+  .row
+    .column
+      #page_script.ui.one.column.center.aligned.page.grid
+        block page_script
+  .row
+    .column
+      .ui.one.column.stackable.center.aligned.page.grid
+        .column.sixteen.wide
+          #disqus_thread

@@ -1,0 +1,32 @@
+extends website.pug
+
+block append title
+  if wiki_home
+    | #{page_title_string} | Kamigen | A Tropical Cyberpunk World
+  else 
+    | #{page_title_string} | Wiki | Kamigen | A Tropical Cyberpunk World
+
+block append content
+  .row#container
+    .column.two.wide
+    .column.two.wide
+      h3.ui.dividing.header.inverted Kamigen World
+      .ui.fluid.menu.vertical.inverted
+        a.item(href='/wiki/characters.html') Characters
+        a.item(href='/wiki/locations.html') Locations
+        a.item(href='/wiki/lore.html') Lore
+        a.item(href='/wiki/timeline.html') Timeline
+      h3.ui.dividing.header.inverted Production
+      .ui.fluid.menu.vertical.inverted
+        a.item(href='/wiki/info_sheets.html') Character and story info sheets
+        a.item(href='/wiki/concept_art.html') Concept art
+        a.item(href='/wiki/production_notes.html') Production notes
+        a.item(href='/wiki/screenshots.html') Screenshots
+    .column.ten.wide
+      if !wiki_home
+        .center.aligned
+          h2
+            a(href="/wiki.html") Wiki
+            |  \ #{page_title_string}
+      block page_content
+    .column.two.wide

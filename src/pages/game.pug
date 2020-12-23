@@ -1,0 +1,58 @@
+extends /src/templates/layout.pug
+
+block append head
+  link(href='./dist/game.css', rel='stylesheet')
+
+block append scripts
+  script(src='./dist/game.js')
+
+block append title
+  | Gameplay Concept | Kamigen | A Tropical Cyberpunk World
+
+block append page
+  #mobileui
+    #do
+    .ui.button.accelerate Accelerate
+    .ui.button.decelerate Decelerate
+    .ui.button.reset Reset camera
+  #info
+    h1 Kamigen
+    a(href="/") Back to website
+    hr
+    p Welcome to the Kamigen demo. There's a lot more to come but feel free to drop some feedback or explore the code over at 
+      a(href="https://github.com/paulbrzeski/kamigen") Github
+    h2 Controls
+    h3 Tilt the aircraft with these keys
+    p
+      .ui.button
+        i.icon.arrow.up
+        | W 
+      .ui.button
+        i.icon.arrow.down
+        | S 
+    p
+      .ui.button
+        i.icon.arrow.left
+        | A 
+      .ui.button
+        i.icon.arrow.right
+        | D
+    h3 Accelerate and decelerate
+    p
+      .ui.button
+        i.icon.fast.backward
+        | Shift
+      .ui.button
+        i.icon.fast.forward
+        | Space
+    h3 Camera controls
+    p
+      .ui.button 
+        i.icon.expand.arrows.alternate
+        i.icon.mouse.pointer
+        | Mouse <> Camera
+      .ui.button 
+        | C - Reset camera
+  #container
+  #stats
+  #waterTexture

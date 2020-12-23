@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    title
+      block title
+    base(href='/')
+    meta(name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css', rel='stylesheet')
+    link(href='./dist/game.css', rel='stylesheet')
+    block head
+  body
+    block page
+    include /src/templates/shaders.pug
+    block scripts
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js')
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.js')
+      script(async='async',src='https://www.googletagmanager.com/gtag/js?id=UA-126811218-1')
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.4.0/Tween.min.js')
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r116/three.min.js')
+      script(src='./vendor/ImprovedNoise.js')
+      script(src='./vendor/simplex.js')
+      script(src='./vendor/threex.keyboardstate.js')
+      script(src='./vendor/stats.min.js')
+      script(src='./vendor/OrbitControls.js')
+      script(src='./vendor/Water.js')
+      script(src='./vendor/Sky.js')
+      script(src='./dist/app.js')
+      

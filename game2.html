@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gameplay Concept v2 | Kamigen | A Tropical Cyberpunk World
+    </title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+    <link href="./dist/game.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="mobileui">
+      <div id="do"></div>
+      <div class="ui button accelerate">Accelerate</div>
+      <div class="ui button decelerate">Decelerate</div>
+      <div class="ui button reset">Reset camera</div>
+    </div>
+    <div id="info">
+      <h1>Kamigen</h1><a href="/">Back to website</a>
+      <hr>
+      <p>Welcome to the Kamigen demo. There's a lot more to come but feel free to drop some feedback or explore the code over at <a href="https://github.com/paulbrzeski/kamigen">Github</a></p>
+      <h2>Controls</h2>
+      <h3>Tilt the aircraft with these keys</h3>
+      <p>
+        <div class="ui button"><i class="icon arrow up"></i>W </div>
+        <div class="ui button"><i class="icon arrow down"></i>S </div>
+      </p>
+      <p>
+        <div class="ui button"><i class="icon arrow left"></i>A </div>
+        <div class="ui button"><i class="icon arrow right"></i>D</div>
+      </p>
+      <h3>Accelerate and decelerate</h3>
+      <p>
+        <div class="ui button"><i class="icon fast backward"></i>Shift</div>
+        <div class="ui button"><i class="icon fast forward"></i>Space</div>
+      </p>
+      <h3>Camera controls</h3>
+      <p>
+        <div class="ui button"> <i class="icon expand arrows alternate"></i><i class="icon mouse pointer"></i>Mouse <> Camera</div>
+        <div class="ui button">
+           C - Reset camera</div>
+      </p>
+    </div>
+    <div id="container"></div>
+    <div id="stats"></div>
+    <div id="waterTexture"></div>
+    <script id="landVertexShader" type="x-shader/x-vertex">uniform sampler2D bumpTexture;
+uniform float bumpScale;
+
+varying float vAmount;
+varying vec2 vUV;
+varying vec4 worldPosition;
+varying vec3 vViewPosition;
+varying vec3 vNormal;
+
+void main() 
+{ 
+  vUV = uv;
+  vec4 bumpData = texture2D( bumpTexture, uv );
+ 
+  vAmount = bumpData.r; // assuming map is grayscale it doesn't matter if you use r, g, or b.
+  
+  // move the position along the normal
+  vec3 newPosition = position + normal * bumpScale * vAmount;
+
+  worldPosition = modelMatrix * vec4( newPosition, 1.0 );
+
+  // Normal position.
+  vNormal = normalize( normalMatrix * normal );
+
+  // View vector.
+  vViewPosition = cameraPosition - worldPosition.xyz;
+  
+  gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+}
+
+    </script>
+    <script id="landFragmentShader" type="x-shader/x-fragment">uniform float landSize;
+uniform float time;
+uniform sampler2D sandyTexture;
+uniform sampler2D forestTexture;
+uniform sampler2D rockyTexture;
+uniform sampler2D texture;
+uniform vec3 sunPosition;
+uniform vec3 center;
+
+varying vec2 vUV;
+varying float vAmount;
+varying vec4 worldPosition;
+varying vec3 vViewPosition;
+varying vec3 vNormal;
+
+// Shade island based on sun direction.
+float sunshadeIsland() {
+  float radius = landSize / 4.;
+
+  // Distance between this point and sun.
+  float a = distance(worldPosition.xyz, sunPosition);
+
+  // Distance between the center and sun.
+  float b = distance(center, sunPosition);
+  
+  // Default shade
+  float c = 0.0;
+
+  // Sun max height
+  float maxSun = 150000.;
+  float brightness = (sunPosition.y / maxSun);
+
+  if (sunPosition.y > 0.) {
+    if (a < b) {
+      brightness *= 0.5;
+    }
+    else {
+      brightness *= 0.3;
+    }
+  }
+  else {
+    brightness *= 0.05;
+  } 
+    
+  return brightness;
+}
+
+float snoise ( vec3 coord, float scale, float time_factor ) {
+    vec3 scaledCoord = coord * scale - (vNormal / time_factor + vec3(0.0, 0.0, -time / time_factor));
+
+    vec2 uvTimeShift = vec2((scaledCoord.x + scaledCoord.z) / 2.0, scaledCoord.y) + vec2( -0.7, 1.5 ) * time / time_factor * 0.015;
+    vec4 noiseGeneratorTimeShift = texture2D( forestTexture, uvTimeShift ) * 50.;
+    vec2 uvNoiseTimeShift = vec2(scaledCoord.x, scaledCoord.y) + 0.5 * vec2( noiseGeneratorTimeShift.r, noiseGeneratorTimeShift.b );
+    vec4 baseColor = texture2D( forestTexture, uvNoiseTimeShift * vec2(4.0, 4.0) );
+
+    return baseColor.b;
+}
+
+float heightMap( vec3 coord ) {
+    float n = abs(snoise(coord , 1.0 , 18.0));
+    n -= 0.75 * abs(snoise(coord , 4.0 , 25.0));
+    n += 0.125 * abs(snoise(coord , 14.0 , 35.0));
+
+    n *= 0.7;
+
+    return n;
+}
+
+// normal
+vec3 getNormalLightWeight() {
+  const float e = .01;
+
+  float n  = heightMap(worldPosition.xyz);
+
+  float nx = heightMap( worldPosition.xyz + vec3( e, 0.0, 0.0 ) );
+  float ny = heightMap( worldPosition.xyz + vec3( 0.0, e, 0.0 ) );
+  float nz = heightMap( worldPosition.xyz + vec3( 0.0, 0.0, e ) );
+
+  vec3 normal = normalize( vNormal + .5 * vec3( n - nx, n - ny, n - nz ) / e );
+
+  // diffuse light
+
+  vec3 vLightWeighting = vec3( 0.005 );
+
+  vec4 lDirection = viewMatrix * vec4( normalize( vec3( 1.0, 0.0, 0.5 ) ), 0.0 );
+  float directionalLightWeighting = dot( normal, normalize( lDirection.xyz ) ) * 0.15 + 0.85;
+  vLightWeighting += vec3( 1.0 ) * directionalLightWeighting;
+
+  // specular light
+
+  vec3 dirHalfVector = normalize( lDirection.xyz + normalize( vViewPosition ) );
+
+  float dirDotNormalHalf = dot( normal, dirHalfVector );
+
+  float dirSpecularWeight = 0.0;
+  if ( dirDotNormalHalf >= 0.0 )
+      dirSpecularWeight = ( 1.0 - n ) * pow( dirDotNormalHalf, 5.0 );
+
+  vLightWeighting *= vec3( 1.0, 0.5, 0.0 ) * dirSpecularWeight * n * 2.0;
+
+  return vLightWeighting;
+}
+
+void main() 
+{
+  if (vAmount < 0.01) {
+    gl_FragColor = texture2D( sandyTexture, vUV * 50.0 );
+    gl_FragColor.a = 0.0;
+  }
+  else {
+    vec4 sandy = (smoothstep(0.01, 0.03, vAmount) - smoothstep(0.05, 0.07, vAmount)) * texture2D( sandyTexture, vUV * 50.0 );
+    vec4 forest = (smoothstep(0.05, 0.07, vAmount) - smoothstep(0.40, 0.70, vAmount)) * texture2D( forestTexture, vUV * 50.0 );
+    vec4 rocky = (smoothstep(0.50, 0.65, vAmount))                                   * texture2D( rockyTexture, vUV * 25.0 );
+    gl_FragColor = sandy + forest + rocky;
+    gl_FragColor -= (texture2D( texture, vUV ) * 0.5);
+
+    // Alternative shading.. needs work. Look to integrate above old functions from Langenium..
+    //float diffuse = max(sunPosition.x * gl_FragColor.r + sunPosition.y * gl_FragColor.g + sunPosition.z * gl_FragColor.b, 0.0);
+    //gl_FragColor *= 1. + diffuse * 0.1;
+    gl_FragColor += sunshadeIsland();
+    gl_FragColor.a = 1.0;
+  }
+}
+
+    </script>
+    <script id="spriteVertexShader" type="x-shader/x-vertex">varying vec2 vUV;
+void main()
+{
+  vUV = uv;
+  gl_Position = projectionMatrix *
+            modelViewMatrix *
+            vec4(position,1.0);
+}
+    </script>
+    <script id="spriteFragmentShader" type="x-shader/x-fragment">varying vec2 vUV;
+void main()
+{
+  vec2 uv = vUV;
+  uv -= 0.5;
+  uv.x *= 0.8;
+  float d = length(uv);
+  float c = smoothstep(0.4, 0.4-0.6, d);
+  c *= 0.5;
+  gl_FragColor = vec4(c);
+}
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-126811218-1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.4.0/Tween.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r116/three.min.js"></script>
+    <script src="./vendor/ImprovedNoise.js"></script>
+    <script src="./vendor/simplex.js"></script>
+    <script src="./vendor/threex.keyboardstate.js"></script>
+    <script src="./vendor/stats.min.js"></script>
+    <script src="./vendor/OrbitControls.js"></script>
+    <script src="./vendor/Water.js"></script>
+    <script src="./vendor/Sky.js"></script>
+    <script src="./dist/app.js"></script>
+  </body>
+</html>

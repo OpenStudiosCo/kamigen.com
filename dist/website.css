@@ -1,0 +1,68 @@
+html,
+html * {
+  background: none #000;
+  color: #fff;
+}
+.row.footer {
+  text-align: center;
+  padding: 4em 0 2em !important;
+}
+#container {
+  padding: 0 2rem;
+}
+#main_menu {
+  padding: 2rem 5rem 0;
+}
+#main_menu .button.inverted {
+  border-width: 1px;
+}
+#mobile_menu {
+  display: none;
+}
+a {
+  color: #ccc;
+  text-decoration: underline dotted;
+}
+a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+#page_script {
+  white-space: pre-wrap;
+}
+@media only screen and (max-width: 1100px) {
+  .ui.page.grid {
+    padding: 0 !important;
+  }
+  #jumbotron {
+    padding: 0px !important;
+  }
+  #main_menu {
+    display: none;
+  }
+  #mobile_menu {
+    background-color: #000;
+    display: block;
+    text-align: center;
+  }
+  #mobile_menu .item {
+    display: none;
+  }
+  #mobile_menu .item.logo {
+    display: block;
+  }
+  #mobile_menu_toggle {
+    position: absolute;
+    right: 0.5rem;
+    top: 1.5rem;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  #comics .column.four.wide {
+    max-width: 25%;
+  }
+}
+/* Semantic UI overrides */
+.ui.items > .item > .content > a.inverted.header {
+  color: #fff;
+}

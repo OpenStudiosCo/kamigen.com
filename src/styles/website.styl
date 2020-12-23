@@ -1,0 +1,64 @@
+html, html * 
+  background none #000000
+  color #FFFFFF
+
+
+.row.footer
+  text-align center
+  padding 4em 0 2em !important
+
+#container 
+  padding 0 2rem
+
+#main_menu
+  padding 2rem 5rem 0
+  .button.inverted
+    border-width 1px
+
+#mobile_menu
+    display none
+
+a
+  color #CCCCCC
+  text-decoration underline dotted
+
+a:hover
+  color #FFFFFF
+  text-decoration none
+
+#page_script
+  white-space pre-wrap
+
+@media only screen and (max-width: 1100px)
+  .ui.page.grid
+    padding 0 !important
+
+  #jumbotron
+    padding 0px !important
+
+  #main_menu
+    display none
+
+  #mobile_menu
+    background-color #000
+    display block
+    text-align center
+    .item
+      display none
+      &.logo
+        display block
+
+  #mobile_menu_toggle
+    position absolute
+    right .5rem
+    top 1.5rem
+    font-size 2rem
+    cursor pointer
+
+  #comics .column.four.wide
+    max-width 25%
+
+/* Semantic UI overrides */
+
+.ui.items > .item > .content > a.inverted.header
+  color: #FFF

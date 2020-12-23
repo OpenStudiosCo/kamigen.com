@@ -1,0 +1,14 @@
+extends /src/templates/comic_reader.pug
+
+block prepend title
+  - var page_title_string = "Cover";
+
+block prepend content
+  - var image_url = '../art/comics/HD/Kamigen_Cover.png';
+  - var next_url = '/comics/page_1.html';
+  - var previous_url = '/comics.html';
+  - var issue = 'Whole Story';
+  - var issue_url = '/comics.html';
+
+block append page_script
+  include /art/comics/scripts/cover.txt

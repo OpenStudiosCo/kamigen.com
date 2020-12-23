@@ -1,0 +1,14 @@
+extends /src/templates/comic_reader.pug
+
+block prepend title
+  - var page_title_string = "Page 6";
+
+block prepend content
+  - var image_url = '../art/comics/HD/Kamigen_Page 6.png';
+  - var next_url = '/comics/page_7.html';
+  - var previous_url = '/comics/page_5.html';
+  - var issue = 'Issue 01';
+  - var issue_url = '/comics/issue_1.html';
+
+block append page_script
+  include /art/comics/scripts/page_6.txt
