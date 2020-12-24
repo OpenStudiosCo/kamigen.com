@@ -14,8 +14,8 @@
     "css": "./node_modules/.bin/stylus src/styles -o dist",
     "pug": "pug src/pages -P -o . -b .",
     "rollup": "rollup -c",
-    "dev-osx": "sudo http-server -p 80 -c-1 .",
-    "dev": "http-server -p 80 -c-1 .",
+    "dev-osx": "sudo http-server -p 9988 -c-1 .",
+    "dev": "http-server -p 9988 -c-1 .",
     "preinstall": "npm i -g http-server rollup"
   },
   "author": "Paul Brzeski",
