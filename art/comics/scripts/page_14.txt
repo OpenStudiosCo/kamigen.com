@@ -1,0 +1,18 @@
+PAGE 14
+
+  PANEL 1
+    Jim's aircraft is rapidly losing altitude. The Organic Electronic Counter Measures (OECM) employed by the Heavy Nautilus haven taken his aircraft generator offline.
+
+    ELECTRONICS ALERT
+      Power loss!
+      Electromagnetic jamming detected!
+    
+    AVIATION ALERT
+      Altitude loss!
+      Main power offline. Eject! Eject! Eject!
+
+    JIM / NARRATOR
+      Rude... lucky I brought my own power supply!
+
+  NOTES
+    The monster Jim is hunting uses a super powerful bioelectromagnetic field that disrupts power generation in everything from aircraft to boats to nearby cities. I'm planning for the current most advanced technology available in the story to be a efficient and portable deuterium based cold fusion reactor.

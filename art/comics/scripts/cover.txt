@@ -1,0 +1,7 @@
+BOOK COVER
+
+  PANEL 1
+    A dark and mysterious silhouette of Kamigen island
+
+  NOTES
+    Kamigen Island is inspired by the real Camiguin island in the Philippines, having a very similar shape thanks to using the real islands height map for topography.

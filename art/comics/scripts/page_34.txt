@@ -1,0 +1,21 @@
+PAGE 34
+
+  PANEL 1
+    The graphic is a scientific report detailing different observations about the moon.
+
+    RYOKO / NARRATOR
+      In ancient times, we went to the moon but nothing came of it.
+
+    LUNAR SURVEY REPORT
+      Geological: Huge new fissures across entire lunar surface.
+      Chemical: All the helium is gone.
+      Nuclear: Irradiated carbon points to massive helium flash, matches mass lost
+      Closing:
+        A force beyond our comprehension is causing the moon to act as an interstellar water magnet. Recommend urgent study.
+
+    RYOKO / NARRATOR
+      Now we're going back, to get answers.
+
+  NOTES
+    This page was inspired by mixed media stories like Bram Stoker's Dracula which used fictional newspaper stories and other documents to weave the story.
+    

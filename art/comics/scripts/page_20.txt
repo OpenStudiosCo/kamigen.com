@@ -1,0 +1,13 @@
+PAGE 20
+
+  PANEL 1
+    The silhouette of a mysterious henchman stands in a doorway, addressing his boss who has a cyborg hand and is stroking his pet cat.
+
+    HENCHMAN
+      M'lord, the Nautilus has been destroyed!
+
+    BOSS
+      How!
+
+  NOTES
+    Jim's nemesis has a cyborg hand and a cat. Older fans may recognise this as Claw from Inspector Gadget, but it isn't.

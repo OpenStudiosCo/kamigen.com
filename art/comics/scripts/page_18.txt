@@ -1,0 +1,16 @@
+PAGE 18
+
+  PANEL 1
+    Jim's aircraft is once again flying at full speed, center stage heading back to Kamigen island. The island is clearly visible in the distance.
+
+    JIM / NARRATOR
+      Time to go home.
+
+  PANEL 2
+    Jim is at a clothing store trying on some clothes in a mirror.
+
+    JIM / NARRATOR
+      I haven't worn pants in years...
+
+  NOTES
+    The top panel is another scene I wanted to do from a different angle but settled for this one as it was suitable for the assets at hand. In future I'll look find a way to re-use the 2D assets I have from different perspective.

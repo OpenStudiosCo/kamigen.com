@@ -1,0 +1,16 @@
+PAGE 1
+
+  PANEL 1
+    The Earth pictured from outer space.
+
+    NARRATOR
+      Once upon a time, this planet had many lands.
+
+  PANEL 2
+    Silhouettes of various people, mainly families, living their lives on Earth at this time.
+
+    NARRATOR
+      Upon which billions lived.
+
+  NOTES
+    I wanted to start the story like a fairy tale to setup the kind of narrator the reader is dealing with (one that thinks he's being funny)

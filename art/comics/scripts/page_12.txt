@@ -1,0 +1,10 @@
+PAGE 12
+
+  PANEL 1
+    Jumping back to the present, Jim is now in the pilot seat of his aircraft. His hands are flipped backwards and cables extending from his cybernetic arms are connected directly to the helm.
+
+    JIM / NARRATOR
+      Flying is a lot easier thanks to the hardware though.
+
+  NOTES
+    Always finding the silver lining, Jim not only became a pilot again - he became a better pilot thanks to his enhanced ability to communicate with and sense information from the aircraft.

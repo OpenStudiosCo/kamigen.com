@@ -1,0 +1,19 @@
+PAGE 23
+
+  PANEL 1
+    The Kamigen council is the center of power of the island, it's members meet at a roundtable in the capital building in Old Turtle City.
+
+    NARRATOR
+      Mysterious ship losses at sea have the Kamigen Council very worried.
+
+    COUNCILLOR #1
+      I can't speak for the others but...
+    
+    COUNCILLOR #2
+      Trillions in sales lost to terrorists.
+    
+    COUNCILLOR #3
+      This threatens the safety of the island!
+
+  NOTES
+    The Kamigen Council is democratically elected with its leader also acting as head of the Kamigen state. 

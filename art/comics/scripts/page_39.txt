@@ -1,0 +1,16 @@
+PAGE 38
+
+  PANEL 1
+    Having boarded the space station unwillingly, Ryoko is greeted by a cheerful stranger in an orange mirror of her own space suit.
+
+    JACK
+      Welcome to Helios Station! Sorry... Trust me. I can't explain any of what I'm about to do... we're both out of time.
+
+  PANEL 2
+    A close up of Jack reveals his name badge and the Helios Station badge. The station's symbol is an icon of the sun.
+
+    JACK
+      Your space suit's fusion generator... swap with me... Mine's renewable.
+
+  NOTES
+    Jack is in possession of langenium, which is a unique artificial mineral that can emit electricity with accumulated sunlight. Ryoko's suit has a deuterium power source.

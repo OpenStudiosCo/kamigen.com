@@ -1,0 +1,26 @@
+PAGE 15
+
+  PANEL 1
+    Using his cyborg body battery, Jim is able to give his aircraft just enough power to target the Heavy Nautilus and power the main weapons.
+
+    JIM / NARRATOR
+      I have to get this over with now.
+
+    SYSTEM ALERTS
+      Power low...
+      Target acquired...
+      Warning - 3 minutes of power remain...
+
+  PANEL 2
+    Jim looks down at his arm to see the dangerous speed his body is losing power at, if he keeps going he will die and the aircraft will crash anyway.
+
+    JIM / NARRATOR
+      I can't power this thing for long.
+
+    CYBORG DIAGNOSTIC DISPLAY
+      Warning!
+      Unsustainable power use, disengage immediately to avoid injury and death.
+
+  NOTES
+    For those interested in the science - Jim's cyborg body has a portable power generator and a battery in case his generator goes offline or a burst of power is needed. In this case, his own generator is offline too and he's supplying the last of his power to the aircraft. If the battery runs out, various medical devices within his body will fail and he will die.
+    In my head, the warning in the second panel is being said out loud by Majel Barrett-Roddenberry - The voice of the computer in Star Trek.

@@ -1,0 +1,13 @@
+PAGE 35
+
+  PANEL 1
+    A computer generated representation of a new water comet heading towards Earth.
+
+    RYOKO / NARRATOR
+      Over 200 years after the first comet, another was detected by our most advanced sensors.
+
+    RYOKO / NARRATOR
+      Due to our monster problem, we will have no where to run if Kamigen Island sinks.
+
+  NOTES
+    This page is a bit like a film scene rather than the characters view of the comet. They're likely looking at more complex information.

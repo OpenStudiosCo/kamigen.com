@@ -1,0 +1,19 @@
+PAGE 38
+
+  PANEL 1
+    Looking out from Ryoko's space helmet and digital overlay, we see the space of a man made structure in the distance.
+
+    SPACE SUIT ALERT
+      IFF Signature Detected. Sending SOS...
+
+    RYOKO / NARRATOR
+      Is that a... a spacecraft? But we just lost the only one...
+
+  PANEL 2
+    A beam of energy from the space station has ensnared Ryoko and begins pulling her in.
+    
+    RYOKO / NARRATOR
+      No... that's a space station! And now it's pulling me in!
+
+  NOTES
+    The space mission Ryoko was on was the first one in generations so there shouldn't be a space station up here, according to her perspective.
