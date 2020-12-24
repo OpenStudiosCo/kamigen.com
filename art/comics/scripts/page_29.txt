@@ -1,0 +1,10 @@
+PAGE 29
+
+  PANEL 1
+    In a broadcast to the whole island, the President confirms that the man responsible for creating the Heavy Nautilus monsters has been caught.
+
+    PRESIDENT SERENA BARBATE
+      The terrorist who engineered these monsters has been brought to justice!!!
+
+  NOTES
+    This announcement is both broadcasted and in front of a gathered crowd at the government building.

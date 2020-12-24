@@ -1,0 +1,10 @@
+PAGE 16
+
+  PANEL 1
+    A wide shot of Jim's falling aircraft firing off a missile at the Heavy Nautilus and managing a direct hit.
+
+    SYSTEM ALERT
+      Missiles away!
+
+  NOTES
+    It may not be clear but Jim's aircraft is actually still falling too fast to recover without engines, he was barely able to get enough power to manouvre into a target lock and fire the missiles.

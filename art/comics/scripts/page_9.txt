@@ -1,0 +1,13 @@
+PAGE 9
+
+  PANEL 1
+    Jim is at his favourite prosthetics store - NextLimbs. It's a small boutique popup store on the beach, built using natural materials and with construction techniques that don't impact the local ecology.
+
+    GORDON
+      The cheapest pair that'll fit an aircraft sea is 60,000. I'm sorry Jim.
+
+    JIM
+      It's OK Gordon, I understand.
+
+  NOTES
+    I was very apprehensive about introducing money into this futuristic world but I figured that perhaps a wheel based prosthetic might be free but advanced cyborg legs that are fit for an aircraft may have a cost to obtain - regardless of whether it was money or some other obstacle/system.

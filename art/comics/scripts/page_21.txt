@@ -1,0 +1,14 @@
+PAGE 21
+
+  PANEL 1
+    The mysterious henchman continues to stand in the doorway. The cat has moved closer to his owners cybernetic hand and purrs.
+
+    HENCHMAN
+      A.. cyborg. Mercenary.. He overcame the jammi...
+
+    BOSS
+      And what happens with anyone else who has a spare battery?
+
+  NOTES
+    I'm torn between adding more detail to this scene to make it look like a throne room and adding more dark contrasts to make it look like a lair.
+
