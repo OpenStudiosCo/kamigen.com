@@ -25,14 +25,14 @@
   },
   "dependencies": {
     "axis": "^1.0.0",
-    "prompt": "^1.0.0",
-    "pug": "^2.0.4",
+    "prompt": "^1.1.0",
+    "pug": "^3.0.2",
     "stylus": "^0.54.8",
     "vue": "^2.6.12"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "chokidar": "^3.4.3",
+    "chokidar": "^3.5.1",
     "cross-spawn": "^6.0.5",
     "jstransformer-markdown": "^1.1.1",
     "pug-cli": "^1.0.0-alpha6",
