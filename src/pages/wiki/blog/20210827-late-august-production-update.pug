@@ -1,0 +1,32 @@
+extends /src/templates/wiki.pug
+
+block prepend title
+  - var page_title_string = "Late August Production Update | Blog";
+
+block prepend content
+  - var page_title_string = "Late August Production Update";
+
+block append page_content
+  p.
+    It's been a while since we've posted so here's a quick rundown of what's been going on behind the scenes!
+    The Kamigen Comics and Game are in heavy production so apologies we've not had time to keep the website up to date.
+  p.
+    We're really excited to show you the final chapter in this phase of the story - each page in Issue 5 will be in full color.
+    As you can imagine, this undertaking and the daunting task of bringing this story to a close has caused some delays in bringing the comic to you!
+  p.
+    If you follow us on Facebook, you might know that we have begun testing Unreal Engine 5 as a production tool - ideally for creating an amazing game and as a way to streamline comics production.
+  p.
+    Below are some preview images of what's going on.
+  .ui.three.column.grid
+    .column
+      h4 The current webGL based game using three.js
+      a(href='./art/blog/Comparison - WebGL.jpg' target='_blank')
+        img.ui.image(src='./art/blog/Comparison - WebGL.jpg' target='_blank')
+    .column
+      h4 Our work in progress Unreal 5 version of the game
+      a(href='./art/blog/Comparison - Unreal 5.jpg' target='_blank')
+        img.ui.image(src='./art/blog/Comparison - Unreal 5.jpg' target='_blank')
+    .column
+      h4 A cinematic shot of the island in the Unreal 5 game engine
+      a(href='./art/blog/Unreal 5 Cinematic shot.jpg' target='_blank')
+        img.ui.image(src='./art/blog/Unreal 5 Cinematic shot.jpg' target='_blank')

@@ -1,0 +1,23 @@
+extends /src/templates/wiki.pug
+
+block prepend title
+  - var page_title_string = "Blog";
+
+block prepend content
+  - var page_title_string = "Blog";
+
+block append page_content
+  .ui.dividing.header
+  .ui.four.column.grid
+    .row
+      .column
+        .column
+          a(href='/wiki/blog/20210827-late-august-production-update.html' title='Late August Production Update')
+            h3 Late August Production Update
+          small
+            em 27 August 2021
+          p It's been a while since we've posted so here's a quick rundown of what's been going on behind the scenes!
+          p The Kamigen Comics and Game are in heavy production so apologies we've not had time to keep the website up to date.
+      .column
+      .column
+      .column  
