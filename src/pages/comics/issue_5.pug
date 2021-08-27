@@ -1,0 +1,21 @@
+extends /src/templates/website.pug
+
+block append title
+  | Issue 05 | Comics | Kamigen | A Tropical Cyberpunk RPG
+
+block append content
+  .row#comics
+    .column
+      .ui.one.column.stackable.center.aligned.page.grid
+        .column
+          .ui.divider.header
+          h2
+            a(href="/comics.html") Comics
+            |  \ 
+            | Issue 05
+          .ui.divider.header
+        .column.four.wide
+          a(href='/comics/issue_5_cover.html')
+            img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 05 Cover-01.png')
+            h3 Issue 05
+            p New pages coming by September 1 2021!
