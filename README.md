@@ -12,7 +12,7 @@ Kamigen is a tropical cyberpunk (science fiction) world with aircraft combat. Dr
 - [Play the Alpha Build](https://kamigen.com/game.html)
 - [Audio Loop Demo](https://kamigen.com/music/flying.html)
 
-[Open Studios](https://openstudios.xyz) is producing Kamigen using both proprietary and open source tools. This project [needs your support](https://openstudios.xyz/donate.html)!
+[Open Studios](https://openstudios.xyz) is producing Kamigen using both proprietary and open source tools. This project [needs your support](https://kamigen.com/shop.html)!
 
 # Story and setting
 The lore is currently being fleshed out by the comics which also serves to generate artwork and build an audience for all Kamigen media.
@@ -24,13 +24,7 @@ The in-game island is generated from a [height map of the actual Camiguin island
 [Traditional Baybayin script](https://en.wikipedia.org/wiki/Baybayin) (known as Badlit in the Visayas) will be a native peoples language in the Kamigen story as a tribute to indigenous peoples of all lands who were disaffected by colonisation
   - The official website footer link to home currently has "Kamigen" written in Badlit instead of the official logo font
 
-Check out the [comics](https://kamigen.com/comics.html) for more.
-
-# Media and screenshots
-![Island Screenshot](./art/resources/screenshots/Wallpaper.PNG)
-![Ocean Screenshot](./art/resources/screenshots/Screenshot%202018-09-22.PNG)
-![Night Screenshot](./art/resources/screenshots/Screenshot%202019-01-26.PNG)
-![Ship Screenshot](./art/resources/screenshots/Screenshot%202019-01-26-1.PNG)
+Learn more at [kamigen.com](https://kamigen.com/)
 
 # Credits:
 - [Camo texture on Deviantart](https://www.deviantart.com/sargy001/art/Tropical-Camo-347462946)
