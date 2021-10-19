@@ -1,9 +1,11 @@
 var Kamigen = (function ($, THREE, TWEEN$1) {
   'use strict';
 
-  $ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
-  THREE = THREE && Object.prototype.hasOwnProperty.call(THREE, 'default') ? THREE['default'] : THREE;
-  TWEEN$1 = TWEEN$1 && Object.prototype.hasOwnProperty.call(TWEEN$1, 'default') ? TWEEN$1['default'] : TWEEN$1;
+  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+  var $__default = /*#__PURE__*/_interopDefaultLegacy($);
+  var THREE__default = /*#__PURE__*/_interopDefaultLegacy(THREE);
+  var TWEEN__default = /*#__PURE__*/_interopDefaultLegacy(TWEEN$1);
 
   /**
     * Director.
@@ -24,11 +26,11 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     */
 
   // Game libs.
-  var MaterialLibrary;
+  var MaterialLibrary$2;
   var lastBeta = 0, lastGamma = 0;
 
   var Aircraft = function Aircraft(materials) {
-    MaterialLibrary = materials;
+    MaterialLibrary$2 = materials;
   };
 
   Aircraft.prototype.animate = function animate (keyboard, camera_controls, AircraftFactory, scene) {
@@ -77,14 +79,14 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     }};
 
   Aircraft.prototype.drawShip = function drawShip () {
-      var this$1 = this;
+      var this$1$1 = this;
 
     var wingPort = this.getWing('port');
     var wingStarboard = this.getWing('starboard');
     var cockpit = this.getCockpit();
     var fuselage = this.getFuselage();
       
-    this.ship = new THREE.Object3D();
+    this.ship = new THREE__default["default"].Object3D();
     this.ship.add(wingPort);
     this.ship.add(wingStarboard);
     this.ship.add(fuselage);
@@ -92,9 +94,9 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     this.ship.position.set(0, 25000, 0);
     this.ship.velocity = 15.0;
     
-    $('.ui.button.accelerate').click(function () { return this$1.ship.velocity += 0.5; });
-    $('.ui.button.decelerate').click(function () { return this$1.ship.velocity -= 0.5; });
-    $('.ui.button.reset').click(function () { return camera_controls.reset(); });
+    $__default["default"]('.ui.button.accelerate').click(function () { return this$1$1.ship.velocity += 0.5; });
+    $__default["default"]('.ui.button.decelerate').click(function () { return this$1$1.ship.velocity -= 0.5; });
+    $__default["default"]('.ui.button.reset').click(function () { return camera_controls.reset(); });
     
       
       var eventHandler = function (event) {
@@ -102,15 +104,15 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
         var gammaDiff = lastGamma - event.gamma;
     
         if (betaDiff > 5.5 || betaDiff < 5.5) {
-          this$1.ship.rotateX(betaDiff / 250);
+          this$1$1.ship.rotateX(betaDiff / 250);
           if (betaDiff > 35 || betaDiff < 35) {
-            this$1.ship.rotateX(betaDiff / 50);
+            this$1$1.ship.rotateX(betaDiff / 50);
           }
         }
         if (gammaDiff > 5.5 || gammaDiff < 5.5) {
-          this$1.ship.rotateY(gammaDiff / 250);
+          this$1$1.ship.rotateY(gammaDiff / 250);
           if (gammaDiff > 35 || gammaDiff < 35) {
-            this$1.ship.rotateY(gammaDiff / 50);
+            this$1$1.ship.rotateY(gammaDiff / 50);
           }
         }
           
@@ -124,10 +126,10 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
   };
 
   Aircraft.prototype.getFuselage = function getFuselage () {
-    var geometry = new THREE.OctahedronGeometry( 30, 0);
-    var texture = MaterialLibrary.textures.darkMetal1;
-    var material = new THREE.MeshPhongMaterial( { map: texture } );
-    var fuselage = new THREE.Mesh( geometry, material );
+    var geometry = new THREE__default["default"].OctahedronGeometry( 30, 0);
+    var texture = MaterialLibrary$2.textures.darkMetal1;
+    var material = new THREE__default["default"].MeshPhongMaterial( { map: texture } );
+    var fuselage = new THREE__default["default"].Mesh( geometry, material );
     
     fuselage.scale.set(.75,5,1.85);
     fuselage.position.set(0, -120, 0);
@@ -137,9 +139,9 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
   };
     
   Aircraft.prototype.getCockpit = function getCockpit () {
-    var geometry = new THREE.OctahedronGeometry( 30, 1);
-    var material = new THREE.MeshToonMaterial( { color: 0x006633, shininess: 100 } );
-    var fuselage = new THREE.Mesh( geometry, material );
+    var geometry = new THREE__default["default"].OctahedronGeometry( 30, 1);
+    var material = new THREE__default["default"].MeshToonMaterial( { color: 0x006633, shininess: 100 } );
+    var fuselage = new THREE__default["default"].Mesh( geometry, material );
     
     fuselage.scale.set(.8,.15,.35);
     fuselage.position.set(0, -110, 70);
@@ -150,15 +152,15 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     
   Aircraft.prototype.getWing = function getWing (side) {
     if (side == 'port') {
-      var closedSpline = new THREE.CatmullRomCurve3( [    
-        new THREE.Vector3(-120,90, 120 ),
-        new THREE.Vector3(-120,90, -120 )
+      var closedSpline = new THREE__default["default"].CatmullRomCurve3( [    
+        new THREE__default["default"].Vector3(-120,90, 120 ),
+        new THREE__default["default"].Vector3(-120,90, -120 )
       ] );
     }
     if (side == 'starboard') {
-      var closedSpline = new THREE.CatmullRomCurve3( [    
-        new THREE.Vector3(-120,90, -120 ),
-        new THREE.Vector3(-120,90, 120 )
+      var closedSpline = new THREE__default["default"].CatmullRomCurve3( [    
+        new THREE__default["default"].Vector3(-120,90, -120 ),
+        new THREE__default["default"].Vector3(-120,90, 120 )
       ] );  
     }
     closedSpline.type = 'catmullrom';
@@ -172,13 +174,13 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     for ( var i = 0; i < count; i ++ ) {
       var l = 80;
       var a = 20 * i / count * Math.PI;
-      pts.push( new THREE.Vector2 ( Math.cos( a ) * l, Math.sin( a ) * 4 ) );
+      pts.push( new THREE__default["default"].Vector2 ( Math.cos( a ) * l, Math.sin( a ) * 4 ) );
     }
-    var shape = new THREE.Shape( pts );
-    var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
-    var texture = MaterialLibrary.textures.darkMetal2;
-    var material = new THREE.MeshPhongMaterial( { map: texture, wireframe: false } );
-    var wing = new THREE.Mesh( geometry, material );
+    var shape = new THREE__default["default"].Shape( pts );
+    var geometry = new THREE__default["default"].ExtrudeGeometry( shape, extrudeSettings );
+    var texture = MaterialLibrary$2.textures.darkMetal2;
+    var material = new THREE__default["default"].MeshPhongMaterial( { map: texture, wireframe: false } );
+    var wing = new THREE__default["default"].Mesh( geometry, material );
       
     
     if (side == 'port') {
@@ -197,7 +199,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     
     var scale = Math.random() * 32 + 16;
     var thrust = 360 * Math.random();
-    var right_thruster = new THREE.Sprite( MaterialLibrary.smoke() );
+    var right_thruster = new THREE__default["default"].Sprite( MaterialLibrary$2.smoke() );
     right_thruster.position.set( this.ship.position.x, this.ship.position.y, this.ship.position.z );
     right_thruster.rotation.set( this.ship.rotation.x, this.ship.rotation.y, this.ship.rotation.z );
     right_thruster.translateX(-90);
@@ -205,7 +207,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     right_thruster.material.rotation = thrust;
     this.initParticle(scene, right_thruster, scale);
     
-    var left_thruster = new THREE.Sprite( MaterialLibrary.smoke() );
+    var left_thruster = new THREE__default["default"].Sprite( MaterialLibrary$2.smoke() );
     left_thruster.position.set( this.ship.position.x, this.ship.position.y, this.ship.position.z );
     left_thruster.rotation.set( this.ship.rotation.x, this.ship.rotation.y, this.ship.rotation.z );
     left_thruster.translateX(90);
@@ -242,8 +244,8 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
   };
 
   Island.prototype.initLand = function initLand (light) {   
-    var geometry = new THREE.PlaneGeometry( 200000, 200000, 200, 200 );
-    this.land= new THREE.Mesh( geometry,MaterialLibrary$1.island(light) ) ;
+    var geometry = new THREE__default["default"].PlaneGeometry( 200000, 200000, 200, 200 );
+    this.land= new THREE__default["default"].Mesh( geometry,MaterialLibrary$1.island(light) ) ;
     this.land.position.y = -900;
     this.land.rotation.x = - Math.PI / 2;
     return this.land;
@@ -274,7 +276,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     sun: ! true
   };
 
-  var MaterialLibrary$2;
+  var MaterialLibrary;
 
   var IslandScene = function IslandScene(Materials) {
     this.scripts = {
@@ -287,11 +289,11 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
       distortionScale: 8,
       alpha: 1
     };
-    MaterialLibrary$2 = Materials;
+    MaterialLibrary = Materials;
   };
 
   IslandScene.prototype.animate = function animate (camera_controls) {
-      var this$1 = this;
+      var this$1$1 = this;
 
     water.material.uniforms.time.value += 1.0 / 60.0;
     land.material.uniforms.time.value += 1.0 / 60.0;
@@ -318,15 +320,15 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     }
     
     clouds.forEach(function (sprite) {
-      sprite.material.opacity = Math.min(1, Math.max(0.05,(sunSphere.position.y / this$1.parameters.oceanSide)));
+      sprite.material.opacity = Math.min(1, Math.max(0.05,(sunSphere.position.y / this$1$1.parameters.oceanSide)));
     });
 
     ship.animate(keyboard, camera_controls, AircraftFactory, scene);
   };
   IslandScene.prototype.addCloud = function addCloud (position) {
-    var spriteMap = new THREE.TextureLoader().load( cloudTextures[cloudId] );
-    var spriteMaterial = new THREE.SpriteMaterial( { alphaTest: 0.00125, map: spriteMap, color: 0xffffff } );
-    var sprite = new THREE.Sprite( spriteMaterial );
+    var spriteMap = new THREE__default["default"].TextureLoader().load( cloudTextures[cloudId] );
+    var spriteMaterial = new THREE__default["default"].SpriteMaterial( { alphaTest: 0.00125, map: spriteMap, color: 0xffffff } );
+    var sprite = new THREE__default["default"].Sprite( spriteMaterial );
     sprite.position.set(position.x, position.y, position.z);
     var randomer = Math.random();
     
@@ -345,15 +347,15 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     }
   };
   IslandScene.prototype.setWater = function setWater () {
-    var waterGeometry = new THREE.CircleBufferGeometry( this.parameters.oceanSide * 5, 1000 );
-    water = new THREE.Water(
+    var waterGeometry = new THREE__default["default"].CircleBufferGeometry( this.parameters.oceanSide * 5, 1000 );
+    water = new THREE__default["default"].Water(
       waterGeometry,
       {
         clipBias: -0.000001,
         textureWidth: 1024,
         textureHeight: 1024,
-        waterNormals: new THREE.TextureLoader().load( './assets/waternormals.jpg', function ( texture ) {
-          texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        waterNormals: new THREE__default["default"].TextureLoader().load( './assets/waternormals.jpg', function ( texture ) {
+          texture.wrapS = texture.wrapT = THREE__default["default"].RepeatWrapping;
         }),
         alpha:this.parameters.alpha,
         sunDirection: light.position.clone().normalize(),
@@ -373,27 +375,27 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
   };
   IslandScene.prototype.init = function init () {
     keyboard= new THREEx.KeyboardState(); 
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 100, this.parameters.oceanSide * 10000 );
+    scene = new THREE__default["default"].Scene();
+    camera = new THREE__default["default"].PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 100, this.parameters.oceanSide * 10000 );
     camera.position.y = 120;
     camera.position.z = - 1600;
       
-    var amb_light = new THREE.AmbientLight( 0xffffff, Math.PI / 10 );
+    var amb_light = new THREE__default["default"].AmbientLight( 0xffffff, Math.PI / 10 );
     scene.add( amb_light );
     
-    light = new THREE.DirectionalLight( 0xffffff, Math.PI / 2 );
+    light = new THREE__default["default"].DirectionalLight( 0xffffff, Math.PI / 2 );
     scene.add( light );
            
     this.setWater();
     
-    AircraftFactory = new Aircraft(MaterialLibrary$2);
+    AircraftFactory = new Aircraft(MaterialLibrary);
     ship = AircraftFactory.drawShip();
         
     scene.add( ship );
     ship.add(camera);
     ship.rotateY(-Math.PI/2);
     
-    land = (new Island(MaterialLibrary$2)).initLand(light);
+    land = (new Island(MaterialLibrary)).initLand(light);
     scene.add(land);
     this.initSky(scene);
 
@@ -401,14 +403,14 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
   };
   IslandScene.prototype.initSky = function initSky (scene) {
     // Add Sky
-    sky = new THREE.Sky();
+    sky = new THREE__default["default"].Sky();
     sky.scale.setScalar( this.parameters.oceanSide * 5 );
     scene.add( sky );
     
     // Add Sun Helper
-    sunSphere = new THREE.Mesh(
-      new THREE.SphereBufferGeometry( 20000, 16, 8 ),
-      new THREE.MeshBasicMaterial( { color: 0xffffff } )
+    sunSphere = new THREE__default["default"].Mesh(
+      new THREE__default["default"].SphereBufferGeometry( 20000, 16, 8 ),
+      new THREE__default["default"].MeshBasicMaterial( { color: 0xffffff } )
     );
     sunSphere.position.y = - 700000;
     sunSphere.visible = false;
@@ -420,7 +422,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
       x *= Math.floor(Math.random()*2) == 1 ? 1 : -1; 
       var y = Math.floor(Math.random()*99) + 1; // this will get a number between 1 and 99;
       y *= Math.floor(Math.random()*2) == 1 ? 1 : -1; 
-      this.addCloud(new THREE.Vector3(
+      this.addCloud(new THREE__default["default"].Vector3(
         (this.parameters.oceanSide / 35) * x,
         150000 + 25000 * Math.random(),
         (this.parameters.oceanSide / 35) * y)
@@ -440,7 +442,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
       sun: ! true
     };
     
-     var sun_cycle = new TWEEN.Tween(effectController)
+     new TWEEN.Tween(effectController)
       .to({azimuth: 1.1}, 600000)
       .to({inclination: 1.1}, 600000)
       .repeat(Infinity)
@@ -457,47 +459,47 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     */
 
   var Materials = function Materials(options) {
-    var this$1 = this;
+    var this$1$1 = this;
 
     /** 
      * Textures
      */
     this.textures = {
       darkMetal1: this.loadTexture('./assets/darkmetal.jpg', function (texture) {
-        texture.wrapS = texture.wrapT = THREE.MirroredRepeatWrapping;
+        texture.wrapS = texture.wrapT = THREE__default["default"].MirroredRepeatWrapping;
         texture.repeat.set( 10., 25. );
       }),
       darkMetal2: this.loadTexture('./assets/darkmetal.jpg', function (texture) {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.wrapS = texture.wrapT = THREE__default["default"].RepeatWrapping;
         texture.repeat.set( .05, .05 );
       }),
       forest: this.loadTexture('/assets/forest.jpg', function ( texture ) {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.wrapS = texture.wrapT = THREE__default["default"].RepeatWrapping;
       }),
       island_heightMap: this.loadTexture('./assets/height.png'),
       island_texture: this.loadTexture('./assets/texture.png'),
       sand: this.loadTexture('/assets/sand.jpg', function ( texture ) {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.wrapS = texture.wrapT = THREE__default["default"].RepeatWrapping;
       }),
       smoke: this.loadTexture('./assets/smoke.png'),
       volcano: this.loadTexture('/assets/volcano.jpg', function ( texture ) {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.wrapS = texture.wrapT = THREE__default["default"].RepeatWrapping;
       })
     };
     /** 
      * Material definitions
      */
     this.island = function (light) {
-      return new THREE.ShaderMaterial({
+      return new THREE__default["default"].ShaderMaterial({
         uniforms: {
-          bumpTexture:{ type: "t", value: this$1.textures.island_heightMap },
+          bumpTexture:{ type: "t", value: this$1$1.textures.island_heightMap },
           bumpScale:  { type: "f", value: 24361.43 },
           landSize:   { type: "f", value: 200000 },
           time:       { type: "f", value: 0.0 },
-          texture:    { type: "t", value: this$1.textures.island_texture },
-          sandyTexture: { type: "t", value: this$1.textures.sand },
-          forestTexture: { type: "t", value: this$1.textures.forest },
-          rockyTexture: { type: "t", value: this$1.textures.volcano },
+          texture:    { type: "t", value: this$1$1.textures.island_texture },
+          sandyTexture: { type: "t", value: this$1$1.textures.sand },
+          forestTexture: { type: "t", value: this$1$1.textures.forest },
+          rockyTexture: { type: "t", value: this$1$1.textures.volcano },
           sunPosition:{ type: "v3", value: light.position.clone() },
           center:     { type: "v3", value: { x: 0, y: 0, z: 0} }
         },
@@ -507,9 +509,9 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
       });
     };
     this.smoke = function () {
-      return new THREE.SpriteMaterial( {
+      return new THREE__default["default"].SpriteMaterial( {
         alphaTest: .0543212345,
-        map: this$1.textures.smoke,
+        map: this$1$1.textures.smoke,
         transparent: true
       } );
     };
@@ -518,7 +520,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
   Materials.prototype.loadTexture = function loadTexture (texture_location, callback) {
       if ( callback === void 0 ) callback = function () {};
 
-    return new THREE.TextureLoader().load( texture_location, callback);
+    return new THREE__default["default"].TextureLoader().load( texture_location, callback);
   };
 
   /**
@@ -536,7 +538,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     * - Objects, reusable THREE JS scene objects with helper classes like animate()
     */
 
-  var clock = new THREE.Clock();
+  var clock = new THREE__default["default"].Clock();
 
   var Scenograph = function Scenograph() {
     this.Director = new Director();
@@ -544,7 +546,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     this.Scenes = {
       IslandScene: new IslandScene(this.Materials)
     };
-    this.renderer = new THREE.WebGLRenderer({
+    this.renderer = new THREE__default["default"].WebGLRenderer({
       antialias: true,
       logarithmicDepthBuffer: false
     });
@@ -563,7 +565,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     this.scene = IslandSceneInstance.scene;
     this.camera = IslandSceneInstance.camera;
     this.ship = IslandSceneInstance.ship;
-    this.camera_controls = new THREE.OrbitControls( this.camera, window.app.scenograph.renderer.domElement );
+    this.camera_controls = new THREE__default["default"].OrbitControls( this.camera, window.app.scenograph.renderer.domElement );
       
     window.addEventListener( 'resize', this.onWindowResize, false );
 
@@ -578,14 +580,14 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
     window.app.scenograph.renderer.setSize( window.innerWidth, window.innerHeight );
   };
   Scenograph.prototype.animate = function animate () {
-    TWEEN$1.update();
+    TWEEN__default["default"].update();
        
     requestAnimationFrame( window.app.scenograph.animate );
     window.app.scenograph.render();
   };
   Scenograph.prototype.render = function render () {
-    var delta = clock.getDelta(),
-      time = clock.getElapsedTime() * 10;
+    var delta = clock.getDelta();
+      clock.getElapsedTime() * 10;
 
     this.Scenes.IslandScene.animate(this.camera_controls);
     
@@ -608,7 +610,7 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
   };
 
   // Run App using jQuery.ready()
-  $(function () {
+  $__default["default"](function () {
     window.app = new App();
 
     // Run all the ready functions
@@ -621,5 +623,5 @@ var Kamigen = (function ($, THREE, TWEEN$1) {
 
   return App;
 
-}(jQuery, THREE, TWEEN));
+})(jQuery, THREE, TWEEN);
 //# sourceMappingURL=app.js.map
