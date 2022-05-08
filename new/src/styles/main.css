@@ -1,0 +1,29 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.gradient-sky {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#8eaad9+0,fddece+50,fff1db+100 */
+    background: #8eaad9; /* Old browsers */
+    background: -moz-linear-gradient(top,  #8eaad9 0%, #fddece 50%, #fff1db 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #8eaad9 0%,#fddece 50%,#fff1db 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #8eaad9 0%,#fddece 50%,#fff1db 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8eaad9', endColorstr='#fff1db',GradientType=0 ); /* IE6-9 */
+}
+
+.gradient-water {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#cce0f4+0,0093d8+100 */
+    background: #cce0f4; /* Old browsers */
+    background: -moz-linear-gradient(top,  #cce0f4 0%, #0093d8 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #cce0f4 0%,#0093d8 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #cce0f4 0%,#0093d8 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cce0f4', endColorstr='#0093d8',GradientType=0 ); /* IE6-9 */
+}
+
+.gradient-water-edge {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#0093d8+0,0093d8+100&1+0,0+100 */
+    background: -moz-linear-gradient(top,  rgba(0,147,216,1) 0%, rgba(0,147,216,0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(0,147,216,1) 0%,rgba(0,147,216,0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(0,147,216,1) 0%,rgba(0,147,216,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0093d8', endColorstr='#000093d8',GradientType=0 ); /* IE6-9 */
+}

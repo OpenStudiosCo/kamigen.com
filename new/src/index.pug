@@ -4,5 +4,15 @@ html
     title
     base(href='/')
     meta(name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    link(rel='stylesheet' href='./main.css')
   body
-    h1 Hello!!
+    .gradient-sky(class="min-w-full h-[400px] lg:h-[600px] absolute -z-10")
+    .gradient-water(class="min-w-full h-[100px] lg:h-[150px] absolute -z-10 top-[400px] lg:top-[600px]")
+    .gradient-water-edge(class="min-w-full h-[200px] lg:h-[300px] absolute -z-10 top-[500px] lg:top-[750px]")
+    div(class="relative z-0")
+      a(href='/')
+        h1
+          img(class="max-w-[250px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo.svg')
+        div(class="max-w-[290px] lg:max-w-md mx-auto mt-6 border-b  border-black ") 
+      div(class="text-center pt-10") A story about Visayans
+      img(class="max-w-xs md:max-w-md lg:max-w-2xl mx-auto mt-[170px] lg:mt-[290px]" src='assets/Kamigen Island.svg')

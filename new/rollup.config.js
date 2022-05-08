@@ -1,23 +1,27 @@
+// ES2015 Support
 import buble from 'rollup-plugin-buble';
+
+// Import pug templates as view functions
 import pug from 'rollup-plugin-pug';
 
+// Import css files (for extraction)
+import postcss from 'rollup-plugin-postcss';
+import path from 'path';
+
 export default {
-  external: [ 'jQuery', 'dat', 'THREE', 'TWEEN' ],
-  input: 'src/app.js',
+  input: 'src/scripts/main.js',
   output: {
-    name: 'Kamigen',
-  	file: 'docs/app.js',
+    name: 'main',
+  	file: 'docs/main.js',
   	format: 'iife',
-    sourcemap: true,
-    globals: {
-      // jQuery: 'jQuery',
-      // dat: 'dat',
-      // THREE: 'THREE',
-      // TWEEN: 'TWEEN'
-    }
+    sourcemap: false
   },
   plugins: [
+    postcss({
+      extract: path.resolve('docs/main.css'),
+      minimize: true,
+    }),
     pug(),
-    buble()
+    buble(),
   ]
 };
