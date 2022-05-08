@@ -35,7 +35,7 @@
     }
     
     100% {
-       filter:blur(10px);
+       filter:blur(20px);
        opacity: 0.0;
        animation-play-state: paused;
     }
@@ -44,7 +44,7 @@
 
 @keyframes blurin {   
     0% {
-       filter:blur(10px);
+       filter:blur(20px);
        opacity: 0.0;
     }
 
@@ -57,17 +57,17 @@
 }
 
 #hero:hover #english_logo {
-    animation:blurout 0.5s ease 1 forwards;
+    animation:blurout 0.35s ease 1 forwards;
 }
 
 #hero:hover #badlit_logo {
-    animation:blurin 0.5s ease 1 forwards;
+    animation:blurin 0.15s ease 1 forwards;
 }
 
 #hero:not(:hover) #english_logo {
-    animation: blurin 0.5s ease 1 forwards;
+    animation: blurin 0.15s ease 1 forwards;
 }
 
 #hero:not(:hover) #badlit_logo {
-    animation: blurout 0.5s ease 1 forwards;
+    animation: blurout 0.35s ease 1 forwards;
 }

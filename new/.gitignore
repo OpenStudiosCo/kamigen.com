@@ -1,3 +1,2 @@
-# Ignore output and vendor folders
-/docs
+# Ignore vendor folders
 /node_modules
