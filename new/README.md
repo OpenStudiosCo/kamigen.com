@@ -1,5 +1,6 @@
 # Kettlefish 11ty Starter Project
 
+- Github Pages oriented folders
 - Pug
 - Rollup
 - Stylus
