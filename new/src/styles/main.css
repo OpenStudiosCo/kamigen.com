@@ -27,3 +27,47 @@
     background: linear-gradient(to bottom,  rgba(0,147,216,1) 0%,rgba(0,147,216,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0093d8', endColorstr='#000093d8',GradientType=0 ); /* IE6-9 */
 }
+
+@keyframes blurout  {
+    0% {
+       filter:blur(0px);
+       opacity: 1.0;
+    }
+    
+    100% {
+       filter:blur(10px);
+       opacity: 0.0;
+       animation-play-state: paused;
+    }
+
+}
+
+@keyframes blurin {   
+    0% {
+       filter:blur(10px);
+       opacity: 0.0;
+    }
+
+    100% {
+        filter:blur(0px);
+        opacity: 1.0;
+        animation-play-state: paused;
+    }
+ 
+}
+
+#hero:hover #english_logo {
+    animation:blurout 0.5s ease 1 forwards;
+}
+
+#hero:hover #badlit_logo {
+    animation:blurin 0.5s ease 1 forwards;
+}
+
+#hero:not(:hover) #english_logo {
+    animation: blurin 0.5s ease 1 forwards;
+}
+
+#hero:not(:hover) #badlit_logo {
+    animation: blurout 0.5s ease 1 forwards;
+}

@@ -12,14 +12,10 @@ html
     div(class="relative z-0")
       #hero_wrapper(x-data="{show_badlit: false}" @mouseover.away="show_badlit = false")
         #hero(@mouseover="show_badlit = true")
-          a#logo(href='/')
+          a#logo(href='#')
             h1()
-              img(id='english_logo' :class="show_badlit ? 'hidden' : ''" class="max-w-[250px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo.svg')
-              img(id='badlit_logo' :class="show_badlit ? '' : 'hidden'" class="max-w-[250px] -mb-[60px] lg:-mb-[69px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo - Badlit.svg')
-              #english_logo.hidden
-                include assets/Kamigen Logo.svg
-              #badlit_logo.hidden
-                include assets/Kamigen Logo - Badlit.svg
+              img(id='english_logo' class="max-w-[250px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo.svg')
+              img(id='badlit_logo' class="opacity-0 max-w-[250px] -mt-[160px] -mb-[60px] lg:-mb-[69px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo - Badlit.svg')
             div(class="max-w-[290px] lg:max-w-md mx-auto mt-6 border-b  border-black ") 
           div(class="text-center pt-10")
             p(:class="show_badlit ? 'hidden' : ''") A story about Visayans
