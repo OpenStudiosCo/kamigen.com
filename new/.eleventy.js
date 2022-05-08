@@ -1,12 +1,15 @@
-module.exports = config => {
- 
-    config.addPassthroughCopy("src/assets", "assets");
+module.exports = function(eleventyConfig) {
 
-    return {
-      //pathPrefix: '/new/',
-      dir: {
-        input: 'src',
-        output: 'docs'
-      },
-    };
+  eleventyConfig.addPassthroughCopy("src/assets", "assets");
+  eleventyConfig.addPassthroughCopy({
+    "./node_modules/alpinejs/dist/cdn.min.js": "./alpine.js",
+  });
+
+  return {
+    //pathPrefix: '/new/',
+    dir: {
+      input: 'src',
+      output: 'docs'
+    },
   };
+};

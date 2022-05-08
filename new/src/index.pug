@@ -10,9 +10,21 @@ html
     .gradient-water(class="min-w-full h-[100px] lg:h-[150px] absolute -z-10 top-[400px] lg:top-[600px]")
     .gradient-water-edge(class="min-w-full h-[200px] lg:h-[300px] absolute -z-10 top-[500px] lg:top-[750px]")
     div(class="relative z-0")
-      a(href='/')
-        h1
-          img(class="max-w-[250px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo.svg')
-        div(class="max-w-[290px] lg:max-w-md mx-auto mt-6 border-b  border-black ") 
-      div(class="text-center pt-10") A story about Visayans
+      #hero_wrapper(x-data="{show_badlit: false}" @mouseover.away="show_badlit = false")
+        #hero(@mouseover="show_badlit = true")
+          a#logo(href='/')
+            h1()
+              img(id='english_logo' :class="show_badlit ? 'hidden' : ''" class="max-w-[250px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo.svg')
+              img(id='badlit_logo' :class="show_badlit ? '' : 'hidden'" class="max-w-[250px] -mb-[60px] lg:-mb-[69px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo - Badlit.svg')
+              #english_logo.hidden
+                include assets/Kamigen Logo.svg
+              #badlit_logo.hidden
+                include assets/Kamigen Logo - Badlit.svg
+            div(class="max-w-[290px] lg:max-w-md mx-auto mt-6 border-b  border-black ") 
+          div(class="text-center pt-10")
+            p(:class="show_badlit ? 'hidden' : ''") A story about Visayans
+            p(:class="show_badlit ? '' : 'hidden'") Istorya sa Bisaya
       img(class="max-w-xs md:max-w-md lg:max-w-2xl mx-auto mt-[170px] lg:mt-[290px]" src='assets/Kamigen Island.svg')
+      img(class="max-h-96 mx-auto " src='assets/Kamigen Issue 01 Cover-01.png')
+    script(src="./alpine.js")
+    script(src='./main.js')

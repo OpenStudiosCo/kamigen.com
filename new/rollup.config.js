@@ -22,6 +22,6 @@ export default {
       minimize: true,
     }),
     pug(),
-    buble(),
+    buble({ transforms: { asyncAwait: false } })
   ]
 };
