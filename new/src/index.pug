@@ -6,8 +6,8 @@ html
     meta(name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
     link(rel='stylesheet' href='./main.css')
   body
-    .gradient-sky(class="min-w-full h-[400px] lg:h-[600px] absolute -z-10")
-    .gradient-water(class="min-w-full h-[100px] lg:h-[150px] absolute -z-10 top-[400px] lg:top-[600px]")
+    .gradient-sky(class="min-w-full h-[400px] lg:h-[575px] absolute -z-10")
+    .gradient-water(class="min-w-full h-[100px] lg:h-[175px] absolute -z-10 top-[400px] lg:top-[575px]")
     .gradient-water-edge(class="min-w-full h-[200px] lg:h-[300px] absolute -z-10 top-[500px] lg:top-[750px]")
     div(class="relative z-0")
       #hero_wrapper(x-data="{show_badlit: false}" @mouseover.away="show_badlit = false")
@@ -20,7 +20,22 @@ html
           div(class="text-center pt-10")
             p(:class="show_badlit ? 'hidden' : ''") A story about Visayans
             p(:class="show_badlit ? '' : 'hidden'") Istorya sa Bisaya
-      img(class="max-w-xs md:max-w-md lg:max-w-2xl mx-auto mt-[170px] lg:mt-[290px]" src='assets/Kamigen Island.svg')
-      img(class="max-h-96 mx-auto " src='assets/Kamigen Issue 01 Cover-01.png')
+      img(class="max-w-xs md:max-w-md lg:max-w-2xl mx-auto mt-[175px] md:mt-[165px] lg:mt-[290px] mb-20" src='assets/Kamigen Island.svg')
+      .container(class="flex relative mx-auto")
+        .slide(class="absolute w-full z-50 text-center md:text-left")
+          img(class="max-h-96 mx-auto md:ml-8 md:mr-0" src='assets/Kamigen Issue 01 Cover-01.png')
+          .slide-content(class="md:absolute md:left-[296px] md:w-[437px] lg:w-[606px] md:top-0 gradient-white md:h-96")
+            .slide-content-inner(class="p-4 md:pl-8 md:pr-16 lg:py-16")
+              h2(class="text-lg underline md:py-3") Issue #01
+              h3(class="text-xl font-bold py-3 md:py-6") Welcome to the Island
+              p(class="md:text-lg") The first issue introduces Kamigen Island and explains a bit about the current state of the world.
+        .slide(class="absolute w-full left-[296px] md:left-[486px] z-40")
+          img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 02 Cover-01.png')
+        .slide(class="absolute w-full left-[296px] md:left-[486px] z-30")
+          img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 03 Cover-01.png')
+        .slide(class="absolute w-full left-[296px] md:left-[486px] z-20")
+          img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 04 Cover-01.png')
+        .slide(class="absolute w-full left-[296px] md:left-[486px] z-10")
+          img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 05 Cover-01.png')
     script(src="./alpine.js")
     script(src='./main.js')

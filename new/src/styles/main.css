@@ -28,6 +28,15 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0093d8', endColorstr='#000093d8',GradientType=0 ); /* IE6-9 */
 }
 
+.gradient-white {   
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+30,ffffff+100&1+30,0.5+100 */
+    background: -moz-linear-gradient(65deg,  rgba(255,255,255,1) 30%, rgba(255,255,255,0.5) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(65deg,  rgba(255,255,255,1) 30%,rgba(255,255,255,0.5) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(65deg,  rgba(255,255,255,1) 30%,rgba(255,255,255,0.5) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#80ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+}
+
 @keyframes blurout  {
     0% {
        filter:blur(0px);
