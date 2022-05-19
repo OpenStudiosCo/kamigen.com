@@ -21,21 +21,23 @@ html
             p(:class="show_badlit ? 'hidden' : ''") A story about Visayans
             p(:class="show_badlit ? '' : 'hidden'") Istorya sa Bisaya
       img(class="max-w-xs md:max-w-md lg:max-w-2xl mx-auto mt-[175px] md:mt-[165px] lg:mt-[290px] mb-20" src='assets/Kamigen Island.svg')
-      .container(class="flex relative mx-auto")
-        .slide(class="absolute w-full z-50 text-center md:text-left")
-          img(class="max-h-96 mx-auto md:ml-8 md:mr-0" src='assets/Kamigen Issue 01 Cover-01.png')
-          .slide-content(class="max-w-[296px] mx-auto md:max-w-none md:absolute md:left-[296px] md:w-[437px] lg:w-[686px] md:top-0 gradient-white md:h-96")
-            .slide-content-inner(class="p-4 md:pl-8 md:pr-16 lg:py-16")
-              h2(class="text-lg underline md:py-3") Issue #01
-              h3(class="text-xl font-bold py-3 md:py-6") Welcome to the Island
-              p(class="md:text-lg") The first issue introduces Kamigen Island and explains a bit about the current state of the world.
-        .slide(class="absolute w-full left-[296px] md:left-[486px] z-40")
-          img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 02 Cover-01.png')
-        .slide(class="absolute w-full left-[296px] md:left-[486px] z-30")
-          img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 03 Cover-01.png')
-        .slide(class="absolute w-full left-[296px] md:left-[486px] z-20")
-          img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 04 Cover-01.png')
-        .slide(class="absolute w-full left-[296px] md:left-[486px] z-10")
-          img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 05 Cover-01.png')
+      .container.mx-auto
+        #comic-slider
+          .keen-slider
+            .keen-slider__slide
+              img(class="max-h-96 mx-auto md:ml-8 md:mr-0" src='assets/Kamigen Issue 01 Cover-01.png')
+              .slide-content(class="max-w-[296px] mx-auto md:max-w-none md:absolute md:left-[296px] md:w-[437px] lg:w-[822px] md:top-0 gradient-white md:h-96")
+                .slide-content-inner(class="p-4 md:pl-8 md:pr-16 lg:py-16")
+                  h2(class="text-lg underline md:py-3") Issue #01
+                  h3(class="text-xl font-bold py-3 md:py-6") Welcome to the Island
+                  p(class="md:text-lg") The first issue introduces Kamigen Island and explains a bit about the current state of the world.
+            .keen-slider__slide
+              img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 02 Cover-01.png')
+            .keen-slider__slide
+              img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 03 Cover-01.png')
+            .keen-slider__slide
+              img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 04 Cover-01.png')
+            .keen-slider__slide
+              img(class="max-h-96 mx-auto" src='assets/Kamigen Issue 05 Cover-01.png')
     script(src="./alpine.js")
     script(src='./main.js')
