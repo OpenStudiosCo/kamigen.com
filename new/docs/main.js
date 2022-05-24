@@ -11,24 +11,10 @@
 			'#comic-slider', {
 				loop: false,
 				mode: "snap",
-				breakpoints: {
-					'(max-width: 768px)': {
-						slides: {
-							origin: "center",
-							perView: 2,
-							spacing: 15,
-						},
-					},
-					'(min-width: 768px)': {
-						slides: {
-							origin: "center",
-							perView: 2,
-							spacing: 30,
-						},
-					},
-				},
 				slides: {
 					origin: "center",
+					perView: 2,
+					spacing: 15
 				},
 			},
 			[
