@@ -37,6 +37,38 @@
 
 }
 
+.keen-slider__slide {
+    img {
+        @apply flex-row max-h-96;
+    }
+    .slide-content {
+        @apply flex-row max-w-[296px] gradient-white;
+    }
+}
+
+
+
+@screen md {
+    .keen-slider__slide {
+        @apply flex flex-nowrap place-content-center;
+        img {
+            @apply flex-col ml-16 mr-0;
+        }
+    
+        .slide-content {
+            @apply flex-col max-w-[475px] min-w-[475px] h-96;
+        }
+    }
+}
+
+@screen lg {
+    .keen-slider__slide {
+        .slide-content {
+            @apply max-w-[672px] max-w-[672px];
+        }
+    }
+}
+
 @keyframes blurout  {
     0% {
        filter:blur(0px);

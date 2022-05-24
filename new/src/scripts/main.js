@@ -9,7 +9,8 @@ function init() {
 	console.log('The page successfully loaded!');
 	var slider = new KeenSlider(
 		'#comic-slider', {
-			mode: "free-snap",
+			loop: false,
+			mode: "snap",
 			breakpoints: {
 				'(max-width: 768px)': {
 					slides: {
@@ -21,7 +22,7 @@ function init() {
 				'(min-width: 768px)': {
 					slides: {
 						origin: "center",
-						perView: 3,
+						perView: 2,
 						spacing: 30,
 					},
 				},
