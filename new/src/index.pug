@@ -59,8 +59,8 @@ html
                   h2(class="text-lg underline md:py-3") Issue #05
                   h3(class="text-xl font-bold py-3 md:py-6") Name TBA
                   p(class="md:text-lg") This is the end of phase 1 and the first comic to be entirely in color!
-      header.p-4(class='dark:bg-gray-200 dark:text-gray-800 mt-10 md:block')
-        .container.flex.justify-between.h-16.mx-auto(class='md:justify-center md:space-x-8')
+      header.p-4(class='dark:bg-gray-200 dark:text-gray-800 mt-10 hidden md:block')
+        .container.justify-between.h-16.mx-auto(class='md:justify-center md:space-x-8 flex')
           ul.items-stretch.space-x-6(class='flex')
             li.flex
               a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Comics
@@ -107,8 +107,8 @@ html
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Umang')
                 img.max-w-none.object-cover(width=60 height=60 src="assets/characters/Umang.svg")
           div.py-12
-            img.float-right(width=384 height=216 src="assets/characters/Anak.svg")
             h3.my-4.text-xl.font-bold Anak
+            img(class="md:float-right md:pb-8" width=384 height=216 src="assets/characters/Anak.svg")
             p.
               Species: Balubid
             br
@@ -120,7 +120,7 @@ html
               The last Balubid, Anak's egg was found by Nick in the 16th century on under the Santo Nino cold spring in Camiguin Island in the Philippines.
             p.
               It's implied there was previously an ice glacier under the Santo Nino cold spring.
-      .container.mx-auto.max-w-4xl
+      .container.mx-auto.max-w-4xl.clear-both
         div.my-12
           h2.my-8.text-center.text-2xl.font-bold Locations
           .relative
@@ -131,38 +131,38 @@ html
               p It's implied there was previously an ice glacier under the Santo Nino cold spring. The last Balubid, Anak's egg was found by Nick in the 16th.
               br
         div.my-12
-          ul.items-center.my-2(class='grid grid-cols-2 gap-4 p-4 mx-auto md:grid-cols-3')
-            li.p-2.m-2
+          .items-center.my-2(class='grid grid-cols-2 gap-4 p-4 mx-auto md:grid-cols-3')
+            .p-2.m-2
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Bulawan City')
-                img.max-w-none.object-cover(width=260 height=260 src="assets/locations/icons/Bulawan.svg")
+                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Bulawan.svg")
                 h3.my-4.text-xl.font-bold.text-center Bulawan City
-            li.p-2.m-2
+            .p-2.m-2
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Camiguin Island')
-                img.max-w-none.object-cover(width=260 height=260 src="assets/locations/icons/Camiguin.svg")
+                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Camiguin.svg")
                 h3.my-4.text-xl.font-bold.text-center Camiguin Island
-            li.p-2.m-2
+            .p-2.m-2
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Helios Shuttle')
-                img.max-w-none.object-cover(width=260 height=260 src="assets/locations/icons/Helios.svg")
+                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Helios.svg")
                 h3.my-4.text-xl.font-bold.text-center Helios Shuttle
-            li.p-2.m-2
+            .p-2.m-2
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Ibalhin Control')
-                img.max-w-none.object-cover(width=260 height=260 src="assets/locations/icons/Ibalhin.svg")
+                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Ibalhin.svg")
                 h3.my-4.text-xl.font-bold.text-center Ibalhin Control
-            li.p-2.m-2
+            .p-2.m-2
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Kamigen Island')
-                img.max-w-none.object-cover(width=260 height=260 src="assets/locations/icons/Kamigen.svg")
+                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Kamigen.svg")
                 h3.my-4.text-xl.font-bold.text-center Kamigen Island
-            li.p-2.m-2
+            .p-2.m-2
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Makaptan\'s Lair')
-                img.max-w-none.object-cover(width=260 height=260 src="assets/locations/icons/Makaptan.svg")
+                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Makaptan.svg")
                 h3.my-4.text-xl.font-bold.text-center Makaptan's Lair
-            li.p-2.m-2
+            .p-2.m-2
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Old Turtle City')
-                img.max-w-none.object-cover(width=260 height=260 src="assets/locations/icons/Old Turtle City.svg")
+                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Old Turtle City.svg")
                 h3.my-4.text-xl.font-bold.text-center Old Turtle City
-            li.p-2.m-2
+            .p-2.m-2
               a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Shangri Lah')
-                img.max-w-none.object-cover(width=260 height=260 src="assets/locations/icons/Shangri Lah.svg")
+                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Shangri Lah.svg")
                 h3.my-4.text-xl.font-bold.text-center Shangri Lah
         div.my-12
           h2.my-8.text-center.text-2xl.font-bold Behind the Scenes
