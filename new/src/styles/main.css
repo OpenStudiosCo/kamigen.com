@@ -82,7 +82,7 @@ body {
         }
     
         .slide-content {
-            @apply flex-col max-w-[475px] min-w-[475px] h-96;
+            @apply flex-col max-w-[475px] h-96;
         }
     }
 }
@@ -90,7 +90,7 @@ body {
 @screen lg {
     .keen-slider__slide {
         .slide-content {
-            @apply max-w-[672px] max-w-[672px];
+            @apply max-w-[672px];
         }
     }
 }
@@ -123,18 +123,18 @@ body {
  
 }
 
-#hero:hover #english_logo {
+.logo:hover .english_logo {
     animation:blurout 0.35s ease 1 forwards;
 }
 
-#hero:hover #badlit_logo {
+.logo:hover .badlit_logo {
     animation:blurin 0.15s ease 1 forwards;
 }
 
-#hero:not(:hover) #english_logo {
+.logo:not(:hover) .english_logo {
     animation: blurin 0.15s ease 1 forwards;
 }
 
-#hero:not(:hover) #badlit_logo {
+.logo:not(:hover) .badlit_logo {
     animation: blurout 0.35s ease 1 forwards;
 }
