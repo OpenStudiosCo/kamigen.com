@@ -10,7 +10,7 @@
 		new k(
 			'#comic-slider', {
 				loop: false,
-				mode: "snap",
+				mode: "free-snap",
 				slides: {
 					origin: "center",
 					perView: 2,

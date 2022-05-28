@@ -1,0 +1,29 @@
+header#homepage-header
+    .gradient-sky(class="min-w-full h-[400px] lg:h-[575px] absolute -z-10")
+    .gradient-water(class="min-w-full h-[100px] lg:h-[175px] absolute -z-10 top-[400px] lg:top-[575px]")
+    .gradient-water-edge(class="min-w-full h-[200px] lg:h-[300px] absolute -z-10 top-[500px] lg:top-[750px]")
+    div(class="relative z-0")
+    #hero_wrapper(x-data="{show_badlit: false}" @mouseover.away="show_badlit = false")
+        #hero(@mouseover="show_badlit = true")
+        a#logo(href='#')
+            h1()
+            img(id='english_logo' class="max-w-[250px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo.svg')
+            img(id='badlit_logo' class="opacity-0 max-w-[250px] -mt-[120px] lg:-mt-[160px] -mb-[60px] lg:-mb-[69px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo - Badlit.svg')
+            div(class="max-w-[290px] lg:max-w-md mx-auto mt-6 border-b  border-black ") 
+        div(class="text-center pt-10")
+            p(:class="show_badlit ? 'hidden' : ''") A story about Visayans
+            p(:class="show_badlit ? '' : 'hidden'") Istorya sa Bisaya
+    img(class="max-w-xs md:max-w-md lg:max-w-2xl mx-auto mt-[175px] md:mt-[165px] lg:mt-[290px] mb-20" src='assets/Kamigen Island.svg')
+    div.menu(class="hidden")
+        .container.justify-between.h-16.mx-auto(class='md:justify-center md:space-x-8 flex')
+            ul.items-stretch.space-x-6(class='flex')
+            li.flex
+                a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Comics
+            li.flex
+                a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Characters
+            li.flex
+                a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Locations
+            li.flex
+                a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Behind the Scenes
+            li.flex
+                a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Links

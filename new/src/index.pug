@@ -6,229 +6,39 @@ html
     meta(name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
     link(rel='stylesheet' href='./main.css')
   body
-    .gradient-sky(class="min-w-full h-[400px] lg:h-[575px] absolute -z-10")
-    .gradient-water(class="min-w-full h-[100px] lg:h-[175px] absolute -z-10 top-[400px] lg:top-[575px]")
-    .gradient-water-edge(class="min-w-full h-[200px] lg:h-[300px] absolute -z-10 top-[500px] lg:top-[750px]")
-    div(class="relative z-0")
-      #hero_wrapper(x-data="{show_badlit: false}" @mouseover.away="show_badlit = false")
-        #hero(@mouseover="show_badlit = true")
-          a#logo(href='#')
-            h1()
-              img(id='english_logo' class="max-w-[250px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo.svg')
-              img(id='badlit_logo' class="opacity-0 max-w-[250px] -mt-[120px] lg:-mt-[160px] -mb-[60px] lg:-mb-[69px] lg:max-w-sm mx-auto pt-14 lg:pt-20" src='assets/Kamigen Logo - Badlit.svg')
-            div(class="max-w-[290px] lg:max-w-md mx-auto mt-6 border-b  border-black ") 
-          div(class="text-center pt-10")
-            p(:class="show_badlit ? 'hidden' : ''") A story about Visayans
-            p(:class="show_badlit ? '' : 'hidden'") Istorya sa Bisaya
-      img(class="max-w-xs md:max-w-md lg:max-w-2xl mx-auto mt-[175px] md:mt-[165px] lg:mt-[290px] mb-20" src='assets/Kamigen Island.svg')
-      .container.mx-auto
-        #comic-slider
-          .keen-slider
-            .keen-slider__slide
-              img(src='assets/Kamigen Issue 01 Cover-01.png')
-              .slide-content
-                .slide-content-inner(class="p-4 md:pl-8 md:pr-16 lg:py-16")
-                  h2(class="text-lg underline md:py-3") Issue #01
-                  h3(class="text-xl font-bold py-3 md:py-6") Welcome to the Island
-                  p(class="md:text-lg") The first issue introduces Kamigen Island and explains a bit about the current state of the world.
-            .keen-slider__slide
-              img(src='assets/Kamigen Issue 02 Cover-01.png')
-              .slide-content
-                .slide-content-inner(class="p-4 md:pl-8 md:pr-16 lg:py-16")
-                  h2(class="text-lg underline md:py-3") Issue #02
-                  h3(class="text-xl font-bold py-3 md:py-6") Mysteries in Outer Space
-                  p(class="md:text-lg") Ryoko is part of a team tasked with saving the Earth from a second water comet and the human race from extinction!
-            .keen-slider__slide
-              img(src='assets/Kamigen Issue 03 Cover-01.png')
-              .slide-content
-                .slide-content-inner(class="p-4 md:pl-8 md:pr-16 lg:py-16")
-                  h2(class="text-lg underline md:py-3") Issue #03
-                  h3(class="text-xl font-bold py-3 md:py-6") Bulawan
-                  p(class="md:text-lg") A hundred million years ago, an advanced society prospered from advancements based on ancient relics from a long dead race.
-            .keen-slider__slide
-              img(src='assets/Kamigen Issue 04 Cover-01.png')
-              .slide-content
-                .slide-content-inner(class="p-4 md:pl-8 md:pr-16 lg:py-16")
-                  h2(class="text-lg underline md:py-3") Issue #04
-                  h3(class="text-xl font-bold py-3 md:py-6") Islands
-                  p(class="md:text-lg") Anak is on a quest to find out why he's the last of his kind - oh and he might as well save the human race along the way!
-            .keen-slider__slide
-              img(src='assets/Kamigen Issue 05 Cover-01.png')
-              .slide-content
-                .slide-content-inner(class="p-4 md:pl-8 md:pr-16 lg:py-16")
-                  h2(class="text-lg underline md:py-3") Issue #05
-                  h3(class="text-xl font-bold py-3 md:py-6") Name TBA
-                  p(class="md:text-lg") This is the end of phase 1 and the first comic to be entirely in color!
-      header.p-4(class='dark:bg-gray-200 dark:text-gray-800 mt-10 hidden md:block')
-        .container.justify-between.h-16.mx-auto(class='md:justify-center md:space-x-8 flex')
-          ul.items-stretch.space-x-6(class='flex')
-            li.flex
-              a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Comics
-            li.flex
-              a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Characters
-            li.flex
-              a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent dark:text-blue-400 dark:border-blue-400') Locations
-            li.flex
-              a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Behind the Scenes
-            li.flex
-              a.flex.items-center.px-4.mx-4.-mb-1.border-b-2(rel='noopener noreferrer' href='#' class='dark:border-transparent') Links
-      .container.mx-auto.max-w-2xl
-        div.mt-24.mb-12
-          h2.my-4.text-center.text-2xl.font-bold Characters
-          ul.items-center.my-2(class='grid grid-flow-col auto-cols-max')
-            li.p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Anak')
-                img.max-w-none.object-cover(width=50 height=50 src="assets/characters/Anak.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Ang Mata')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/Ang Mata.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Bulawan Dakong Umang')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/Bulawan Dakong Umang.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Jim')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/Jim.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='President Serena Barbate')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/President Serena Barbate.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Ryoko')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/Ryoko.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='The Founder')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/The Founder.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='The Visayans')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/The Visayans.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Tom')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/Tom.svg")
-            li
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Umang')
-                img.max-w-none.object-cover(width=60 height=60 src="assets/characters/Umang.svg")
-          div.py-12
-            h3.my-4.text-xl.font-bold Anak
-            img(class="md:float-right md:pb-8" width=384 height=216 src="assets/characters/Anak.svg")
-            p.
-              Species: Balubid
+    include views/homepage-header
+    include views/homepage-comics
+    include views/homepage-characters
+    include views/homepage-locations
+    include views/homepage-news
+    .container.mx-auto.max-w-4xl.clear-both
+      div.my-12
+        h2.my-8.text-2xl.font-bold.text-center Links
+        .ui.grid.gap-4(class="grid-flow-cols grid-cols-1 md:grid-cols-4")
+          .p-4
+            h3.my-4.text-xl.font-bold Kamigen Online
+            p Some of our other pages, we hope you like them!
             br
-            p.
-              Born: 1535 AD on Camiguin Island in the Philippines
+            a.block.my-2.p-4.gradient-light-grey(href='#') Facebook
+            a.block.my-2.p-4.gradient-light-grey(href='#') Github
+            a.block.my-2.p-4.gradient-light-grey(href='#') Instagram
+            a.block.my-2.p-4.gradient-light-grey(href='#') Merchandise
+          .p-4
+            h3.my-4.text-xl.font-bold Look who's tweeting
+            p People talking about Kamigen on Twitter
+          .p-4
+            h3.my-4.text-xl.font-bold Visayan Culture
+            p Learn more about Visayan culture.
             br
-            p.
-              Bio:
-              The last Balubid, Anak's egg was found by Nick in the 16th century on under the Santo Nino cold spring in Camiguin Island in the Philippines.
-            p.
-              It's implied there was previously an ice glacier under the Santo Nino cold spring.
-      .container.mx-auto.max-w-4xl.clear-both
-        div.my-12
-          h2.my-8.text-center.text-2xl.font-bold Locations
-          .relative
-            img.mx-auto(src="assets/locations/Shangri Lah.svg")
-            div.absolute.text-white(class="p-2 md:p-8 bottom-2 md:bottom-8 top-1216 md:top-32 left-2 md:left-8 right-2 md:right-8 max-w-[100%] md:max-w-[35%]" style="background: rgba(0,0,0,0.5);")
-              p The last Balubid, Anak's egg was found by Nick in the 16th century on under the Santo Nino cold spring in Camiguin Island in the Philippines.
-              br
-              p It's implied there was previously an ice glacier under the Santo Nino cold spring. The last Balubid, Anak's egg was found by Nick in the 16th.
-              br
-        div.my-12
-          .items-center.my-2(class='grid grid-cols-2 gap-4 p-4 mx-auto md:grid-cols-3')
-            .p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Bulawan City')
-                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Bulawan.svg")
-                h3.my-4.text-xl.font-bold.text-center Bulawan City
-            .p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Camiguin Island')
-                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Camiguin.svg")
-                h3.my-4.text-xl.font-bold.text-center Camiguin Island
-            .p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Helios Shuttle')
-                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Helios.svg")
-                h3.my-4.text-xl.font-bold.text-center Helios Shuttle
-            .p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Ibalhin Control')
-                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Ibalhin.svg")
-                h3.my-4.text-xl.font-bold.text-center Ibalhin Control
-            .p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Kamigen Island')
-                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Kamigen.svg")
-                h3.my-4.text-xl.font-bold.text-center Kamigen Island
-            .p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Makaptan\'s Lair')
-                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Makaptan.svg")
-                h3.my-4.text-xl.font-bold.text-center Makaptan's Lair
-            .p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Old Turtle City')
-                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Old Turtle City.svg")
-                h3.my-4.text-xl.font-bold.text-center Old Turtle City
-            .p-2.m-2
-              a(rel='noopener noreferrer' href='#' class='dark:border-transparent' title='Shangri Lah')
-                img.object-contain.object-center.w-full.h-72(src="assets/locations/icons/Shangri Lah.svg")
-                h3.my-4.text-xl.font-bold.text-center Shangri Lah
-        div.my-12
-          h2.my-8.text-center.text-2xl.font-bold Behind the Scenes
-          .ui.grid.gap-4(class="grid-flow-cols grid-cols-1 md:grid-cols-3")
-            .p-6.gradient-grey
-              img.object-cover.object-center.w-full.h-72(src='https://source.unsplash.com/random/300x300/?1', alt='', class='bg-gray-500')
-              .mt-4.mb-2
-                h2.text-xl.font-semibold.tracking-wide Late August Production Update
-              p
-                | Mauris et lorem at ullamcorper elit tristique dignissim et ullamcorper elit. In sed feugiat mi. Etiam ut lacinia dui.
-            .p-6.gradient-grey
-              img.object-cover.object-center.w-full.h-72(src='https://source.unsplash.com/random/300x300/?2', alt='', class='bg-gray-500')
-              .mt-4.mb-2
-                h2.text-xl.font-semibold.tracking-wide Mobile UX Development
-              p
-                | Mauris et lorem at ullamcorper elit tristique dignissim et ullamcorper elit. In sed feugiat mi. Etiam ut lacinia dui.
-            .p-6.gradient-grey
-              img.object-cover.object-center.w-full.h-72(src='https://source.unsplash.com/random/300x300/?3', alt='', class='bg-gray-500')
-              .mt-4.mb-2
-                h2.text-xl.font-semibold.tracking-wide Pages 125-128 are out! 
-              p
-                | Mauris et lorem at ullamcorper elit tristique dignissim et ullamcorper elit. In sed feugiat mi. Etiam ut lacinia dui.
-            .p-6.gradient-grey
-              img.object-cover.object-center.w-full.h-72(src='https://source.unsplash.com/random/300x300/?4', alt='', class='bg-gray-500')
-              .mt-4.mb-2
-                h2.text-xl.font-semibold.tracking-wide Old Turtle City Diagrams
-              p
-                | Mauris et lorem at ullamcorper elit tristique dignissim et ullamcorper elit. In sed feugiat mi. Etiam ut lacinia dui.
-            .p-6.gradient-grey
-              img.object-cover.object-center.w-full.h-72(src='https://source.unsplash.com/random/300x300/?5', alt='', class='bg-gray-500')
-              .mt-4.mb-2
-                h2.text-xl.font-semibold.tracking-wide Pages 121-124 are out!
-              p
-                | Mauris et lorem at ullamcorper elit tristique dignissim et ullamcorper elit. In sed feugiat mi. Etiam ut lacinia dui.
-            .p-6.gradient-grey
-              img.object-cover.object-center.w-full.h-72(src='https://source.unsplash.com/random/300x300/?6', alt='', class='bg-gray-500')
-              .mt-4.mb-2
-                h2.text-xl.font-semibold.tracking-wide Reclaiming the lost Visayan culture
-              p
-                | Mauris et lorem at ullamcorper elit tristique dignissim et ullamcorper elit. In sed feugiat mi. Etiam ut lacinia dui.
-        div.my-12
-          h2.my-8.text-2xl.font-bold.text-center Links
-          .ui.grid.gap-4(class="grid-flow-cols grid-cols-1 md:grid-cols-4")
-            .p-4
-              h3.my-4.text-xl.font-bold Kamigen Online
-              p Some of our other pages, we hope you like them!
-              br
-              a.block.my-2.p-4.gradient-light-grey(href='#') Facebook
-              a.block.my-2.p-4.gradient-light-grey(href='#') Github
-              a.block.my-2.p-4.gradient-light-grey(href='#') Instagram
-              a.block.my-2.p-4.gradient-light-grey(href='#') Merchandise
-            .p-4
-              h3.my-4.text-xl.font-bold Look who's tweeting
-              p People talking about Kamigen on Twitter
-            .p-4
-              h3.my-4.text-xl.font-bold Visayan Culture
-              p Learn more about Visayan culture.
-              br
-              a.block.my-2.p-4.gradient-light-grey(href='#') Akopito
-              a.block.my-2.p-4.gradient-light-grey(href='#') Aswang Project
-              a.block.my-2.p-4.gradient-light-grey(href='#') Filipiknow
-            .p-4
-              h3.my-4.text-xl.font-bold About
-              p Kamigen is a solarpunk world based around Visayan culture.
-              p This media franchise is independently developed by Open Studios.
-      .container.mx-auto.max-w-7xl
-        .float-right.p-8 © 2022 Open Studios
+            a.block.my-2.p-4.gradient-light-grey(href='#') Akopito
+            a.block.my-2.p-4.gradient-light-grey(href='#') Aswang Project
+            a.block.my-2.p-4.gradient-light-grey(href='#') Filipiknow
+          .p-4
+            h3.my-4.text-xl.font-bold About
+            p Kamigen is a solarpunk world based around Visayan culture.
+            br
+            p This media franchise is independently developed by Open Studios.
+    .container.mx-auto.max-w-4xl
+      .float-right.p-8 © 2022 Open Studios
     script(src="./alpine.js")
     script(src='./main.js')

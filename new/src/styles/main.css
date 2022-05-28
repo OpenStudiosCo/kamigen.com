@@ -53,6 +53,14 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40cccccc', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
 }
 
+body {
+    @apply overflow-x-hidden;
+}
+
+.keen-slider:not([data-keen-slider-disabled]) {
+    @apply w-screen;
+}
+
 .keen-slider__slide {
     img {
         @apply flex-row max-h-96;
@@ -62,7 +70,9 @@
     }
 }
 
-
+#homepage-header {
+    
+}
 
 @screen md {
     .keen-slider__slide {
