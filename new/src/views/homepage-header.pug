@@ -1,8 +1,9 @@
 script.
     // @see https://studiosimpati.co/developer-center/element-viewport-check/
-    function isInViewport (elem, offset = 0) {
-        const bounding = document.querySelector(elem).getBoundingClientRect();
-        return (bounding.top >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) + offset);
+    function isInViewport (selector, offset = 0) {
+        const bounding = document.querySelector(selector).getBoundingClientRect();
+        //return (bounding.top >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) + offset);
+        return (0 > bounding.bottom) ? false : true;
     }
     
 header#homepage-header.transition-all.ease-in-out.delay-150(
