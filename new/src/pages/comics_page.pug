@@ -5,6 +5,11 @@ pagination:
     alias: comic
 dynamicPermalinks: false
 permalink: "| comics/#{ comic.slug }.html"
-
 ---
-#{ comic.name } is #{ comic.page_start } years old
+
+h1 #{ comic.name } is #{ comic.page_start } years old
+- let n = 0;
+while n < (comic.page_end - comic.page_start)
+  - let page = comic.page_start + n;
+  div= page
+  - n++
