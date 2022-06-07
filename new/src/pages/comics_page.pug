@@ -6,10 +6,34 @@ pagination:
 dynamicPermalinks: false
 permalink: "| comics/#{ comic.slug }.html"
 ---
+doctype html
+html
+  head
+    title Kamigen Comics
+    //- base(href='/')
+    meta(name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    link(rel='stylesheet' href='./main.css')
+  body.bg-black.text-white.overflow-x-hidden
+    header
+      .flex.items-center
+        div Issue 01 - Welcome to the Island
+        div Menu
+        div Close
+      .m-4.flex(style="overflow-x: auto;")
+        button.p-4.inline-block
+          img.w-36.h-auto(src='assets/comics/SD/Kamigen Issue 01 Cover-01.png')
+        - let n = 0;
+        while n < (comic.page_end - comic.page_start)
+          - let page = comic.page_start + n;
+          button.p-4.inline-block
+            - let img_src = 'assets/comics/SD/Kamigen Issue 0' + n + ' Cover-01.png'
+            img.w-36.h-auto(src=img_src)
+          - n++
+        button.p-4
+          img.w-36.h-auto(src='assets/comics/SD/Kamigen Issue 02 Cover-01.png')
+    main.m-16
+      img.mx-auto.w-auto(class="h-[100vw - 4rem]" src='assets/comics/SD/Kamigen Issue 01 Cover-01.png')
+    script(src="./alpine.js")
+    script(src='./main.js')
 
 h1 #{ comic.name } is #{ comic.page_start } years old
-- let n = 0;
-while n < (comic.page_end - comic.page_start)
-  - let page = comic.page_start + n;
-  div= page
-  - n++
