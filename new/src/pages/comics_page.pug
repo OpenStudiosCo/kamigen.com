@@ -21,16 +21,18 @@ html
         div Close
       .m-4.flex(style="overflow-x: auto;")
         button.p-4.inline-block
-          img.w-36.h-auto(src='assets/comics/SD/Kamigen Issue 01 Cover-01.png')
+          - let img_src = '/assets/comics/SD/Kamigen Issue 0' + n + ' Cover-01.png'
+          img.w-36.h-auto(src=img_src)
         - let n = 0;
         while n < (comic.page_end - comic.page_start)
           - let page = comic.page_start + n;
           button.p-4.inline-block
-            - let img_src = 'assets/comics/SD/Kamigen Issue 0' + n + ' Cover-01.png'
+            - let img_src = '/assets/comics/SD/Kamigen Issue 0' + n + ' Cover-01.png'
             img.w-36.h-auto(src=img_src)
           - n++
         button.p-4
-          img.w-36.h-auto(src='assets/comics/SD/Kamigen Issue 02 Cover-01.png')
+          - let img_src = '/assets/comics/SD/Kamigen Issue 0' + n + ' Cover-01.png'
+          img.w-36.h-auto(src=img_src)
     main.m-16
       img.mx-auto.w-auto(class="h-[100vw - 4rem]" src='assets/comics/SD/Kamigen Issue 01 Cover-01.png')
     script(src="./alpine.js")
