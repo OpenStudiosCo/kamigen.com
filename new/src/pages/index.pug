@@ -3,26 +3,28 @@ html
   head
     title Kamigen
     //- base(href='/')
-    meta(name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    meta(name='viewport' content='width=device-width, user-scalable=yes, minimum-scale=1.0, maximum-scale=25.0')
     link(rel='stylesheet' href='./main.css')
     script.
       function start() {
 
         let time = 0;
-        let direction = 'up'
+        let direction = 'up';
 
         animate ( time );
         
         function animate( time ) {
-          time = parseInt(time) + 1;
+          let newTime = parseInt(time) + 1;
+
           var elem = document.getElementById("myDiv");
           var style = window.getComputedStyle(elem);
 
           let currentTop = style.marginTop.replace('px', '');
 
-          let change = ( Math.cos( time ));
+          let change = ( Math.sin(  newTime ));
 
           document.getElementById("myDiv").style.marginTop = (parseFloat(currentTop) + 1 * change) + "px";
+          time = newTime;
           window.requestAnimationFrame( animate )
         }
       };
