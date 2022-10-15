@@ -1122,8 +1122,8 @@
         var ambientLight = new THREE.AmbientLight(0xcccccc, 0.5);
         scene.add(ambientLight);
 
-        var pointLight = new THREE.PointLight( 0xffffff, 0.5 );
-        camera.add( pointLight );
+        var pointLight = new THREE.PointLight(0xffffff, 0.5);
+        camera.add(pointLight);
 
         scene.add(camera);
 
@@ -1145,25 +1145,34 @@
 
         var loader = new THREE.GLTFLoader();
 
-        loader.load( 'assets/seagull.glb', function ( gltf ) {
+        loader.load('assets/seagull.glb', function (gltf) {
+            gltf.scene.traverse(function (child) {
+                if (child.type == 'SkinnedMesh') {
+                    var material = new THREE.MeshToonMaterial( {
+                        map: child.material.map
+                    });
+                    child.material = material;
+                    child.frustumCulled = false;
+                }
+            });
             var model = gltf.scene;
             model.name = 'Seagull';
-            model.scale.set( 150, 150, 150 );
-            model.position.set( -10, 20, 0 );
-            model.rotation.set( 0, Math.PI, 0 );
+            model.scale.set(150, 150, 150);
+            model.position.set(-10, 20, 0);
+            model.rotation.set(0, Math.PI / 2, 0);
             window.scenoGraph.objects.seagull = model;
 
-            scene.add( window.scenoGraph.objects.seagull );
-            mixer = new THREE.AnimationMixer( window.scenoGraph.objects.seagull );
-            mixer.clipAction( gltf.animations[ 9 ] ).play();
+            scene.add(window.scenoGraph.objects.seagull);
+            mixer = new THREE.AnimationMixer(window.scenoGraph.objects.seagull);
+            mixer.clipAction(gltf.animations[9]).play();
             animateScene();
             console.log(gltf);
 
-        }, undefined, function ( error ) {
+        }, undefined, function (error) {
 
-            console.error( error );
+            console.error(error);
 
-        } );
+        });
 
         // Begin animations.
         window.scenoGraph = {
@@ -1176,16 +1185,16 @@
                         repeat: Infinity,
                         to: [2.5, -2.5, 0],
                     })
-                }            
+                }
             },
             objects: {
                 seagull: null,
             }
         };
 
-        
 
-        window.addEventListener( 'resize', onWindowResize );
+
+        window.addEventListener('resize', onWindowResize);
 
         function onWindowResize() {
             var scrollWidth = Math.max(
@@ -1201,7 +1210,7 @@
             camera.aspect = scrollWidth / scrollHeight;
             camera.updateProjectionMatrix();
 
-            renderer.setSize( scrollWidth, scrollHeight );
+            renderer.setSize(scrollWidth, scrollHeight);
 
         }
 
@@ -1211,7 +1220,7 @@
 
             var delta = clock.getDelta();
 
-            mixer.update( delta );
+            mixer.update(delta);
 
             render();
         }
@@ -1228,6 +1237,11 @@
 
                     object.position.y += Math.cos(timer) * 0.025;
 
+                }
+
+                if (object.name == 'Seagull') {
+                    object.position.x = Math.sin(timer) * 1.1;
+                    object.position.z = Math.cos(timer) * 1.1;
                 }
 
             });
