@@ -1148,7 +1148,7 @@
                         duration: 5000,
                         onUpdate: function (latest) { return window.scene.animations.building.yPosition = buildingPosition + latest; },
                         repeat: Infinity,
-                        to: [5, -5, 0],
+                        to: [2.5, -2.5, 0],
                     })
                 }            
             }
