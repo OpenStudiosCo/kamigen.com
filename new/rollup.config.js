@@ -15,12 +15,16 @@ import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 
 export default {
+  external: [ 'THREE' ],
   input: 'src/scripts/main.js',
   output: {
     name: 'main',
   	file: 'docs/main.js',
   	format: 'iife',
-    sourcemap: false
+    sourcemap: true,
+    globals: {
+      THREE: 'THREE',
+    }
   },
   plugins: [
     postcss({

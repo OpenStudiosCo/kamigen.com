@@ -1,6 +1,6 @@
 import '../styles/main.css';
 
-import { animate } from "popmotion"
+import { animate } from "popmotion";
 
 function docReady(fn) {
     // see if DOM is already available
@@ -15,6 +15,13 @@ function docReady(fn) {
 function init() {
 
     
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
     var elem = document.getElementById("myDiv");
     var style = window.getComputedStyle(elem);
 
