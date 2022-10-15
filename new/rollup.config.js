@@ -11,6 +11,9 @@ import path from 'path';
 // Resolve node plugins in scripts so they are bundled too.
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
+import injectProcessEnv from 'rollup-plugin-inject-process-env';
+
+
 export default {
   input: 'src/scripts/main.js',
   output: {
@@ -20,12 +23,16 @@ export default {
     sourcemap: false
   },
   plugins: [
-    nodeResolve(),
     postcss({
       extract: path.resolve('docs/main.css'),
       minimize: true,
     }),
+    injectProcessEnv({ 
+      NODE_ENV: 'production',
+    }),
+    nodeResolve(),
     pug(),
     buble({ transforms: { asyncAwait: false } })
   ]
 };
+ 
