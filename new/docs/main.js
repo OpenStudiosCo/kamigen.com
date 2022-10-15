@@ -1093,6 +1093,13 @@
         var mixer;
         var clock = new THREE.Clock();
 
+        window.scenoGraph = {
+            objects: {
+                building: null,
+                seagull: null,
+            }
+        };
+
         var canvasElm = document.querySelector('canvas.overlay');
         var scrollWidth = Math.max(
             document.body.clientWidth, document.documentElement.clientWidth
@@ -1138,17 +1145,20 @@
         var scale = 5.75;
         object.name = 'Building';
         object.scale.set(scale, scale, scale);
-        var buildingPosition = -300;
+        var buildingYPosition = -300;
 
-        object.position.set(0, buildingPosition, 0);
-        scene.add(object);
+        object.position.set(0, buildingYPosition, 0);
+        window.scenoGraph.objects.building = object;
+        scene.add(window.scenoGraph.objects.building);
 
         var loader = new THREE.GLTFLoader();
+
+        var seagullYPosition = 450;
 
         loader.load('assets/seagull.glb', function (gltf) {
             gltf.scene.traverse(function (child) {
                 if (child.type == 'SkinnedMesh') {
-                    var material = new THREE.MeshToonMaterial( {
+                    var material = new THREE.MeshToonMaterial({
                         map: child.material.map
                     });
                     child.material = material;
@@ -1157,8 +1167,9 @@
             });
             var model = gltf.scene;
             model.name = 'Seagull';
-            model.scale.set(150, 150, 150);
-            model.position.set(-10, 20, 0);
+            var scale = 100;
+            model.scale.set(scale, scale, scale);
+            model.position.set(-50, seagullYPosition, 10);
             model.rotation.set(0, Math.PI / 2, 0);
             window.scenoGraph.objects.seagull = model;
 
@@ -1175,21 +1186,27 @@
         });
 
         // Begin animations.
-        window.scenoGraph = {
-            animations: {
-                building: {
-                    yPosition: buildingPosition,
-                    tween: animate({
-                        duration: 5000,
-                        onUpdate: function (latest) { return window.scenoGraph.animations.building.yPosition = buildingPosition + latest; },
-                        repeat: Infinity,
-                        to: [2.5, -2.5, 0],
-                    })
-                }
-            },
-            objects: {
-                seagull: null,
+        window.scenoGraph.animations = {
+            // Doesn't work so well for sine waving animation
+            // building: {
+            //     yPosition: buildingYPosition,
+            //     tween: animate({
+            //         duration: 5000,
+            //         onUpdate: latest => window.scenoGraph.animations.building.position = parseFloat(buildingYPosition) + parseFloat(latest),
+            //         repeat: Infinity,
+            //         to: [2.5, -2.5, 0],
+            //     })
+            // },
+            seagullY: {
+                position: seagullYPosition,
+                tween: animate({
+                    duration: 5000,
+                    onUpdate: function (latest) { return window.scenoGraph.animations.seagullY.position = parseFloat(latest); },
+                    repeat: Infinity,
+                    to: [ 0, 0.0125, 0, -0.0125, 0],
+                })
             }
+        
         };
 
 
@@ -1216,13 +1233,13 @@
 
         function animateScene() {
 
-            window.requestAnimationFrame(animateScene);
-
             var delta = clock.getDelta();
 
             mixer.update(delta);
 
             render();
+
+            window.requestAnimationFrame(animateScene);
         }
 
         function render() {
@@ -1233,15 +1250,16 @@
 
             scene.traverse(function (object) {
 
-                if (object.isMesh === true) {
-
-                    object.position.y += Math.cos(timer) * 0.025;
-
+                if (object.name === 'Building') {
+                    object.position.y += Math.cos(timer) * 0.005;
+                    object.position.y += Math.cos(timer) * 0.0125;
+                    object.position.z += Math.sin(timer) * 0.0125;
                 }
-
-                if (object.name == 'Seagull') {
-                    object.position.x = Math.sin(timer) * 1.1;
-                    object.position.z = Math.cos(timer) * 1.1;
+                if (object.name === 'Seagull') {
+                    object.translateY(window.scenoGraph.animations.seagullY.position);
+                    // object.position.x += Math.sin(timer) * 0.00125;
+                    // object.position.y += Math.cos(timer) * 0.00125;
+                    // object.position.z += Math.cos(timer) * 0.00125;
                 }
 
             });
@@ -1249,6 +1267,15 @@
             renderer.render(scene, camera);
 
         }
+
+
+        // const PARAMS = {
+        //     offset: { x: 50, y: 25 },
+        // };
+
+        // const pane = new Tweakpane.Pane();
+        // pane.addInput(PARAMS, 'offset');
+
 
         console.log('The page successfully loaded!');
     }

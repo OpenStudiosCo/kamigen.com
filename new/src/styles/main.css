@@ -7,6 +7,11 @@ body {
     overflow-x: hidden;
 }
 
+/* Fix z-index of TweakPane */
+.tp-dfwv {
+    z-index: 1000;
+}
+
 #page1 .plate {
     position: absolute;
     width: 100%;
