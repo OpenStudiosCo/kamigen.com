@@ -1095,7 +1095,10 @@
 
         window.scenoGraph = {
             objects: {
+                bridge: null,
                 building: null,
+                redboat: null,
+                yellowboat: null,
                 seagull: null,
             }
         };
@@ -1135,21 +1138,20 @@
         scene.add(camera);
 
         // Setup scene objects.
-        var map = new THREE.TextureLoader().load('assets/page1_hq_building.png');
-        map.anisotropy = 16;
-        map.wrapS = map.wrapT = THREE.RepeatWrapping;
-        //map.minFilter = map.magFilter = THREE.LinearFilter;
 
-        var material = new THREE.MeshPhongMaterial({ map: map, side: THREE.DoubleSide, transparent: true });
-        var object = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 4, 4), material);
-        var scale = 5.75;
-        object.name = 'Building';
-        object.scale.set(scale, scale, scale);
-        var buildingYPosition = -300;
-
-        object.position.set(0, buildingYPosition, 0);
-        window.scenoGraph.objects.building = object;
+        window.scenoGraph.objects.building = getPlaneModel('Building', 'assets/page1_hq_building.png', [0, -300, 0], 5.75);
         scene.add(window.scenoGraph.objects.building);
+
+        window.scenoGraph.objects.bridge = getPlaneModel('Bridge', 'assets/page1_hq_bridge.png', [-242, -327, -15], 1);
+        scene.add(window.scenoGraph.objects.bridge);
+
+        window.scenoGraph.objects.redboat = getPlaneModel('Red Boat', 'assets/page1_hq_red_boat.png', [-275, -420, -20], 0.5);
+        window.scenoGraph.objects.redboat.scale.set(0.5, 0.75, 0.5);
+        scene.add(window.scenoGraph.objects.redboat);
+
+        window.scenoGraph.objects.yellowboat = getPlaneModel('Yellow Boat', 'assets/page1_hq_yellow_boat.png', [265, -550, -20], 1);
+        window.scenoGraph.objects.yellowboat.scale.set(0.5, 0.75, 0.5);
+        scene.add(window.scenoGraph.objects.yellowboat);
 
         var loader = new THREE.GLTFLoader();
 
@@ -1180,9 +1182,7 @@
             console.log(gltf);
 
         }, undefined, function (error) {
-
             console.error(error);
-
         });
 
         // Begin animations.
@@ -1203,15 +1203,31 @@
                     duration: 5000,
                     onUpdate: function (latest) { return window.scenoGraph.animations.seagullY.position = parseFloat(latest); },
                     repeat: Infinity,
-                    to: [ 0, 0.0125, 0, -0.0125, 0],
+                    to: [0, 0.0125, 0, -0.0125, 0],
                 })
             }
-        
+
         };
 
 
 
         window.addEventListener('resize', onWindowResize);
+
+
+        function getPlaneModel(name, imageUrl, position, scale) {
+            var map = new THREE.TextureLoader().load(imageUrl);
+            map.anisotropy = 16;
+            map.wrapS = map.wrapT = THREE.RepeatWrapping;
+
+            var material = new THREE.MeshPhongMaterial({ map: map, side: THREE.DoubleSide, transparent: true });
+            var object = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 4, 4), material);
+            object.name = name;
+            object.scale.set(scale, scale, scale);
+
+            object.position.set(position[0], position[1], position[2]);
+
+            return object;
+        }
 
         function onWindowResize() {
             var scrollWidth = Math.max(
@@ -1249,11 +1265,20 @@
             camera.lookAt(scene.position);
 
             scene.traverse(function (object) {
-
+                if (object.name === 'Bridge') {
+                    object.position.x += Math.cos(timer) * 0.0025;
+                    object.position.y += Math.cos(timer) * 0.015;
+                    object.rotation.z += Math.cos(timer) * 0.000025;
+                }
                 if (object.name === 'Building') {
-                    object.position.y += Math.cos(timer) * 0.005;
-                    object.position.y += Math.cos(timer) * 0.0125;
-                    object.position.z += Math.sin(timer) * 0.0125;
+                    object.rotation.z -= Math.cos(timer) * 0.0000125;
+                    object.position.x += Math.cos(timer) * 0.0025;
+                    object.position.y += Math.cos(timer) * 0.015;
+                    object.position.z += Math.sin(timer) * 0.0025;
+                }
+                if (object.name === 'Red Boat' || object.name === 'Yellow Boat') {
+                    object.position.y -= Math.cos(timer) * 0.006;
+                    object.rotation.z -= Math.cos(timer) * 0.0000125;
                 }
                 if (object.name === 'Seagull') {
                     object.translateY(window.scenoGraph.animations.seagullY.position);
