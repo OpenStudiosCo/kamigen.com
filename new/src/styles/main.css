@@ -2,142 +2,83 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-.gradient-sky {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#8eaad9+0,fddece+50,fff1db+100 */
-    background: #8eaad9; /* Old browsers */
-    background: -moz-linear-gradient(top,  #8eaad9 0%, #fddece 50%, #fff1db 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top,  #8eaad9 0%,#fddece 50%,#fff1db 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom,  #8eaad9 0%,#fddece 50%,#fff1db 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8eaad9', endColorstr='#fff1db',GradientType=0 ); /* IE6-9 */
-}
-
-.gradient-water {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#cce0f4+0,0093d8+100 */
-    background: #cce0f4; /* Old browsers */
-    background: -moz-linear-gradient(top,  #cce0f4 0%, #0093d8 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top,  #cce0f4 0%,#0093d8 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom,  #cce0f4 0%,#0093d8 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cce0f4', endColorstr='#0093d8',GradientType=0 ); /* IE6-9 */
-}
-
-.gradient-water-edge {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#0093d8+0,0093d8+100&1+0,0+100 */
-    background: -moz-linear-gradient(top,  rgba(0,147,216,1) 0%, rgba(0,147,216,0) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top,  rgba(0,147,216,1) 0%,rgba(0,147,216,0) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom,  rgba(0,147,216,1) 0%,rgba(0,147,216,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0093d8', endColorstr='#000093d8',GradientType=0 ); /* IE6-9 */
-}
-
-.gradient-white {   
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+30,ffffff+100&1+30,0.5+100 */
-    background: -moz-linear-gradient(65deg,  rgba(255,255,255,1) 30%, rgba(255,255,255,0.5) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(65deg,  rgba(255,255,255,1) 30%,rgba(255,255,255,0.5) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(65deg,  rgba(255,255,255,1) 30%,rgba(255,255,255,0.5) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#80ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
-}
-
-.gradient-grey {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#cccccc+0,cccccc+100&1+0,0+100 */
-    background: -moz-linear-gradient(top,  rgba(204,204,204,1) 0%, rgba(204,204,204,0) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top,  rgba(204,204,204,1) 0%,rgba(204,204,204,0) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom,  rgba(204,204,204,1) 0%,rgba(204,204,204,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#00cccccc',GradientType=0 ); /* IE6-9 */
-}
-
-.gradient-light-grey {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#cccccc+0,ffffff+100&0.25+0,0+100 */
-    background: -moz-linear-gradient(top,  rgba(204,204,204,0.25) 0%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top,  rgba(204,204,204,0.25) 0%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom,  rgba(204,204,204,0.25) 0%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40cccccc', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
-}
 
 body {
-    @apply overflow-x-hidden;
+    margin: 0;
 }
 
-#comic-slider {
-    .keen-slider:not([data-keen-slider-disabled]) {
-        @apply w-screen items-center;
-    }
-
-    .keen-slider__slide {
-        > * {
-            @apply flex-row max-h-fit;
-        }
-
-        img {
-            @apply max-h-fit;
-        }
-        .slide-content {
-            @apply max-w-[296px] gradient-white;
-        }
-    }
+#page1 .plate {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
-@screen md {
-    #comic-slider .keen-slider__slide {
-        img, .slide-content {
-            @apply mx-auto;
-        }
-    }
+#page1 .building {
+    margin-top: 119%;
+    left: 0;
+    right: 0;
+    z-index: 2;
 }
 
-@screen lg {
-    #comic-slider .keen-slider__slide {
-        @apply flex flex-nowrap place-content-center mx-8;
-        img {
-            @apply flex-col;
-        }
-    
-        .slide-content {
-            @apply flex-col max-w-[475px] h-96;
-        }
-    }
+#page1 .water {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    filter: url("#watereffect");
 }
 
-@screen xl {
-    #comic-slider .keen-slider__slide {
-        .slide-content {
-            @apply max-w-[672px];
-        }
-    }
+#page1 .water img {
+    margin-top: 159.4%;
 }
-@keyframes blurout  {
+
+#page1 .background {
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 0;
+}
+
+@screen md {}
+
+@screen lg {}
+
+@screen xl {}
+
+@keyframes blurout {
     0% {
-       filter:blur(0px);
-       opacity: 1.0;
-    }
-    
-    100% {
-       filter:blur(20px);
-       opacity: 0.0;
-       animation-play-state: paused;
-    }
-
-}
-
-@keyframes blurin {   
-    0% {
-       filter:blur(20px);
-       opacity: 0.0;
+        filter: blur(0px);
+        opacity: 1.0;
     }
 
     100% {
-        filter:blur(0px);
+        filter: blur(20px);
+        opacity: 0.0;
+        animation-play-state: paused;
+    }
+
+}
+
+@keyframes blurin {
+    0% {
+        filter: blur(20px);
+        opacity: 0.0;
+    }
+
+    100% {
+        filter: blur(0px);
         opacity: 1.0;
         animation-play-state: paused;
     }
- 
+
 }
 
 .logo:hover .english_logo {
-    animation:blurout 0.35s ease 1 forwards;
+    animation: blurout 0.35s ease 1 forwards;
 }
 
 .logo:hover .badlit_logo {
-    animation:blurin 0.15s ease 1 forwards;
+    animation: blurin 0.15s ease 1 forwards;
 }
 
 .logo:not(:hover) .english_logo {
@@ -146,18 +87,4 @@ body {
 
 .logo:not(:hover) .badlit_logo {
     animation: blurout 0.35s ease 1 forwards;
-}
-
-.thumbnail .keen-slider__slide {
-    font-size: 30px;
-    margin-top: 10px;
-    height: 100px;
-}
-
-.thumbnail .keen-slider__slide {
-    cursor: pointer;
-}
-
-.thumbnail .keen-slider__slide.active {
-    border: 2px dashed black;
 }

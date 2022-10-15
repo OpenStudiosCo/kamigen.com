@@ -3,82 +3,39 @@ import '../styles/main.css';
 
 import KeenSlider from 'keen-slider';
 
-document.addEventListener('DOMContentLoaded', init);
+function docReady(fn) {
+    // see if DOM is already available
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        // call on next available tick
+        setTimeout(fn, 1);
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
+}
 
 function init() {
     console.log('The page successfully loaded!');
 
-    // Comics Slider
-    new KeenSlider(
-        '#comic-slider', {
-            slides: {
-                origin: "center",
-                perView: 2,
-                spacing: 15
-            },
-        },
-        [
-            // add plugins here
-        ]
-    );
+    let time = 0;
+    let direction = 'up';
 
-    // Character Slider
-    let character_slider = new KeenSlider('#character-slider', {
-            slides: {
-                perView: 1
-            },
-        }
-    );
-    new KeenSlider(
-        '#character-thumbnails', {
-            initial: 0,
-            slides: {
-                perView: 5,
-                spacing: 5,
-            },
-            breakpoints: {
-                '(min-width: 1280px)': {
-                    slides: {
-                        perView: 8,
-                        spacing: 10,
-                    },
-                },
-            }
-            
-        },
-        [ ThumbnailPlugin(character_slider) ]
-    );
-}
+    animate(time);
 
-function ThumbnailPlugin(main) {
-    return (slider) => {
-        function removeActive() {
-            slider.slides.forEach((slide) => {
-                slide.classList.remove("active")
-            })
-        }
+    function animate(time) {
+        let newTime = parseInt(time) + 1;
 
-        function addActive(idx) {
-            slider.slides[idx].classList.add("active")
-        }
+        var elem = document.getElementById("myDiv");
+        var style = window.getComputedStyle(elem);
 
-        function addClickEvents() {
-            slider.slides.forEach((slide, idx) => {
-                slide.addEventListener("click", () => {
-                    main.moveToIdx(idx)
-                })
-            })
-        }
+        let currentTop = style.marginTop.replace('px', '');
 
-        slider.on("created", () => {
-            addActive(slider.track.details.rel)
-            addClickEvents()
-            main.on("animationStarted", (main) => {
-                removeActive()
-                const next = main.animator.targetIdx || 0
-                addActive(main.track.absToRel(next))
-                slider.moveToIdx(next)
-            })
-        })
+        let change = (Math.sin(newTime));
+
+        document.getElementById("myDiv").style.marginTop = (parseFloat(currentTop) + 1 * change) + "px";
+        time = newTime;
+        window.requestAnimationFrame(animate)
     }
+
 }
+
+docReady(init);
