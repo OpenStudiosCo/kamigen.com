@@ -1115,7 +1115,7 @@
 
         // Setup renderer.
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, scrollWidth / scrollHeight, 0.1, 1000);
+        var camera = new THREE.PerspectiveCamera(75, scrollWidth / scrollHeight, 0.1, 10000);
         camera.position.z = 800;
 
 
@@ -1155,8 +1155,6 @@
 
         var loader = new THREE.GLTFLoader();
 
-        var seagullYPosition = 450;
-
         loader.load('assets/seagull.glb', function (gltf) {
             gltf.scene.traverse(function (child) {
                 if (child.type == 'SkinnedMesh') {
@@ -1171,47 +1169,64 @@
             model.name = 'Seagull';
             var scale = 100;
             model.scale.set(scale, scale, scale);
-            model.position.set(-50, seagullYPosition, 10);
-            model.rotation.set(0, Math.PI / 2, 0);
+            model.position.set(-150, 450, 10);
+            model.rotation.set(0, Math.PI * 0.9, 0);
             window.scenoGraph.objects.seagull = model;
 
             scene.add(window.scenoGraph.objects.seagull);
             mixer = new THREE.AnimationMixer(window.scenoGraph.objects.seagull);
             mixer.clipAction(gltf.animations[9]).play();
-            animateScene();
+            
             console.log(gltf);
+
+            startScene();
 
         }, undefined, function (error) {
             console.error(error);
         });
 
-        // Begin animations.
-        window.scenoGraph.animations = {
-            // Doesn't work so well for sine waving animation
-            // building: {
-            //     yPosition: buildingYPosition,
-            //     tween: animate({
-            //         duration: 5000,
-            //         onUpdate: latest => window.scenoGraph.animations.building.position = parseFloat(buildingYPosition) + parseFloat(latest),
-            //         repeat: Infinity,
-            //         to: [2.5, -2.5, 0],
-            //     })
-            // },
-            seagullY: {
-                position: seagullYPosition,
-                tween: animate({
-                    duration: 5000,
-                    onUpdate: function (latest) { return window.scenoGraph.animations.seagullY.position = parseFloat(latest); },
-                    repeat: Infinity,
-                    to: [0, 0.0125, 0, -0.0125, 0],
-                })
-            }
 
-        };
+       
 
+        function startScene() {
+            // Begin animations.
+            window.scenoGraph.animations = {
+                // Doesn't work so well for sine waving animation
+                // building: {
+                //     yPosition: buildingYPosition,
+                //     tween: animate({
+                //         duration: 5000,
+                //         onUpdate: latest => window.scenoGraph.animations.building.position = parseFloat(buildingYPosition) + parseFloat(latest),
+                //         repeat: Infinity,
+                //         to: [2.5, -2.5, 0],
+                //     })
+                // },
+                // seagullX: {
+                //     position: 0,
+                //     tween: animate({
+                //         duration: 5000,
+                //         onUpdate: latest => window.scenoGraph.animations.seagullX.position = parseFloat(latest),
+                //         repeat: Infinity,
+                //         to: [0, 0.0125, 0, -0.0125, 0],
+                //     })
+                // },
+                seagullY: {
+                    position: 0,
+                    tween: animate({
+                        duration: 5000,
+                        onUpdate: function (latest) { return window.scenoGraph.animations.seagullY.position = parseFloat(latest); },
+                        repeat: Infinity,
+                        to: [0, 0.0125, 0, -0.025, 0],
+                        offset: [0, 0.05, 0.1,  1]
+                    })
+                }
 
+            };
 
-        window.addEventListener('resize', onWindowResize);
+            window.addEventListener('resize', onWindowResize);
+
+            animateScene();
+        }
 
 
         function getPlaneModel(name, imageUrl, position, scale) {
@@ -1281,10 +1296,11 @@
                     object.rotation.z -= Math.cos(timer) * 0.0000125;
                 }
                 if (object.name === 'Seagull') {
-                    object.translateY(window.scenoGraph.animations.seagullY.position);
-                    // object.position.x += Math.sin(timer) * 0.00125;
-                    // object.position.y += Math.cos(timer) * 0.00125;
-                    // object.position.z += Math.cos(timer) * 0.00125;
+                    object.position.y += window.scenoGraph.animations.seagullY.position;
+                    object.translateZ(Math.cos(timer) * -0.015);
+
+                    // object.translateY(Math.cos(timer) * -0.015);
+                    // object.translateX(Math.cos(timer) * 0.075);
                 }
 
             });
