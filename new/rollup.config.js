@@ -22,6 +22,7 @@ export default {
   	file: 'docs/main.js',
   	format: 'iife',
     sourcemap: true,
+
     globals: {
       THREE: 'THREE',
     }

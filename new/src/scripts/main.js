@@ -13,6 +13,8 @@ function docReady(fn) {
 }
 
 function init() {
+    let mixer;
+    const clock = new THREE.Clock();
 
     const canvasElm = document.querySelector('canvas.overlay');
     const scrollWidth = Math.max(
@@ -57,28 +59,54 @@ function init() {
     const material = new THREE.MeshPhongMaterial({ map: map, side: THREE.DoubleSide, transparent: true });
     let object = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 4, 4), material);
     let scale = 5.75;
+    object.name = 'Building';
     object.scale.set(scale, scale, scale);
     let buildingPosition = -300;
 
     object.position.set(0, buildingPosition, 0);
     scene.add(object);
 
-    window.scene = {
+    const loader = new THREE.GLTFLoader();
+
+    loader.load( 'assets/seagull.glb', function ( gltf ) {
+        const model = gltf.scene;
+        model.name = 'Seagull';
+        model.scale.set( 150, 150, 150 );
+        model.position.set( -10, 20, 0 );
+        model.rotation.set( 0, Math.PI, 0 );
+        window.scenoGraph.objects.seagull = model;
+
+        scene.add( window.scenoGraph.objects.seagull );
+        mixer = new THREE.AnimationMixer( window.scenoGraph.objects.seagull );
+        mixer.clipAction( gltf.animations[ 9 ] ).play();
+        animateScene();
+        console.log(gltf);
+
+    }, undefined, function ( error ) {
+
+        console.error( error );
+
+    } );
+
+    // Begin animations.
+    window.scenoGraph = {
         animations: {
             building: {
                 yPosition: buildingPosition,
                 tween: animate({
                     duration: 5000,
-                    onUpdate: latest => window.scene.animations.building.yPosition = buildingPosition + latest,
+                    onUpdate: latest => window.scenoGraph.animations.building.yPosition = buildingPosition + latest,
                     repeat: Infinity,
                     to: [2.5, -2.5, 0],
                 })
             }            
+        },
+        objects: {
+            seagull: null,
         }
     };
-    
 
-    animateScene();
+    
 
     window.addEventListener( 'resize', onWindowResize );
 
@@ -103,6 +131,10 @@ function init() {
     function animateScene() {
 
         window.requestAnimationFrame(animateScene);
+
+        const delta = clock.getDelta();
+
+        mixer.update( delta );
 
         render();
     }
