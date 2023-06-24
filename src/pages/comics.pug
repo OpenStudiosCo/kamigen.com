@@ -6,77 +6,83 @@ block append title
 block append content
   .row
     .column
-      .ui.stackable.center.aligned.page.grid
+      #comics_hero.ui.inverted.vertical.center.aligned.segment
+        .gradient-sky
+        .gradient-water
+        .gradient-water-edge
+        .ui.stackable.middle.aligned.very.relaxed.page.grid
+          .row
+            .column.eight.wide
+              a(href='/comics/cover.html')
+                img.ui.image.fluid(src='./art/comics/SD/Kamigen_Cover.png')
+                h3 The whole story
+            .column.eight.wide.left.aligned
+              a(href='/comics/cover.html')
+                h2 The whole story
+              h4 First time reading the Kamigen comics? This is the spot for you!
+              p This is the whole story from the official hard cover to the latest pages.
+              a(href='/comics/cover.html') Read the whole story now
+  .row
+    .column
+      .ui.stackable.middle.aligned.very.relaxed.page.grid
         .row
-          .column.four.wide
-            a(href='/comics/cover.html')
-              img.ui.image.fluid(src='./art/comics/SD/Kamigen_Cover.png')
-              h3 The whole story
-          .column.twelve.wide.left.aligned
-            a(href='/comics/cover.html')
-              h2 The whole story
-            h4 First time reading the Kamigen comics? This is the spot for you!
-            p This is the whole story from the official hard cover to the latest pages.
-            a(href='/comics/cover.html') Read the whole story now
+          .column.eight.wide
+            a(href='/comics/issue_1.html')
+              img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 01 Cover-01.png')
+              h3 Issue 01
+          .column.eight.wide.left.aligned
+            a(href='/comics/issue_1.html')
+              h2 Issue 01
+            h4 Welcome to Kamigen
+            p The first issue introduces Kamigen Island and explains a bit about the current state of the world.
+            p
+              a(href='/comics/issue_1.html') Open Issue 01
+            p
+              a(href='/comics/issue_1_script.html') Transcript
         .row
-          .column.four.wide
-            a(href='/comics/issue_5.html')
-              img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 05 Cover-01.png')
-              h3 Issue 05
-          .column.four.wide.left.aligned
-            a(href='/comics/issue_5.html')
-              h2 Issue 05
-            h4 Name TBA
-            p This is the end of phase 1 and the first comic to be entirely in color!
-            a(href='/comics/issue_5.html') Preview Issue 05
-          .column.four.wide
+          .column.eight.wide
+            a(href='/comics/issue_2.html')
+              img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 02 Cover-01.png')
+              h3 Issue 02
+          .column.eight.wide.left.aligned
+            a(href='/comics/issue_2.html')
+              h2 Issue 02
+            h4 Mysteries in Outer Space
+            p Ryoko is part of a team tasked with saving the Earth from a second water comet and the human race from extinction!
+            p
+              a(href='/comics/issue_2.html') Launch Issue 02
+            p
+              a(href='/comics/issue_2_script.html') Transcript
+        .row
+          .column.eight.wide
+            a(href='/comics/issue_3.html')
+              img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 03 Cover-01.png')
+              h3 Issue 03
+          .column.eight.wide.left.aligned
+            a(href='/comics/issue_3.html')
+              h2 Issue 03
+            h4 Bulawan
+            p A hundred million years ago, an advanced society prospered from advancements based on ancient relics from a long dead race.
+            a(href='/comics/issue_3.html') Enter Issue 03
+        .row
+          .column.eight.wide
             a(href='/comics/issue_4.html')
               img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 04 Cover-01.png')
               h3 Issue 04
-          .column.four.wide.left.aligned
+          .column.eight.wide.left.aligned
             a(href='/comics/issue_4.html')
               h2 Issue 04
             h4 Islands
             p Anak is on a quest to find out why he's the last of his kind - oh and he might as well save the human race along the way!
             a(href='/comics/issue_4.html') Begin Issue 04
         .row
-          .column.four.wide
-            a(href='/comics/issue_3.html')
-              img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 03 Cover-01.png')
-              h3 Issue 03
-          .column.four.wide.left.aligned
-            a(href='/comics/issue_3.html')
-              h2 Issue 03
-            h4 Bulawan
-            p A hundred million years ago, an advanced society prospered from advancements based on ancient relics from a long dead race.
-            a(href='/comics/issue_3.html') Enter Issue 03
-          .column.four.wide
-            a(href='/comics/issue_2.html')
-              img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 02 Cover-01.png')
-              h3 Issue 02
-          .column.four.wide.left.aligned
-            a(href='/comics/issue_2.html')
-              h2 Issue 02
-            h4 Mysteries in Outer Space
-            p Ryoko is part of a team tasked with saving the Earth from a second water comet and the human race from extinction!
-            ul
-              li
-                a(href='/comics/issue_2.html') Launch Issue 02
-              li
-                a(href='/comics/issue_2_script.html') Transcript
-        .row
-          .column.four.wide
-            a(href='/comics/issue_1.html')
-              img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 01 Cover-01.png')
-              h3 Issue 01
-          .column.four.wide.left.aligned
-            a(href='/comics/issue_1.html')
-              h2 Issue 01
-            h4 Welcome to Kamigen
-            p The first issue introduces Kamigen Island and explains a bit about the current state of the world.
-            ul
-              li
-                a(href='/comics/issue_1.html') Open Issue 01
-              li
-                a(href='/comics/issue_1_script.html') Transcript
-
+          .column.eight.wide
+            a(href='/comics/issue_5.html')
+              img.ui.image.fluid(src='./art/comics/SD/Kamigen Issue 05 Cover-01.png')
+              h3 Issue 05
+          .column.eight.wide.left.aligned
+            a(href='/comics/issue_5.html')
+              h2 Issue 05
+            h4 Name TBA
+            p This is the end of phase 1 and the first comic to be entirely in color!
+            a(href='/comics/issue_5.html') Preview Issue 05

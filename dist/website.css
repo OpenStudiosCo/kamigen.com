@@ -1,6 +1,37 @@
+.gradient-sky,
+.gradient-water,
+.gradient-water-edge {
+  min-width: 100%;
+  height: calc(100% / 3);
+  position: absolute;
+}
+.gradient-sky {
+  background: linear-gradient(to bottom, #8eaad9 0%, #fddece 50%, #fff1db 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  top: 0;
+}
+.gradient-water {
+  background: linear-gradient(to bottom, #cce0f4 0%, #0093d8 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  top: calc(100% / 3);
+}
+.gradient-water-edge {
+  background: linear-gradient(to bottom, #0093d8 0%, #000 70%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  bottom: 0;
+}
+.gradient-white {
+  background: linear-gradient(65deg, #fff 30%, rgba(255,255,255,0.5) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+.gradient-grey {
+  background: linear-gradient(to bottom, #ccc 0%, rgba(204,204,204,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+.gradient-light-grey {
+  background: linear-gradient(to bottom, rgba(204,204,204,0.25) 0%, rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+html,
+body {
+  background: none #000;
+}
 html,
 html * {
-  background: none #000;
   color: #fff;
 }
 .row.footer {
@@ -29,6 +60,12 @@ a:hover {
 }
 #page_script {
   white-space: pre-wrap;
+}
+#comics_hero {
+  padding: 2rem 0;
+}
+#comics_hero .grid {
+  margin: 4rem 0;
 }
 @media only screen and (max-width: 1100px) {
   .ui.page.grid {
