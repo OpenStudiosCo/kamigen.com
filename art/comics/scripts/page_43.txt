@@ -1,19 +1,16 @@
-PAGE 44
+PAGE 43
 
   PANEL 1
-    The entrance to an underwater cave.
+    Ryoko is seen in a raft, on the water's surface of the moon.
 
     RYOKO (Narrator)
-      This cave shouldn't be here... or have air. What is that glow?
+      The anomaly is right here... at the bottom of the water.
 
   PANEL 2
-    An advanced ancient computer terminal with Visayan Badlit letters on the screen and keyboard.
+    A view from beneath the water's surface, we see Ryoko descending into the dark.
 
     RYOKO (Narrator)
-      This place is ancient... this technology can't be human.
+      I have no choice. Time for a leap of faith.
 
   NOTES
-    Badlit translations:
-        Left hand side = "Tubig", Cebuano for water, also showing H2O molecules
-        Top smaller text = TBA
-        Center text = TBA
+    We don't see or mention it, but it's implied Ryoko possesses a gadget or device that allows her to track the anomaly.
