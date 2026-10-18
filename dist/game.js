@@ -74,7 +74,7 @@ var Kamigen = (function () {
       sun: ! true
     };
 
-     var sun_cycle = new TWEEN.Tween(effectController)
+     new TWEEN.Tween(effectController)
       .to({azimuth: 1.1}, 600000)
       .to({inclination: 1.1}, 600000)
       .repeat(Infinity)
@@ -405,8 +405,8 @@ var Kamigen = (function () {
     render();
   }
   function render() {
-    var delta = clock.getDelta(),
-      time = clock.getElapsedTime() * 10;
+    var delta = clock.getDelta();
+      clock.getElapsedTime() * 10;
     
     water.material.uniforms.time.value += 1.0 / 60.0;
     land.material.uniforms.time.value += 1.0 / 60.0;
@@ -481,5 +481,5 @@ var Kamigen = (function () {
 
   return App;
 
-}());
+})();
 //# sourceMappingURL=game.js.map

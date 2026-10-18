@@ -23,6 +23,18 @@ export default [
     ]
   },
   {
+    input: 'src/game.js',
+    output: {
+      name: 'Kamigen',
+      file: 'dist/game.js',
+      format: 'iife',
+      sourcemap: true
+    },
+    plugins: [
+      buble()
+    ]
+  },
+  {
     input: 'src/site.js',
     output: {
       name: 'KamigenSite',
