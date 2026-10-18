@@ -2,7 +2,6 @@
  * Kamigen Jumbotron
  */
 
-var NEAR = 1e-6, FAR = 1e27;
 var water, light;
 var parameters = {
   oceanSide: 150000,
@@ -10,13 +9,8 @@ var parameters = {
   distortionScale: 8,
   alpha: 1
 };
-var waterNormals;
 var container;
-var keyboard, ship;
-var camera, camera_controls, scene, renderer;
-var water, texture, water_geometry, material, particle;
-var worldWidth = 256, worldDepth = 256,
-worldHalfWidth = worldWidth / 2, worldHalfDepth = worldDepth / 2;
+var camera, scene, renderer;
 var clock = new THREE.Clock();
 var land, sky;
 var sunSphere;
@@ -64,13 +58,12 @@ function initSky() {
     sun: ! true
   };
 
-   var sun_cycle = new TWEEN.Tween(effectController)
+  new TWEEN.Tween(effectController)
     .to({azimuth: 1.1}, 600000)
     .to({inclination: 1.1}, 600000)
     .repeat(Infinity)
     .yoyo(true)
     .start();
-
 }
 
 var cloudId = 0;
@@ -139,20 +132,26 @@ function initLand() {
   land.rotation.x = - Math.PI / 2;
   scene.add( land );
 }
+function getRenderSize() {
+  return {
+    width: Math.max( 1, container.clientWidth || window.innerWidth ),
+    height: Math.max( 1, container.clientHeight || 350 )
+  };
+}
 function init() {
-  keyboard  = new THREEx.KeyboardState();
   container = document.getElementById( 'jumbotron' );
+  var renderSize = getRenderSize();
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     logarithmicDepthBuffer: false
   });
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, 350 );
+  renderer.setPixelRatio( Math.min( window.devicePixelRatio, 2 ) );
+  renderer.setSize( renderSize.width, renderSize.height );
   container.innerHTML = "";
   container.appendChild( renderer.domElement );
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / 350, 100, parameters.oceanSide * 10000 );
+  camera = new THREE.PerspectiveCamera( 45, renderSize.width / renderSize.height, 100, parameters.oceanSide * 10000 );
   camera.position.x = -15000;
   camera.position.y = 150000;
   camera.position.z = 125000;
@@ -163,8 +162,6 @@ function init() {
 
   light = new THREE.DirectionalLight( 0xffffff, Math.PI / 2 );
   scene.add( light );
-  
-  //camera_controls = new THREE.OrbitControls( camera, renderer.domElement );
   
   setWater();
     
@@ -205,12 +202,12 @@ function setWater() {
 }
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / 350;
+  var renderSize = getRenderSize();
+  camera.aspect = renderSize.width / renderSize.height;
   camera.updateProjectionMatrix();
-  renderer.setSize( window.innerWidth, 350 );
+  renderer.setSize( renderSize.width, renderSize.height );
 }
 
-var resettingCamera = false;
 function animate() {
   TWEEN.update();
  
@@ -218,8 +215,7 @@ function animate() {
   render();
 }
 function render() {
-  var delta = clock.getDelta(),
-    time = clock.getElapsedTime();
+  var time = clock.getElapsedTime();
   
   water.material.uniforms.time.value += 1.0 / 60.0;
   land.material.uniforms.time.value += 1.0 / 60.0;
@@ -250,7 +246,6 @@ function render() {
   });
 
 
-  //camera_controls.update( delta );
   camera.position.x = -150000 * Math.cos( time / 10 ) ;
   camera.position.y = Math.max(1000, 140000 * Math.cos( time / 10 ));
   camera.position.z = 120000 * Math.sin( time / 10 ) ;

@@ -1,33 +1,49 @@
 import buble from 'rollup-plugin-buble';
 import pug from 'rollup-plugin-pug';
-import { eslint } from "rollup-plugin-eslint";
-import uglify from 'rollup-plugin-uglify';
 
-export default {
-  external: [ 'jQuery', 'dat', 'THREE', 'TWEEN' ],
-  input: 'src/app.js',
-  output: {
-    name: 'Kamigen',
-  	file: 'dist/app.js',
-  	format: 'iife',
-    sourcemap: true,
-    globals: {
-      jQuery: 'jQuery',
-      dat: 'dat',
-      THREE: 'THREE',
-      TWEEN: 'TWEEN'
-    }
+export default [
+  {
+    external: [ 'jQuery', 'dat', 'THREE', 'TWEEN' ],
+    input: 'src/app.js',
+    output: {
+      name: 'Kamigen',
+      file: 'dist/app.js',
+      format: 'iife',
+      sourcemap: true,
+      globals: {
+        jQuery: 'jQuery',
+        dat: 'dat',
+        THREE: 'THREE',
+        TWEEN: 'TWEEN'
+      }
+    },
+    plugins: [
+      pug(),
+      buble()
+    ]
   },
-  plugins: [
-    // uglify(),
-    // eslint({
-    //   exclude: ['**/**/*.pug'],
-    //   rules: {
-    //     'no-bitwise': 'off',
-    //     'no-underscore-dangle': 'off'
-    //   }
-    // }),
-    pug(),
-    buble()
-  ]
-};
+  {
+    input: 'src/site.js',
+    output: {
+      name: 'KamigenSite',
+      file: 'dist/site.js',
+      format: 'iife',
+      sourcemap: true
+    },
+    plugins: [
+      buble()
+    ]
+  },
+  {
+    input: 'src/jumbotron.js',
+    output: {
+      name: 'KamigenIsland',
+      file: 'dist/jumbotron.js',
+      format: 'iife',
+      sourcemap: true
+    },
+    plugins: [
+      buble()
+    ]
+  }
+];

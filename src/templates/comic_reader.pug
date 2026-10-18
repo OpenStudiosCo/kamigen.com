@@ -1,67 +1,42 @@
 extends website.pug
 
 block append title
-  | #{page_title_string} | Comics | Kamigen | A Tropical Cyberpunk World
+  | #{page_title_string} | Comics | Kamigen
 
 block append content
-  .row
-    .column.center.aligned
-      h2
-        a(href="/comics.html") Comics
-        |  \ 
-        a(href=`${issue_url}`) #{issue}
-        |  \ #{page_title_string}
-  .row
-    .column
-      .ui.one.column.center.aligned.page.grid
-        .column.eight.wide
-          a.ui.grey.large.labeled.icon.button(href=previous_url)
-            i.icon.reply
-            | Previous
-        .column.eight.wide
-          if next_url
-            a.ui.grey.large.right.labeled.icon.button(href=next_url)
-              i.icon.share
-              | Next
-          else 
-            .ui.grey.large.right.labeled.icon.button Coming soon!
-  .row
-    .column
-      .ui.one.column.stackable.center.aligned.page.grid
-        .column.sixteen.wide
-        if next_url
-          a(href=next_url)
-            img.ui.image.massive(src=image_url)
-        else
-          a(href=issue_url)
-            img.ui.image.massive(src=image_url)
-  .row
-    .column
-      .ui.one.column.center.aligned.page.grid
-        .column.eight.wide
-          a.ui.grey.large.labeled.icon.button(href=previous_url)
-            i.icon.reply
-            | Previous
-        .column.eight.wide
-          if next_url
-            a.ui.grey.large.right.labeled.icon.button(href=next_url)
-              i.icon.share
-              | Next
-          else 
-            .ui.grey.large.right.labeled.icon.button Coming soon!
-  .row
-    .column.center.aligned
-      h2
-        a(href="/comics.html") Comics
-        |  \ 
-        a(href=`${issue_url}`) #{issue}
-        |  \ #{page_title_string}
-  .row
-    .column
-      #page_script.ui.one.column.center.aligned.page.grid
+  article.comic-reader
+    header.reader-head
+      nav.reader-breadcrumb(aria-label='Breadcrumb')
+        a(href='/comics.html') Comics
+        span(aria-hidden='true') /
+        a(href=issue_url)= issue
+        span(aria-hidden='true') /
+        span= page_title_string
+      h1= page_title_string
+    nav.reader-controls(aria-label='Comic page navigation')
+      a.btn.btn-secondary(href=previous_url rel='prev') ← Previous
+      if next_url
+        a.btn.btn-primary(href=next_url rel='next') Next →
+      else
+        span.reader-end Latest page
+    figure.comic-page
+      if next_url
+        a(href=next_url aria-label=`Continue to the page after ${page_title_string}`)
+          img(src=image_url alt=`Kamigen comic ${page_title_string}` decoding='async' fetchpriority='high')
+      else
+        a(href=issue_url aria-label=`Return to ${issue}`)
+          img(src=image_url alt=`Kamigen comic ${page_title_string}` decoding='async' fetchpriority='high')
+    nav.reader-controls(aria-label='Comic page navigation')
+      a.btn.btn-secondary(href=previous_url rel='prev') ← Previous
+      if next_url
+        a.btn.btn-primary(href=next_url rel='next') Next →
+      else
+        span.reader-end Latest page
+    if next_url
+      p.reader-hint Select the page to continue reading.
+    section.reader-transcript#page_script
+      h2 Page transcript
+      pre
         block page_script
-  .row
-    .column
-      .ui.one.column.stackable.center.aligned.page.grid
-        .column.sixteen.wide
-          #disqus_thread
+    section.reader-comments(aria-label='Comments')
+      #disqus_thread

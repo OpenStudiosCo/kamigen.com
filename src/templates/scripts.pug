@@ -1,50 +1,66 @@
-block vendor_scripts
-  script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js')
-  script(src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.js')
-  script(async='async',src='https://www.googletagmanager.com/gtag/js?id=UA-126811218-1')
-  script(src='https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.4.0/Tween.min.js')
-  script(src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r116/three.min.js')
-  script(src='./vendor/ImprovedNoise.js')
-  script(src='./vendor/simplex.js')
-  script(src='./vendor/threex.keyboardstate.js')
-  script(src='./vendor/stats.min.js')
-  script(src='./vendor/OrbitControls.js')
-  script(src='./vendor/Water.js')
-  script(src='./vendor/Sky.js')
 block scripts
-  script.
-    $(document).ready(()=>{
-      $('#mobile_menu_toggle').click(()=>{
-        $('#mobile_menu .item:not(.logo)').slideToggle();
-      });
-    });
+  script(src='/dist/site.js' defer)
   script.
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'UA-126811218-1');
-  script.       
-    (function() { // DON'T EDIT BELOW THIS LINE
-    var d = document, s = d.createElement('script');
-    s.src = 'https://kamigen.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-    })();
-  script.
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
     gtag('config', 'G-V14S7QR4X4');
-  script.
+
     var _paq = window._paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
-    (function() {
+
+    function loadAnalytics() {
+      var d = document;
+      var google = d.createElement('script');
+      google.async = true;
+      google.src = 'https://www.googletagmanager.com/gtag/js?id=G-V14S7QR4X4';
+      d.head.appendChild(google);
+
       var u="https://analytics.openstudios.xyz/";
       _paq.push(['setTrackerUrl', u+'matomo.php']);
       _paq.push(['setSiteId', '8']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
+      var matomo = d.createElement('script');
+      matomo.async = true;
+      matomo.src = u + 'matomo.js';
+      d.head.appendChild(matomo);
+
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+      (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1266796517023212');
+      fbq('track', 'PageView');
+    }
+
+    window.addEventListener('load', function () {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAnalytics, {timeout: 2500});
+      } else {
+        setTimeout(loadAnalytics, 1500);
+      }
+    }, {once: true});
+
+    var disqus = document.getElementById('disqus_thread');
+    if (disqus) {
+      var loadDisqus = function () {
+        if (loadDisqus.loaded) return;
+        loadDisqus.loaded = true;
+        var script = document.createElement('script');
+        script.src = 'https://kamigen.disqus.com/embed.js';
+        script.setAttribute('data-timestamp', Date.now());
+        document.head.appendChild(script);
+      };
+      if ('IntersectionObserver' in window) {
+        var commentsObserver = new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting) {
+            commentsObserver.disconnect();
+            loadDisqus();
+          }
+        }, {rootMargin: '500px 0px'});
+        commentsObserver.observe(disqus);
+      } else {
+        window.addEventListener('load', loadDisqus, {once: true});
+      }
+    }

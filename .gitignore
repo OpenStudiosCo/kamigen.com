@@ -57,3 +57,9 @@ typings/
 # dotenv environment variables file
 .env
 
+# Generated public pages. Source lives in src/pages and src/templates.
+/*.html
+/blog/*.html
+/comics/*.html
+/wiki/*.html
+
