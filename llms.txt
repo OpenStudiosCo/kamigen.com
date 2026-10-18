@@ -1,0 +1,17 @@
+# Kamigen
+
+> Kamigen is a solarpunk comic and game world based around Visayan culture, independently developed by Open Studios.
+
+## Main sections
+
+- [Homepage](https://kamigen.com/): Introduction and latest release
+- [Comics](https://kamigen.com/comics.html): Issues and pages in reading order
+- [World guide](https://kamigen.com/wiki.html): Characters, locations, lore and production material
+- [Blog](https://kamigen.com/blog.html): Project news and production updates
+- [Game demo](https://kamigen.com/game.html): Interactive WebGL prototype
+
+## Machine-readable access
+
+- [XML sitemap](https://kamigen.com/sitemap.xml)
+- Comic reader pages include a text transcript below each image.
+- Navigation and content use semantic HTML and descriptive links.

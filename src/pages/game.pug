@@ -1,9 +1,14 @@
 extends /src/templates/layout.pug
 
 block append head
+  link(href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css' rel='stylesheet')
   link(href='./dist/game.css', rel='stylesheet')
 
+block append shaders
+  include /src/templates/shaders.pug
+
 block append scripts
+  include /src/templates/game-vendor-scripts.pug
   script(src='./dist/game.js')
 
 block append title

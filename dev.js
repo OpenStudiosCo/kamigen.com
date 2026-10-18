@@ -7,9 +7,7 @@ function run (script) {
 }
 
 run('dev');
-run('rollup');
-run('css');
-run('pug');
+run('build');
 
 chokidar.watch('src', {ignored: /(^|[\/\\])\../}).on('all', (event, path) => {
   if (event === 'change') {

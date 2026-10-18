@@ -4,50 +4,28 @@ block append head
   link(href='/dist/website.css', rel='stylesheet')
 
 block append page
-  .ui.grid.stackable
-    .row
-      .column
-        #main_menu.ui.five.column.very.relaxed.grid.center.aligned
-          .column
-            a.ui.button.inverted.big.fluid(href='/comics.html') Comics
-          .column
-            a.ui.button.inverted.big.fluid(href='/game.html') Game
-          .column.logo
-            a(href='/')
-              img(src='/art/design/Website%20Logo-01.png' title="Return to the Kamigen Homepage")
-          .column
-            a.ui.button.inverted.big.fluid(href='/blog.html') Blog
-          .column
-            a.ui.button.inverted.big.fluid(href='/wiki.html') Wiki
-        #mobile_menu.ui.fluid.vertical.menu.inverted
-          .item.logo
-            a(href='/')
-              img(src='/art/design/Website%20Logo-01.png' title="Return to the Kamigen Homepage")
-            #mobile_menu_toggle
-              i.content.icon
-          .item
-            a.ui.button.inverted.big.fluid(href='/comics.html') Comics
-          .item
-            a.ui.button.inverted.big.fluid(href='/game.html') Game
-          .item
-            a.ui.button.inverted.big.fluid(href='/blog.html') Blog
-          .item
-            a.ui.button.inverted.big.fluid(href='/wiki.html') Wiki
-    .ui.dividing.header
+  a.skip(href='#content') Skip to story
+  header.mast
+    a.brand(href='/' aria-label='Kamigen. Hover or focus to see the name in Badlit.')
+      img.en(src='/new/src/assets/Kamigen%20Logo.svg' alt='')
+      img.badlit(src='/new/src/assets/Kamigen%20Logo%20-%20Badlit.svg' alt='')
+      span.brand-hint Kamigen
+    button.nav-burger(type='button' aria-expanded='false' aria-controls='primary-navigation') Menu
+    ul.nav-links#primary-navigation
+      li: a(href='/comics.html') Comics
+      li: a(href='/game.html') Game
+      li: a(href='/wiki.html') World
+      li: a(href='/blog.html') Blog
+  main.site-main#content
     block content
-    .row.footer
-      .column.five.wide
-        .ui.horizontal.list
-          .item
-            a(href='https://www.facebook.com/kamigenofficial/' title='Kamigen Facebook Page')
-              img.ui.mini.image(src='/assets/facebook.png' alt='Facebook')
-          .item
-            a(href='https://www.instagram.com/kamigen_comics/' title='Kamigen Comics Instagram')
-              img.ui.mini.image(src='/assets/instagram.png' alt='Instagram')
-      .column.six.wide
-        a(href='/' title="Kamigen")
-          img(src='/art/design/Website%20Footer%20Logo-01.png' alt="Kamigen")
-      .column.five.wide
-        | Kamigen is an&nbsp;
-        a(href='https://openstudios.xyz' title='Visit Open Studios') Open Studios
-        |  production.
+  footer.site-foot
+    a.foot-brand(href='/' aria-label='Kamigen home')
+      img(src='/new/src/assets/Kamigen%20Logo%20-%20Badlit.svg' alt='')
+      small Kamigen
+    p
+      | Independently developed by #[a(href='https://openstudios.xyz') Open Studios]. #[a(href='/shop.html') Shop] · #[a(href='https://github.com/paulbrzeski/kamigen') Source]
+    .social
+      a(href='https://www.facebook.com/kamigenofficial/' title='Kamigen on Facebook')
+        img(src='/assets/optimized/social/facebook.webp' alt='Facebook' width='52' height='52' loading='lazy' decoding='async')
+      a(href='https://www.instagram.com/kamigen_comics/' title='Kamigen Comics on Instagram')
+        img(src='/assets/optimized/social/instagram.webp' alt='Instagram' width='52' height='52' loading='lazy' decoding='async')

@@ -1,0 +1,201 @@
+//- Production homepage.
+//- Content stays explicit so releases and editorial descriptions are reviewed,
+//- rather than inferred from filenames or generated automatically.
+section.opening(aria-label='Enter Kamigen')
+  .opening-layout
+    .opening-copy
+      p.meta-line
+        span A story about Visayans
+        span(aria-hidden='true') ·
+        span Solarpunk science fiction
+      h1(aria-label='Kamigen')
+        img.hero-wordmark(src='/new/src/assets/Kamigen%20Logo.svg' alt='Kamigen')
+      .badlit-line
+        img(src='/new/src/assets/Kamigen%20Logo%20-%20Badlit.svg' alt='')
+        small Kamigen in Badlit
+      p.lede Kamigen is a solarpunk world based around Visayan culture. First time reading the comics? This is the spot for you.
+      .actions
+        a.btn.btn-primary(href='/comics/page_1.html') Start reading
+        a.btn.btn-secondary(href='#latest') Latest release
+    .hero-art
+      .hero-scene(aria-hidden='true')
+        span.hero-sun
+        .water-traces
+          span(style='--left:4%;--top:8%;--width:31%;--alpha:.28;--turn:-1deg;--delay:-3s')
+          span(style='--left:48%;--top:13%;--width:42%;--alpha:.2;--turn:.7deg;--delay:-7s')
+          span(style='--left:18%;--top:29%;--width:47%;--alpha:.34;--turn:.3deg;--delay:-1s')
+          span(style='--left:72%;--top:36%;--width:19%;--alpha:.25;--turn:-1.4deg;--delay:-5s')
+          span(style='--left:-5%;--top:52%;--width:38%;--alpha:.18;--turn:.9deg;--delay:-8s')
+          span(style='--left:39%;--top:61%;--width:27%;--alpha:.3;--turn:-.5deg;--delay:-2s')
+          span(style='--left:67%;--top:78%;--width:37%;--alpha:.16;--turn:.5deg;--delay:-6s')
+        svg.bird-flight(viewBox='0 0 240 76' aria-hidden='true')
+          g.bird.bird--1(transform='translate(7 31)')
+            path.wing.wing-left(d='M0 12c8-11 16-11 24 0')
+            path.wing.wing-right(d='M24 12c8-11 17-11 26 0')
+          g.bird.bird--2(transform='translate(105 12) scale(.78)')
+            path.wing.wing-left(d='M0 12c8-11 16-11 24 0')
+            path.wing.wing-right(d='M24 12c8-11 17-11 26 0')
+          g.bird.bird--3(transform='translate(171 40) scale(.9)')
+            path.wing.wing-left(d='M0 12c8-11 16-11 24 0')
+            path.wing.wing-right(d='M24 12c8-11 17-11 26 0')
+        svg.bird-flight.bird-flight--late(viewBox='0 0 190 62' aria-hidden='true')
+          g.bird.bird--1(transform='translate(5 22)')
+            path.wing.wing-left(d='M0 12c8-11 16-11 24 0')
+            path.wing.wing-right(d='M24 12c8-11 17-11 26 0')
+          g.bird.bird--2(transform='translate(104 7) scale(.72)')
+            path.wing.wing-left(d='M0 12c8-11 16-11 24 0')
+            path.wing.wing-right(d='M24 12c8-11 17-11 26 0')
+        img.hero-island-main(src='/new/src/assets/Kamigen%20Island.svg' alt='')
+        span.hero-island-reflection
+          img(src='/new/src/assets/Kamigen%20Island.svg' alt='')
+      button.hero-pause(type='button' aria-pressed='false') Pause motion
+
+section.issues#comics(aria-labelledby='issues-title')
+  .wrap
+    .section-head
+      div
+        p.section-kicker Comics
+        h2#issues-title The collection
+        p.deck The whole story from Issue 01 through the latest pages, in reading order.
+      a.more-link(href='/comics.html') All comics
+    .issue-grid
+      article.issue
+        .issue-num(aria-hidden='true') 01
+        a.issue-art(href='/comics/issue_1.html' aria-label='Open Issue 01')
+          img(src='/assets/optimized/home/issue-01.webp' alt='Issue 01 cover. A cyborg on a palm beach.' loading='lazy' decoding='async' width='640' height='906')
+        .issue-body
+          h3 Welcome to Kamigen
+          p The first issue introduces Kamigen Island and explains a bit about the current state of the world.
+          a.btn.btn-ink(href='/comics/issue_1.html') Open Issue 01
+      article.issue
+        .issue-num(aria-hidden='true') 02
+        a.issue-art(href='/comics/issue_2.html' aria-label='Open Issue 02')
+          img(src='/assets/optimized/home/issue-02.webp' alt='Issue 02 cover. Ryoko in a magenta flight suit above the Earth.' loading='lazy' decoding='async' width='640' height='906')
+        .issue-body
+          h3 Mysteries in Outer Space
+          p Ryoko is part of a team tasked with saving the Earth from a second water comet and the human race from extinction!
+          a.btn.btn-ink(href='/comics/issue_2.html') Open Issue 02
+      article.issue
+        .issue-num(aria-hidden='true') 03
+        a.issue-art(href='/comics/issue_3.html' aria-label='Open Issue 03')
+          img(src='/assets/optimized/home/issue-03.webp' alt='Issue 03 cover. A tattooed figure between jungle and ice.' loading='lazy' decoding='async' width='640' height='905')
+        .issue-body
+          h3 Bulawan
+          p A hundred million years ago, an advanced society prospered from advancements based on ancient relics from a long dead race.
+          a.btn.btn-ink(href='/comics/issue_3.html') Open Issue 03
+      article.issue
+        .issue-num(aria-hidden='true') 04
+        a.issue-art(href='/comics/issue_4.html' aria-label='Open Issue 04')
+          img(src='/assets/optimized/home/issue-04.webp' alt='Issue 04 cover. The cast at sunset over the island.' loading='lazy' decoding='async' width='640' height='905')
+        .issue-body
+          h3 Islands
+          p Anak is on a quest to find out why he's the last of his kind - oh and he might as well save the human race along the way!
+          a.btn.btn-ink(href='/comics/issue_4.html') Open Issue 04
+      article.issue
+        .issue-num(aria-hidden='true')
+          | 05
+          small In color
+        a.issue-art(href='/comics/issue_5.html' aria-label='Open Issue 05')
+          img(src='/assets/optimized/home/issue-05.webp' alt='Issue 05 cover. A great eye above a golden city.' loading='lazy' decoding='async' width='640' height='905')
+        .issue-body
+          h3 Issue 05
+          p This is the end of phase 1 and the first comic to be entirely in color!
+          a.btn.btn-ink(href='/comics/issue_5.html') Open Issue 05
+
+section.latest#latest(aria-labelledby='latest-title')
+  .wrap
+    p.section-kicker 15 July 2026 release
+    h2#latest-title Pages 129–133
+    p.deck The latest five-page release. The crisis on Kamigen Island continues, and old enemies talk for the first time.
+    .latest-rail
+      each item in [{page:129,height:735}, {page:130,height:369}, {page:131,height:735}, {page:132,height:735}, {page:133,height:735}]
+        - const page = item.page
+        a.page-tile(href=`/comics/page_${page}.html`)
+          img(src=`/assets/optimized/home/page-${page}.webp` alt=`Page ${page}` loading='lazy' decoding='async' width='520' height=item.height)
+          span.page-meta
+            strong Page #{page}
+            if page === 129
+              span Begin the latest release.
+            else if page === 133
+              span Continue to the latest page.
+
+section.cast(aria-labelledby='cast-title')
+  .wrap
+    .section-head
+      div
+        p.section-kicker.on-dark Characters
+        h2#cast-title The cast
+      a.more-link(href='/wiki/characters.html') All characters
+    .cast-layout
+      a.cast-feature(href='/wiki/characters.html')
+        span.cast-portrait
+          img(src='/new/src/assets/characters/Ryoko.svg' alt='Ryoko' loading='lazy' decoding='async')
+        h3.cast-name Ryoko
+        p.cast-role Part of a team tasked with saving the Earth from a second water comet.
+      a.cast-card(href='/wiki/characters.html')
+        span.cast-portrait
+          img(src='/new/src/assets/characters/Jim.svg' alt='Jim' loading='lazy' decoding='async')
+        h3.cast-name Jim
+        p.cast-role Aircraft pilot. Cyborg. Light sense of humour.
+      a.cast-card(href='/wiki/characters.html')
+        span.cast-portrait
+          img(src='/new/src/assets/characters/The%20Visayans.svg' alt='The Visayans — Trudy and Nick' loading='lazy' decoding='async')
+        h3.cast-name The Visayans
+        p.cast-role Nick and Trudy were born on Camiguin Island.
+
+section.world(aria-labelledby='world-title')
+  .world-stage
+    img.shot(src='/art/screenshots/Kamigen%20Island%20shot.PNG' alt='Kamigen Island at sunset, silhouetted against gold sky' loading='lazy' decoding='async')
+    iframe.island-frame(title='Live 3D view of Kamigen Island' hidden)
+  .world-veil(aria-hidden='true')
+  .world-copy
+    p.section-kicker.on-dark Game · World
+    h2#world-title Kamigen Island
+    p Welcome to the Kamigen demo. Tilt the aircraft with W, A, S and D. Shift and space for speed. There's a lot more to come.
+    .view-switch(role='group' aria-label='How to see the island')
+      button(type='button' data-view='shot' aria-pressed='true') The shot
+      button(type='button' data-view='live' aria-pressed='false') See it moving
+    .world-routes
+      a.btn.btn-primary(href='/game.html') Play the game demo
+      a.text(href='/game2.html') Other build
+      a.text(href='/wiki/locations.html') Explore locations
+
+section.atlas(aria-labelledby='atlas-title')
+  .wrap
+    .atlas-head
+      div
+        p.section-kicker Illustrated atlas
+        h2#atlas-title Locations
+      p.atlas-note Kamigen Island is the main location of the story, approximately where Camiguin Island once stood.
+    .atlas-cards
+      each place in [{name:'Kamigen Island',file:'Kamigen'}, {name:'Camiguin Island',file:'Camiguin'}, {name:'Bulawan City',file:'Bulawan'}, {name:'Shangri Lah',file:'Shangri Lah'}, {name:'Old Turtle City',file:'Old Turtle City'}, {name:'Helios Shuttle',file:'Helios'}, {name:'Ibalhin Control',file:'Ibalhin'}, {name:"Makaptan's Lair",file:'Makaptan'}]
+        a.atlas-card(href='/wiki/locations.html')
+          img(src=`/new/src/assets/locations/icons/${place.file}.svg` alt='' loading='lazy' decoding='async')
+          strong= place.name
+    nav.atlas-links(aria-label='Explore the world')
+      a(href='/wiki/locations.html') Location guide
+      a(href='/wiki/characters.html') Characters
+      a(href='/wiki/concept_art.html') Concept art
+      a(href='/wiki/screenshots.html') Screenshots
+
+section.notes(aria-labelledby='notes-title')
+  .wrap
+    p.section-kicker Dispatch
+    h2#notes-title Behind the scenes
+    a.dispatch(href='/blog/20260716-why-we-didnt-use-gen-ai.html')
+      time(datetime='2026-07-16') 16 July 2026
+      div
+        h3 Creative Somersault: Why we didn't use generative AI in Kamigen
+        p Kamigen went away for a long time with no explanation. We felt it was only right to let you know what happened behind the scenes.
+    a.dispatch(href='/blog/20210930-reclaiming-the-lost-visayan-culture.html')
+      time(datetime='2021-09-30') 30 September 2021
+      div
+        h3 Reclaiming the lost Visayan culture
+        p The mythology of Visayan culture featured a diverse pantheon of unique indigenous deities, some of whom are featured as characters in the Kamigen comics.
+    a.dispatch(href='/blog/20210827-late-august-production-update.html')
+      time(datetime='2021-08-27') 27 August 2021
+      div
+        h3 Late August Production Update
+        p It's been a while since we've posted so here's a quick rundown of what's been going on behind the scenes!
+    p.notes-more
+      a(href='/blog.html') Read the blog

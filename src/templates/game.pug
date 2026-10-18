@@ -1,10 +1,21 @@
 doctype html
-html
+html(lang='en')
   head
+    meta(charset='utf-8')
     title
       block title
     base(href='/')
     meta(name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    meta(name='theme-color' content='#061a2c')
+    meta(name='description' content='Explore the interactive Kamigen game demo.')
+    meta(name='robots' content='index, follow, max-image-preview:large')
+    meta(property='og:type' content='website')
+    meta(property='og:site_name' content='Kamigen')
+    meta(property='og:image' content='https://kamigen.com/art/screenshots/Kamigen%20Island%20shot.PNG')
+    meta(property='og:image:alt' content='Kamigen Island at sunset')
+    meta(name='twitter:card' content='summary_large_image')
+    meta(name='twitter:image' content='https://kamigen.com/art/screenshots/Kamigen%20Island%20shot.PNG')
+    link(rel='icon' href='/favicon.ico')
     link(href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css', rel='stylesheet')
     link(href='./dist/game.css', rel='stylesheet')
     block head
@@ -12,17 +23,6 @@ html
     block page
     include /src/templates/shaders.pug
     block scripts
-      script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js')
-      script(src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.js')
-      script(async='async',src='https://www.googletagmanager.com/gtag/js?id=UA-126811218-1')
-      script(src='https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.4.0/Tween.min.js')
-      script(src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r116/three.min.js')
-      script(src='./vendor/ImprovedNoise.js')
-      script(src='./vendor/simplex.js')
-      script(src='./vendor/threex.keyboardstate.js')
-      script(src='./vendor/stats.min.js')
-      script(src='./vendor/OrbitControls.js')
-      script(src='./vendor/Water.js')
-      script(src='./vendor/Sky.js')
+      include /src/templates/game-vendor-scripts.pug
       script(src='./dist/app.js')
       
