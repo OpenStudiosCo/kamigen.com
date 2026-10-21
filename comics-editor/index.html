@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Kamigen Comics Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/comics-editor/css/editor.css">
+</head>
+<body>
+  <div class="kce-app" id="app">
+    <header class="kce-toolbar">
+      <div class="kce-brand">Kamigen Comics</div>
+      <div class="kce-tool-group" aria-label="File">
+        <button type="button" id="btn-new" title="New page">New</button>
+        <button type="button" id="btn-open" title="Open">Open</button>
+        <button type="button" class="primary" id="btn-save" title="Save (Ctrl+S)">Save</button>
+        <button type="button" id="btn-save-as">Save as</button>
+      </div>
+      <div class="kce-tool-group" aria-label="History">
+        <button type="button" id="btn-undo" title="Undo (Ctrl+Z)">Undo</button>
+        <button type="button" id="btn-redo" title="Redo (Ctrl+Shift+Z)">Redo</button>
+      </div>
+      <div class="kce-tool-group" aria-label="View">
+        <button type="button" id="btn-zoom-out" title="Zoom out">−</button>
+        <button type="button" id="btn-zoom-fit" title="Fit page">Fit</button>
+        <button type="button" id="btn-zoom-in" title="Zoom in">+</button>
+      </div>
+      <div class="kce-tool-group" aria-label="Share">
+        <button type="button" id="btn-preview">Preview</button>
+        <button type="button" id="btn-export-png">Export PNG</button>
+        <button type="button" id="btn-export-svg">Export SVG</button>
+      </div>
+      <span class="kce-status" id="save-status">Starting…</span>
+    </header>
+
+    <nav class="kce-activities" aria-label="Creative activities">
+      <button type="button" class="kce-activity active" data-activity="layout">
+        <span class="ico" aria-hidden="true">▦</span>
+        <span>Layout</span>
+      </button>
+      <button type="button" class="kce-activity" data-activity="characters">
+        <span class="ico" aria-hidden="true">☺</span>
+        <span>Characters</span>
+      </button>
+      <button type="button" class="kce-activity" data-activity="scene">
+        <span class="ico" aria-hidden="true">☁</span>
+        <span>Scene</span>
+      </button>
+      <button type="button" class="kce-activity" data-activity="dialogue">
+        <span class="ico" aria-hidden="true">💬</span>
+        <span>Dialogue</span>
+      </button>
+      <button type="button" class="kce-activity" data-activity="effects">
+        <span class="ico" aria-hidden="true">✦</span>
+        <span>Effects</span>
+      </button>
+      <button type="button" class="kce-activity" data-activity="preview">
+        <span class="ico" aria-hidden="true">▶</span>
+        <span>Preview</span>
+      </button>
+    </nav>
+
+    <div class="kce-workspace">
+      <aside class="kce-left">
+        <div id="activity-panel"></div>
+      </aside>
+
+      <main class="kce-center">
+        <div class="kce-canvas-wrap" id="canvas-wrap">
+          <div class="kce-canvas-stage" id="canvas-stage">
+            <div class="kce-page-host" id="page-host"></div>
+            <div class="kce-overlay-ui" id="overlay-ui"></div>
+          </div>
+        </div>
+        <div class="kce-context-bar" id="context-bar" hidden></div>
+        <p class="kce-hint" id="context-hint">Choose a layout, then add characters and dialogue.</p>
+      </main>
+
+      <aside class="kce-right">
+        <h2 class="kce-section-title">Layers</h2>
+        <label class="field">Panel
+          <select id="panel-select"></select>
+        </label>
+        <ul class="kce-layer-list" id="layer-list"></ul>
+        <div class="kce-props" id="props">
+          <p class="kce-empty">Select something on the page to edit it.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <div class="kce-toast" id="toast"></div>
+  <input type="file" id="import-files" accept=".svg,.png,.jpg,.jpeg,.webp" multiple hidden>
+  <script type="module" src="/comics-editor/js/editor-app.js"></script>
+</body>
+</html>
