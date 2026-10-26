@@ -1,0 +1,118 @@
+{
+  "dialogues": [
+    {
+      "id": "dialogue_1",
+      "name": "Dialogue 1 \u2014 top",
+      "text": "This has to be it...\nlet's split up and\nlook for the door.",
+      "anchor": [
+        153.6,
+        101.8
+      ],
+      "panel": "panel_top",
+      "shapeSrc": "art/comics/library/pages/page124/speech/dialogue_1_shape.svg",
+      "pageX": 115.56903000000001,
+      "pageY": 68.96108000000001,
+      "width": 315.43199999999996,
+      "height": 88.91400000000002,
+      "textX": 38.03096999999998,
+      "textY": 32.83891999999999,
+      "fontSize": 12,
+      "lineHeight": 1.3333333333333333
+    },
+    {
+      "id": "dialogue_2",
+      "name": "Dialogue 2 \u2014 mid left (frog)",
+      "text": "That's\none big\ncrab...",
+      "anchor": [
+        33.5,
+        326.0
+      ],
+      "panel": "panel_mid_left",
+      "shapeSrc": "art/comics/library/pages/page124/speech/dialogue_2_shape.svg",
+      "pageX": 16.291,
+      "pageY": 295.411,
+      "width": 130.198,
+      "height": 81.58100000000002,
+      "textX": 17.209,
+      "textY": 30.589,
+      "fontSize": 12,
+      "lineHeight": 1.3333333333333333
+    },
+    {
+      "id": "dialogue_3",
+      "name": "Dialogue 3 \u2014 mid center (shh)",
+      "text": "shh... hear that?\nsomeone's coming...",
+      "anchor": [
+        221.8,
+        336.0
+      ],
+      "panel": "panel_mid_center",
+      "shapeSrc": "art/comics/library/pages/page124/speech/dialogue_3_shape.svg",
+      "pageX": 208.55,
+      "pageY": 299.403,
+      "width": 182.31099999999998,
+      "height": 128.882,
+      "textX": 13.25,
+      "textY": 36.59699999999998,
+      "fontSize": 12,
+      "lineHeight": 1.3333333333333333
+    },
+    {
+      "id": "dialogue_4",
+      "name": "Dialogue 4 \u2014 mid right (Ahhh)",
+      "text": "Ahhh.. poop.",
+      "anchor": [
+        428.8,
+        333.7
+      ],
+      "panel": "panel_mid_right",
+      "shapeSrc": "art/comics/library/pages/page124/speech/dialogue_4_shape.svg",
+      "pageX": 419.15,
+      "pageY": 303.757,
+      "width": 115.26499999999999,
+      "height": 151.039,
+      "textX": 9.650000000000034,
+      "textY": 29.942999999999984,
+      "fontSize": 12,
+      "lineHeight": 1.3333333333333333
+    },
+    {
+      "id": "dialogue_5",
+      "name": "Dialogue 5 \u2014 bottom wide",
+      "text": "it wouldn't have\nbreached this wall.\nit's made of the same\nalloys as the city's\ncore frame.",
+      "anchor": [
+        233.5,
+        726.2
+      ],
+      "panel": "panel_bottom",
+      "shapeSrc": "art/comics/library/pages/page124/speech/dialogue_5_shape.svg",
+      "pageX": 192.60672700000003,
+      "pageY": 680.504898,
+      "width": 237.84999999999997,
+      "height": 134.18399999999997,
+      "textX": 40.893272999999965,
+      "textY": 45.69510200000002,
+      "fontSize": 12,
+      "lineHeight": 1.3333333333333333
+    },
+    {
+      "id": "dialogue_6",
+      "name": "Dialogue 6 \u2014 bottom left",
+      "text": "Damn. It's a\nshame we didn't\ncrash the ship\ndown here.",
+      "anchor": [
+        64.1,
+        604.4
+      ],
+      "panel": "panel_bottom",
+      "shapeSrc": "art/comics/library/pages/page124/speech/dialogue_6_shape.svg",
+      "pageX": 30.505241000000012,
+      "pageY": 567.468278,
+      "width": 191.21599999999998,
+      "height": 151.27999999999997,
+      "textX": 33.59475899999998,
+      "textY": 36.93172199999992,
+      "fontSize": 12,
+      "lineHeight": 1.3333333333333333
+    }
+  ]
+}

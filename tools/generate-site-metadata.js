@@ -4,7 +4,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const PAGES = path.join(ROOT, 'src', 'pages');
 const ORIGIN = 'https://kamigen.com';
-const OMITTED_PAGES = new Set(['comics/page_new.pug']);
+const OMITTED_PAGES = new Set(['comics/page_new.pug', 'comics/composition-demo.pug']);
 
 function walk(directory) {
   return fs.readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {

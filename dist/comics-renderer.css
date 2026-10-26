@@ -1,0 +1,50 @@
+/* Shared comics composition renderer (reader + editor preview effects) */
+.composition-demo .comic-page {
+  background: transparent;
+  padding: 0;
+}
+
+.composition-demo #kce-mount {
+  width: 100%;
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
+.composition-demo #kce-mount svg.kce-page {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: transparent;
+}
+
+.kce-loading,
+.kce-error {
+  padding: 2rem;
+  color: #555;
+}
+
+.kce-transcript {
+  margin: 0;
+  padding-left: 1.25rem;
+  line-height: 1.5;
+}
+
+.kce-transcript li {
+  margin-bottom: 0.5rem;
+}
+
+/* Opt-in pulse glow: still ring first; animate only when motion is allowed */
+.kce-pulse-glow .kce-pulse-still {
+  opacity: var(--kce-pulse-min, 0.25);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .kce-pulse-glow .kce-pulse-still {
+    animation: kce-pulse var(--kce-pulse-ms, 1800ms) ease-in-out infinite alternate;
+  }
+}
+
+@keyframes kce-pulse {
+  from { opacity: var(--kce-pulse-min, 0.25); }
+  to { opacity: var(--kce-pulse-max, 0.85); }
+}

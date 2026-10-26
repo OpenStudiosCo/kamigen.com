@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Jim — original vs prepared vs posed</title>
+  <style>
+    :root { --bg: #2a2a2a; --ink: #eee; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Source Sans 3", "Noto Sans", sans-serif; background: var(--bg); color: var(--ink); }
+    header { padding: 0.85rem 1.1rem; background: #111; }
+    header h1 { margin: 0; font-size: 1.15rem; }
+    header p { margin: 0.35rem 0 0; opacity: 0.85; font-size: 0.92rem; max-width: 56rem; }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      padding: 0.75rem;
+    }
+    @media (max-width: 960px) {
+      .row { grid-template-columns: 1fr; }
+    }
+    figure { margin: 0; background: #111; padding: 0.5rem; }
+    figcaption { font-size: 0.85rem; margin-bottom: 0.4rem; font-weight: 700; }
+    /* Equal frame, baseline, scale for all three views. Extra headroom for raised arm. */
+    .frame {
+      background: #000;
+      aspect-ratio: 1 / 1.15;
+      overflow: hidden;
+      position: relative;
+    }
+    .frame img {
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      width: 92%;
+      height: auto;
+      transform: translate(-50%, -50%);
+      display: block;
+    }
+    .closeups {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+      padding: 0 0.75rem 1.5rem;
+    }
+    @media (max-width: 960px) {
+      .closeups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .closeups .frame { aspect-ratio: 1; }
+    .closeups img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 72% 32%;
+      position: static;
+      transform: none;
+      left: auto;
+      top: auto;
+    }
+    .closeups img.left-shoulder { object-position: 28% 32%; }
+    .notes { padding: 0 1rem 2rem; max-width: 56rem; line-height: 1.45; opacity: 0.95; }
+    code { font-size: 0.9em; }
+    a { color: #9ecbff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Jim — original · prepared neutral · arm posed</h1>
+    <p>
+      Same scale, baseline, black background and framing.
+      Articulated arm uses an inverse-shirt mask so the joint stays under garment geometry.
+      Editor proof: <a href="/comics-editor/?path=art/comics/compositions/jim_artwork_proof.json">jim_artwork_proof</a>.
+    </p>
+  </header>
+  <div class="row">
+    <figure>
+      <figcaption>1. Original artwork</figcaption>
+      <div class="frame"><img src="/new/src/assets/characters/Jim.svg" alt="Original Jim"></div>
+    </figure>
+    <figure>
+      <figcaption>2. Prepared neutral</figcaption>
+      <div class="frame"><img src="/art/comics/library/characters/jim/prep/jim_figure.svg" alt="Prepared neutral"></div>
+    </figure>
+    <figure>
+      <figcaption>3. Prepared posed (−40° / −30° / +12°)</figcaption>
+      <div class="frame"><img src="/art/comics/library/characters/jim/prep/jim_figure_arm_posed.svg" alt="Arm posed"></div>
+    </figure>
+  </div>
+  <div class="closeups">
+    <figure>
+      <figcaption>Shoulder · original</figcaption>
+      <div class="frame"><img src="/art/comics/library/characters/jim/prep/compare/shoulder_original.png" alt="Shoulder original"></div>
+    </figure>
+    <figure>
+      <figcaption>Shoulder · prepared</figcaption>
+      <div class="frame"><img src="/art/comics/library/characters/jim/prep/compare/shoulder_neutral.png" alt="Shoulder prepared"></div>
+    </figure>
+    <figure>
+      <figcaption>Shoulder · posed</figcaption>
+      <div class="frame"><img src="/art/comics/library/characters/jim/prep/compare/shoulder_arm_posed.png" alt="Shoulder posed"></div>
+    </figure>
+    <figure>
+      <figcaption>Shoulder · wave</figcaption>
+      <div class="frame"><img src="/art/comics/library/characters/jim/prep/compare/shoulder_arm_wave.png" alt="Shoulder wave"></div>
+    </figure>
+  </div>
+  <section class="notes">
+    <p>
+      Shirt PNG under <code>_clip47</code> is essential pattern artwork.
+      Paint order: <code>body_back → arm_L_under → shirt → body_mid → arm_L_*</code>.
+      Mask <code>_maskHideUnderShirt</code> hides articulated arm pixels inside the shirt silhouette.
+      Rebuild: <code>python3 tools/jim-prep/rebuild_jim_figure.py</code>.
+      Details: <code>art/comics/library/characters/jim/prep/PREP.md</code> ·
+      <code>docs/comics-editor/SOURCE_MANIFEST.md</code>.
+    </p>
+  </section>
+</body>
+</html>

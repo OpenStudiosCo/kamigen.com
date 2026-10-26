@@ -1,0 +1,67 @@
+{
+  "id": "char_jim_poseable",
+  "name": "Jim (fixture cutout)",
+  "kind": "poseable",
+  "version": 1,
+  "viewBox": [0, 0, 200, 360],
+  "defaultSize": { "width": 200, "height": 360 },
+  "expressionMode": "none",
+  "parts": [
+    {
+      "id": "torso",
+      "parent": null,
+      "src": "parts/torso.svg",
+      "origin": [55, 100],
+      "pivot": [100, 155],
+      "size": [90, 110],
+      "z": 20,
+      "joints": {
+        "head": [100, 108],
+        "arm_l_upper": [62, 120]
+      }
+    },
+    {
+      "id": "head",
+      "parent": "torso",
+      "src": "parts/head.svg",
+      "origin": [65, 40],
+      "pivot": [100, 78],
+      "size": [70, 78],
+      "z": 40,
+      "parentAttach": [100, 108]
+    },
+    {
+      "id": "arm_l_upper",
+      "parent": "torso",
+      "src": "parts/arm_upper.svg",
+      "origin": [48, 118],
+      "pivot": [62, 120],
+      "size": [28, 56],
+      "z": 15,
+      "parentAttach": [62, 120],
+      "joint": [62, 168]
+    },
+    {
+      "id": "arm_l_lower",
+      "parent": "arm_l_upper",
+      "src": "parts/arm_lower.svg",
+      "origin": [50, 166],
+      "pivot": [62, 168],
+      "size": [24, 50],
+      "z": 14,
+      "parentAttach": [62, 168],
+      "joint": [62, 210]
+    }
+  ],
+  "poses": {
+    "standing": { "name": "Standing", "parts": {} },
+    "waving": {
+      "name": "Waving",
+      "parts": {
+        "arm_l_upper": { "rotation": -95 },
+        "arm_l_lower": { "rotation": 20 }
+      }
+    }
+  },
+  "expressions": {}
+}
