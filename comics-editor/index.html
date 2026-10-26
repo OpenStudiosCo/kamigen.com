@@ -81,19 +81,24 @@
       </main>
 
       <aside class="kce-right">
-        <h2 class="kce-section-title">Layers</h2>
-        <label class="field">Panel
-          <select id="panel-select"></select>
-        </label>
-        <ul class="kce-layer-list" id="layer-list"></ul>
-        <div class="kce-props" id="props">
-          <p class="kce-empty">Select something on the page to edit it.</p>
-        </div>
+        <section class="kce-layers-pane" aria-label="Layers">
+          <h2 class="kce-section-title">Layers</h2>
+          <p class="kce-layer-legend" id="layer-legend">Top of each panel list = front (drawn last). Bottom = back. Hidden and locked layers stay selectable here.</p>
+          <label class="field">Focus panel
+            <select id="panel-select"></select>
+          </label>
+          <ul class="kce-layer-list" id="layer-list" aria-label="Page layers"></ul>
+        </section>
+        <section class="kce-props-pane" aria-label="Properties">
+          <div class="kce-props" id="props">
+            <p class="kce-empty">Select something on the page to edit it.</p>
+          </div>
+        </section>
       </aside>
     </div>
   </div>
   <div class="kce-toast" id="toast"></div>
   <input type="file" id="import-files" accept=".svg,.png,.jpg,.jpeg,.webp" multiple hidden>
-  <script type="module" src="/comics-editor/js/editor-app.js"></script>
+  <script type="module" src="/comics-editor/js/editor-app.js?v=ux11"></script>
 </body>
 </html>

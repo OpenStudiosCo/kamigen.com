@@ -1,4 +1,5 @@
 import { createId } from './id.js';
+import { defaultTail, normalizeTail } from './bubble-geometry.js';
 
 export const FORMAT_NAME = 'kamigen-comic-composition';
 export const FORMAT_VERSION = 2;
@@ -29,11 +30,11 @@ const PANEL_KEYS = [
 
 const LAYER_KEYS = [
   'id', 'type', 'name', 'x', 'y', 'width', 'height', 'rotation', 'opacity',
-  'visible', 'locked', 'flipX', 'flipY', 'effects', 'assetId', 'src',
+  'visible', 'locked', 'flipX', 'flipY', 'effects', 'assetId', 'src', 'sourceRect',
   'preserveAspectRatio', 'shape', 'shapeSrc', 'fill', 'stroke', 'strokeWidth', 'text',
   'role', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'textAlign',
   'lineHeight', 'colour', 'padding', 'cornerRadius', 'tail', 'translation',
-  'textWrap', 'textX', 'textY',
+  'textWrap', 'letterSpacing', 'textX', 'textY', 'hiddenPartIds',
   'overflowWarn', 'characterId', 'rigSrc', 'poseId', 'expressionId', 'partState', 'note'
 ];
 
@@ -126,6 +127,8 @@ export function createImageLayer(partial = {}) {
     flipY: !!partial.flipY,
     assetId: partial.assetId || null,
     src: partial.src || '',
+    // Optional crop into a shared raster/SVG (instance placement stays on the layer).
+    sourceRect: partial.sourceRect || null,
     preserveAspectRatio: partial.preserveAspectRatio !== false,
     effects: Object.assign(defaultEffects(), partial.effects || {})
   };
@@ -208,11 +211,18 @@ export function createBubbleLayer(partial = {}) {
     stroke: partial.stroke || '#111111',
     strokeWidth: partial.strokeWidth != null ? partial.strokeWidth : 2,
     cornerRadius: partial.cornerRadius != null ? partial.cornerRadius : 18,
+    shape: partial.shape || (partial.role === 'thought' ? 'ellipse' : 'rounded'),
     shapeSrc: partial.shapeSrc || '',
     textWrap: partial.textWrap !== false,
+    letterSpacing: partial.letterSpacing != null ? partial.letterSpacing : 0,
     textX: partial.textX,
     textY: partial.textY,
-    tail: partial.tail || { enabled: true, x: 40, y: 110, direction: 'down' },
+    tail: normalizeTail(
+      partial.tail || defaultTail(partial.role || 'speech', partial.width != null ? partial.width : 220, partial.height != null ? partial.height : 100),
+      partial.width != null ? partial.width : 220,
+      partial.height != null ? partial.height : 100,
+      partial.role || 'speech'
+    ),
     overflowWarn: !!partial.overflowWarn,
     effects: Object.assign(defaultEffects(), partial.effects || {})
   };

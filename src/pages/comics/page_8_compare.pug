@@ -1,0 +1,136 @@
+extends /src/templates/website.pug
+
+block prepend title
+  - var page_title_string = "Page 8 reconstruction compare";
+
+block append title
+  | #{page_title_string} | Comics | Kamigen
+
+block append head
+  meta(name='robots' content='noindex,follow')
+  link(href='https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap' rel='stylesheet')
+  link(rel='stylesheet' href='/dist/comics-renderer.css')
+  style.
+    .p8-compare { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .p8-compare h1 { font-family: "Noto Sans", sans-serif; font-size: 1.6rem; margin: 0 0 0.35rem; }
+    .p8-compare .lede { color: #333; max-width: 52rem; line-height: 1.45; margin: 0 0 1.25rem; }
+    .p8-compare .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+    @media (max-width: 820px) {
+      .p8-compare .grid { grid-template-columns: 1fr; }
+    }
+    .p8-compare figure {
+      margin: 0;
+      background: #f7f7f5;
+      border: 1px solid #d4d0c8;
+      padding: 0.75rem;
+    }
+    .p8-compare figcaption {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .p8-compare .published img,
+    .p8-compare #kce-mount svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #fff;
+    }
+    .p8-compare #kce-mount { min-height: 16rem; background: #fff; }
+    .p8-compare .actions {
+      margin: 1.25rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .p8-compare .actions a {
+      display: inline-block;
+      padding: 0.45rem 0.85rem;
+      background: #1a1a1a;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .p8-compare .actions a.secondary {
+      background: #fff;
+      color: #1a1a1a;
+      border: 1px solid #1a1a1a;
+    }
+    .p8-compare .gaps {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 820px) {
+      .p8-compare .gaps { grid-template-columns: 1fr; }
+    }
+    .p8-compare .gaps section {
+      border-top: 2px solid #1a1a1a;
+      padding-top: 0.75rem;
+    }
+    .p8-compare .gaps h2 { font-size: 1rem; margin: 0 0 0.5rem; }
+    .p8-compare .gaps ul { margin: 0; padding-left: 1.1rem; line-height: 1.45; }
+    .p8-compare .gaps li { margin-bottom: 0.4rem; }
+
+block append content
+  article.p8-compare
+    nav.reader-breadcrumb(aria-label='Breadcrumb')
+      a(href='/comics.html') Comics
+      span(aria-hidden='true')  /
+      span Page 8 reconstruction
+    h1 Page 8 — published vs reconstruction
+    p.lede
+      | Side-by-side check of source fidelity. The reconstruction uses artwork
+      | cropped from the published HD page (original file untouched), including
+      | published lettering. Editable caption layers are present but hidden by
+      | default. Posing is
+      strong  not
+      | mixed into this page — see the separate Jim rig test.
+    .actions
+      a(href='/comics-editor/?composition=art/comics/compositions/page_8_reconstruction.json') Open faithful page
+      a.secondary(href='/comics-editor/?composition=art/comics/compositions/jim_rig_test.json') Open Jim rig test
+      a.secondary(href='/art/comics/compositions/page_8_reconstruction.json') Composition JSON
+      a.secondary(href='/comics/page_8.html') Published page 8
+      a.secondary(href='/docs/comics-editor/PAGE_8_ACCEPTANCE.md') Source audit
+    .grid
+      figure.published
+        figcaption Published page (reference)
+        img(
+          src='/art/comics/SD/Kamigen_Page%208.png'
+          alt='Published Kamigen page 8'
+          width='596'
+          height='843'
+        )
+      figure.reconstruction
+        figcaption Reconstruction (extracted published art + editable captions)
+        #kce-mount(
+          aria-label='Page 8 reconstruction preview'
+          data-composition-url='/art/comics/compositions/page_8_reconstruction.json'
+        )
+          p.kce-loading Loading reconstruction…
+    .gaps
+      section
+        h2 Source reality
+        ul
+          li No Affinity / Inkscape / Krita page-8 source was found — only published PNG + script.
+          li Jim.svg is a flattened Affinity reference sheet, not the page-8 bar figure and not limb-grouped.
+          li Panel art here is nondestructive HD crops under art/comics/library/extracted/page8/.
+      section
+        h2 Still different from print
+        ul
+          li Live caption layers are hidden by default; unhide to edit (cleared crops available under extracted/page8/).
+          li Without a layered vector page, props/characters cannot be separated further than panel crops.
+          li Articulation lives in jim_rig_test — deliberately separate from this page.
+    section.reader-transcript
+      h2 Page transcript
+      #kce-transcript
+
+block append scripts
+  script(src='/dist/comics-reader.js' defer)

@@ -57,5 +57,16 @@ export default [
     plugins: [
       buble()
     ]
+  },
+  {
+    // Modern ES for composition reader (async/for-of/modules). No buble transpile.
+    input: 'src/comics-reader.js',
+    output: {
+      name: 'KamigenComics',
+      file: 'dist/comics-reader.js',
+      format: 'iife',
+      sourcemap: true
+    },
+    plugins: []
   }
 ];

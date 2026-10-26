@@ -1,0 +1,134 @@
+[
+  {
+    "id": "figure_1",
+    "name": "Mid-center \u2014 red suit + Jim",
+    "x": 221.288,
+    "y": 399.985,
+    "width": 179.764,
+    "height": 219.41,
+    "src": "art/comics/library/pages/page124/characters/figure_1.svg",
+    "recovered": 6,
+    "bytes": 422122
+  },
+  {
+    "id": "figure_2",
+    "name": "Mid-left \u2014 frog",
+    "x": 101.447,
+    "y": 347.164,
+    "width": 83.645,
+    "height": 193.056,
+    "src": "art/comics/library/pages/page124/characters/figure_2.svg",
+    "recovered": 1,
+    "bytes": 75032
+  },
+  {
+    "id": "figure_3",
+    "name": "Top \u2014 silhouette A",
+    "x": 375.877,
+    "y": 125.383,
+    "width": 38.667,
+    "height": 104.658,
+    "src": "art/comics/library/pages/page124/characters/figure_3.svg",
+    "recovered": 0,
+    "bytes": 23337
+  },
+  {
+    "id": "figure_4",
+    "name": "Top \u2014 silhouette B",
+    "x": 313.385,
+    "y": 133.362,
+    "width": 44.697,
+    "height": 96.248,
+    "src": "art/comics/library/pages/page124/characters/figure_4.svg",
+    "recovered": 0,
+    "bytes": 38834
+  },
+  {
+    "id": "figure_5",
+    "name": "Bottom \u2014 figure A",
+    "x": 182.744,
+    "y": 660.714,
+    "width": 46.738,
+    "height": 130.101,
+    "src": "art/comics/library/pages/page124/characters/figure_5.svg",
+    "recovered": 0,
+    "bytes": 23383
+  },
+  {
+    "id": "figure_6",
+    "name": "Bottom \u2014 figure B",
+    "x": 94.554,
+    "y": 679.201,
+    "width": 62.856,
+    "height": 139.915,
+    "src": "art/comics/library/pages/page124/characters/figure_6.svg",
+    "recovered": 0,
+    "bytes": 38830
+  },
+  {
+    "id": "figure_7",
+    "name": "Top \u2014 red suit",
+    "x": 292.817,
+    "y": 148.477,
+    "width": 59.17,
+    "height": 133.181,
+    "src": "art/comics/library/pages/page124/characters/figure_7.svg",
+    "recovered": 1,
+    "bytes": 77217
+  },
+  {
+    "id": "figure_8",
+    "name": "Top \u2014 frog",
+    "x": 348.985,
+    "y": 148.476,
+    "width": 40.138,
+    "height": 119.857,
+    "src": "art/comics/library/pages/page124/characters/figure_8.svg",
+    "recovered": 0,
+    "bytes": 125051
+  },
+  {
+    "id": "figure_9",
+    "name": "Top \u2014 Jim",
+    "x": 374.102,
+    "y": 143.314,
+    "width": 71.378,
+    "height": 129.52,
+    "src": "art/comics/library/pages/page124/characters/figure_9.svg",
+    "recovered": 0,
+    "bytes": 224547
+  },
+  {
+    "id": "figure_10",
+    "name": "Mid-right \u2014 silhouette A",
+    "x": 492.173,
+    "y": 364.443,
+    "width": 30.833,
+    "height": 79.967,
+    "src": "art/comics/library/pages/page124/characters/figure_10.svg",
+    "recovered": 0,
+    "bytes": 23395
+  },
+  {
+    "id": "figure_11",
+    "name": "Mid-right \u2014 silhouette B",
+    "x": 469.219,
+    "y": 366.302,
+    "width": 39.973,
+    "height": 84.887,
+    "src": "art/comics/library/pages/page124/characters/figure_11.svg",
+    "recovered": 0,
+    "bytes": 38862
+  },
+  {
+    "id": "figure_12",
+    "name": "Overflow / trailing group",
+    "x": 271.787,
+    "y": 376.427,
+    "width": 323.624,
+    "height": 429.285,
+    "src": "art/comics/library/pages/page124/characters/figure_12.svg",
+    "recovered": 7,
+    "bytes": 433973
+  }
+]

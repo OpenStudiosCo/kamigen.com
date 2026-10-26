@@ -1,0 +1,40 @@
+extends /src/templates/website.pug
+
+block prepend title
+  - var page_title_string = "Composition demo";
+
+block append title
+  | #{page_title_string} | Comics | Kamigen
+
+block append head
+  meta(name='robots' content='noindex,follow')
+  link(href='https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap' rel='stylesheet')
+  link(rel='stylesheet' href='/dist/comics-renderer.css')
+
+block append content
+  article.comic-reader.composition-demo
+    header.reader-head
+      nav.reader-breadcrumb(aria-label='Breadcrumb')
+        a(href='/comics.html') Comics
+        span(aria-hidden='true') /
+        span Composition demo
+      h1 Composition demo
+      p.reader-hint
+        | Isolated demonstration of the shared Kamigen Comics composition renderer.
+        | Dialogue and layout here are
+        strong  non-canon placeholders
+        |  for tooling verification. Published comic pages are unchanged.
+    figure.comic-page#kce-mount(aria-label='Layered composition preview')
+      p.kce-loading Loading composition…
+    section.reader-transcript
+      h2 Page transcript
+      #kce-transcript
+    p.reader-hint
+      a(href='/art/comics/compositions/demo-sample.json') Editable composition JSON
+      |  ·
+      a(href='/art/comics/exports/demo-sample.png') Static PNG export
+      |  · Author locally with
+      code  npm run editor
+
+block append scripts
+  script(src='/dist/comics-reader.js' defer)

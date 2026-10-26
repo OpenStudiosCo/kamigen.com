@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Kamigen Comics — Live Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dist/comics-renderer.css">
+  <style>
+    @font-face {
+      font-family: "Laffayette Comic Pro";
+      src: url("/art/comics/library/fonts/Laffayette_Comic_Pro.ttf") format("truetype");
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Cardenio Modern";
+      src: url("/art/comics/library/fonts/CardenioModern-Regular.otf") format("opentype");
+      font-display: swap;
+    }
+    body {
+      margin: 0;
+      font-family: "Source Sans 3", sans-serif;
+      background: #1a2228;
+      color: #f2f4f6;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.65rem 1rem;
+      background: #2f3a42;
+      border-bottom: 1px solid #4d5d6a;
+    }
+    header strong { letter-spacing: 0.04em; }
+    header .meta { color: #a8b4be; font-size: 0.9rem; }
+    main {
+      padding: 1.25rem;
+      display: flex;
+      justify-content: center;
+    }
+    #kce-mount {
+      background: #fff;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+    }
+    #kce-mount svg { display: block; max-width: 100%; height: auto; }
+    .kce-error { color: #f0c0c0; padding: 1rem; }
+    #kce-transcript {
+      max-width: 720px;
+      margin: 0 auto 2rem;
+      padding: 0 1.25rem 2rem;
+      color: #d7dee4;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Live preview</strong>
+    <span class="meta" id="preview-meta">Loading…</span>
+  </header>
+  <main>
+    <div id="kce-mount"></div>
+  </main>
+  <div id="kce-transcript"></div>
+  <script type="module">
+    import {
+      parseComposition,
+      listCharacterRigPaths
+    } from '/src/comics-editor/composition.js';
+    import {
+      renderComposition,
+      buildTranscriptHtml,
+      waitForRenderReady
+    } from '/src/comics-editor/renderer.js';
+
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token') || '';
+    const meta = document.getElementById('preview-meta');
+    const mount = document.getElementById('kce-mount');
+    const transcriptHost = document.getElementById('kce-transcript');
+
+    async function loadDefs(composition) {
+      const defs = {};
+      const svgCache = {};
+      const paths = listCharacterRigPaths(composition);
+      await Promise.all(paths.map(async (rigSrc) => {
+        const res = await fetch('/' + rigSrc.replace(/^\//, ''));
+        if (!res.ok) return;
+        const def = await res.json();
+        defs[def.id] = def;
+        defs[rigSrc] = def;
+        if (def.svgSrc) {
+          const svgRes = await fetch('/' + def.svgSrc.replace(/^\//, ''));
+          if (svgRes.ok) svgCache[def.svgSrc] = await svgRes.text();
+        }
+      }));
+      // Prefetch composition SVGs for FilB inlining
+      const urls = new Set();
+      (composition.panels || []).forEach((panel) => {
+        (panel.layers || []).forEach((layer) => {
+          if (layer.src && /\.svg(?:$|\?)/i.test(layer.src)) urls.add(layer.src);
+          if (layer.shapeSrc && /\.svg(?:$|\?)/i.test(layer.shapeSrc)) urls.add(layer.shapeSrc);
+        });
+      });
+      await Promise.all([...urls].map(async (src) => {
+        if (svgCache[src]) return;
+        try {
+          const res = await fetch('/' + src.replace(/^\//, ''));
+          if (res.ok) svgCache[src] = await res.text();
+        } catch (e) { /* ignore */ }
+      }));
+      return { defs, svgCache };
+    }
+
+    async function boot() {
+      if (!token) {
+        mount.innerHTML = '<p class="kce-error">Missing preview token. Open Preview from the editor.</p>';
+        return;
+      }
+      try {
+        const res = await fetch('/api/preview?token=' + encodeURIComponent(token));
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || res.statusText);
+        const composition = parseComposition(data.text);
+        const { defs, svgCache } = await loadDefs(composition);
+        if (document.fonts && document.fonts.ready) {
+          try { await document.fonts.ready; } catch (e) { /* ignore */ }
+        }
+        mount.innerHTML = '';
+        const svg = renderComposition(composition, mount, {
+          mode: 'reader',
+          assetBase: '',
+          characterDefs: defs,
+          svgCache
+        });
+        await waitForRenderReady(svg);
+        meta.textContent = [
+          composition.title || composition.id,
+          data.dirty ? 'unsaved editor state' : 'saved snapshot',
+          data.sourcePath || ''
+        ].filter(Boolean).join(' · ');
+        if (transcriptHost) {
+          transcriptHost.innerHTML = '';
+          transcriptHost.appendChild(buildTranscriptHtml(composition));
+        }
+      } catch (error) {
+        mount.innerHTML = `<p class="kce-error">Preview failed: ${error.message}</p>`;
+        meta.textContent = 'Error';
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>

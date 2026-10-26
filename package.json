@@ -18,7 +18,9 @@
     "seo": "node tools/generate-site-metadata.js",
     "rollup": "rollup -c",
     "validate": "node tools/validate-site.js",
-    "test": "npm run build && npm run validate",
+    "test": "npm run build && npm run validate && npm run test:comics-editor",
+    "test:comics-editor": "node tools/comics-editor-test.js",
+    "editor": "node tools/comics-editor-server.js",
     "dev": "http-server -p 9988 -c-1 .",
     "watch": "node dev.js"
   },

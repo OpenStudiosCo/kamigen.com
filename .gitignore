@@ -57,9 +57,29 @@ typings/
 # dotenv environment variables file
 .env
 
+# Comics editor recovery autosaves
+.comics-editor-autosave/
+
+# Live preview sessions (unsaved editor snapshots; local authoring only)
+.comics-editor-preview/
+
+comics-sources/
+
+# Local VectorCraft binary + conversion scratch (do not commit large vendor/work trees)
+tools/vendor/
+art/comics/work/
+
 # Generated public pages. Source lives in src/pages and src/templates.
 /*.html
 /blog/*.html
 /comics/*.html
 /wiki/*.html
 
+# --- Comics editor working data (local only; not for code-only WIP commits) ---
+# Narrow scopes: do NOT ignore previously tracked production art under art/comics/HD etc.
+/art/comics/library/
+/art/comics/compositions/
+/art/comics/exports/
+
+# Local browser/review temp captures (not fidelity evidence)
+.comics-editor-review/

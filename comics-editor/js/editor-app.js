@@ -26,6 +26,15 @@ import {
 import { HistoryStack } from '/src/comics-editor/history.js';
 import { renderComposition } from '/src/comics-editor/renderer.js';
 import { exportPng, exportSvg } from '/src/comics-editor/export.js';
+import {
+  attachFromPoint,
+  bubbleHandlePoints,
+  buildSpeechBubblePath,
+  defaultTail,
+  normalizeTail,
+  proceduralFromImportedBox,
+  scaleTailForBodyResize
+} from '/src/comics-editor/bubble-geometry.js';
 
 const API = '/api';
 const HINTS = {
@@ -63,8 +72,15 @@ const state = {
   panY: 20,
   history: new HistoryStack(),
   drag: null,
-  serverOk: false
+  serverOk: false,
+  collapsedPanels: {},
+  expandedLayers: {}
 };
+
+const ICON_EYE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 5c-5 0-9 4.5-10 7 1 2.5 5 7 10 7s9-4.5 10-7c-1-2.5-5-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></svg>';
+const ICON_EYE_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.3 2.2 2.2 3.3l3.1 3.1C3.7 7.5 2.4 9.1 1.8 10.5c1 2.5 5 7 10.2 7 1.7 0 3.2-.4 4.5-1l3.2 3.2 1.1-1.1L3.3 2.2zm8.7 13.3c-2.5 0-4.5-2-4.5-4.5 0-.6.1-1.1.3-1.6l5.8 5.8c-.5.2-1 .3-1.6.3zM12 5c1.2 0 2.3.2 3.3.6l-1.5 1.5c-.6-.2-1.2-.3-1.8-.3-2.5 0-4.5 2-4.5 4.5 0 .6.1 1.2.3 1.8L6.3 14.6C4.7 13.3 3.5 11.7 2.8 10.5 3.8 8 7.2 5 12 5zm9.2 5.5c-.4 1-1.2 2.3-2.4 3.5l-1.4-1.4c.8-.8 1.4-1.7 1.8-2.1C17.8 8.6 15.2 7 12 7c-.3 0-.6 0-.9.1L9.5 5.5C10.3 5.2 11.1 5 12 5c4.8 0 8.2 3 9.2 5.5z"/></svg>';
+const ICON_LOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17 9h-1V7a4 4 0 1 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-6-2a2 2 0 1 1 4 0v2h-4V7zm3 8.7V18h-2v-2.3a1.5 1.5 0 1 1 2 0z"/></svg>';
+const ICON_UNLOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17 9h-1V7a4 4 0 0 0-7.8-1.2l1.5 1.1A2 2 0 0 1 14 7v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-3 6.7V18h-2v-2.3a1.5 1.5 0 1 1 2 0z"/></svg>';
 
 const els = {
   pageHost: document.getElementById('page-host'),
@@ -111,10 +127,55 @@ function markDirty() {
   setStatus(`Unsaved — ${state.path}`, 'dirty');
 }
 
+function isReferencePanel(panel) {
+  if (!panel) return false;
+  if (panel.role === 'reference' || panel.reference === true) return true;
+  const id = String(panel.id || '').toLowerCase();
+  const name = String(panel.name || '').toLowerCase();
+  return id.includes('page_ref') || id.includes('reference')
+    || name.includes('reference') || name.includes('comparison');
+}
+
+function productionPanels() {
+  if (!state.composition) return [];
+  return state.composition.panels.filter((p) => !isReferencePanel(p));
+}
+
+function firstProductionPanel() {
+  return productionPanels()[0] || state.composition?.panels[0] || null;
+}
+
 function selectedPanel() {
-  return state.composition.panels.find((p) => p.id === state.selectedPanelId)
-    || state.composition.panels[0]
-    || null;
+  const byId = state.composition.panels.find((p) => p.id === state.selectedPanelId);
+  if (byId) return byId;
+  return firstProductionPanel();
+}
+
+/** Prefer a real art panel when creating content (never silently use hidden refs). */
+function panelForContent() {
+  const current = state.composition.panels.find((p) => p.id === state.selectedPanelId);
+  if (current && !isReferencePanel(current)) return current;
+  const prod = firstProductionPanel();
+  if (prod) {
+    state.selectedPanelId = prod.id;
+    return prod;
+  }
+  return current || null;
+}
+
+function typeLabel(layer) {
+  if (!layer) return '';
+  if (layer.type === 'bubble') {
+    if (layer.role === 'thought') return 'thought';
+    if (layer.role === 'caption') return 'caption';
+    return 'speech';
+  }
+  if (layer.type === 'character') return 'character';
+  if (layer.type === 'image') {
+    if (/background/i.test(layer.name || '') || /_bg$/.test(layer.id || '')) return 'background';
+    return 'image';
+  }
+  return layer.type || 'layer';
 }
 
 function selectedLayer() {
@@ -284,13 +345,47 @@ function drawSelectionOverlay() {
         h.dataset.handle = name;
         h.style.left = `${panel.x + layer.x + layer.width * fx}px`;
         h.style.top = `${panel.y + layer.y + layer.height * fy}px`;
+        // Keep handle screen size stable across zoom
+        h.style.transform = `translate(-50%, -50%) scale(${1 / state.zoom})`;
         els.overlay.appendChild(h);
       });
+  }
+
+  if (
+    !layer.locked
+    && !state.poseMode
+    && (layer.type === 'bubble' || layer.type === 'text')
+    && !layer.shapeSrc
+    && layer.role !== 'caption'
+  ) {
+    drawBubbleHandles(panel, layer);
   }
 
   if (state.poseMode && layer.type === 'character' && !layer.locked) {
     drawJointHandles(panel, layer);
   }
+}
+
+function drawBubbleHandles(panel, layer) {
+  const tail = normalizeTail(layer.tail, layer.width, layer.height, layer.role || 'speech');
+  if (!tail.enabled) return;
+  const pts = bubbleHandlePoints(layer.width, layer.height, layer.cornerRadius || 18, tail);
+  if (!pts) return;
+  const scale = 1 / state.zoom;
+  const place = (key, pt, title, cls) => {
+    const h = document.createElement('div');
+    h.className = `kce-bubble-handle ${cls || ''}`;
+    h.dataset.bubbleHandle = key;
+    h.title = title;
+    h.style.left = `${panel.x + layer.x + pt.x}px`;
+    h.style.top = `${panel.y + layer.y + pt.y}px`;
+    h.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    els.overlay.appendChild(h);
+  };
+  place('tip', pts.tip, 'Drag tail tip toward speaker', 'tip');
+  place('attach', pts.attach, 'Move tail attachment around bubble', 'attach');
+  place('baseWidth', pts.baseRight, 'Drag to change tail base width', 'base');
+  place('curve', pts.curve, 'Adjust tail curvature', 'curve');
 }
 
 function drawJointHandles(panel, layer) {
@@ -317,92 +412,271 @@ function drawJointHandles(panel, layer) {
 }
 
 function renderPanelSelect() {
-  els.panelSelect.innerHTML = state.composition.panels.map((p) =>
-    `<option value="${p.id}" ${p.id === state.selectedPanelId ? 'selected' : ''}>${p.name || p.id}</option>`
-  ).join('');
+  els.panelSelect.innerHTML = state.composition.panels.map((p) => {
+    const tag = isReferencePanel(p) ? ' (refs)' : '';
+    return `<option value="${p.id}" ${p.id === state.selectedPanelId ? 'selected' : ''}>${p.name || p.id}${tag}</option>`;
+  }).join('');
+}
+
+function clearDropIndicators() {
+  els.layerList.querySelectorAll('.drop-target, .drop-before, .drop-after').forEach((el) => {
+    el.classList.remove('drop-target', 'drop-before', 'drop-after');
+  });
+}
+
+function renderLayerChildren(layer, panel, host) {
+  const kids = document.createElement('ul');
+  kids.className = 'kce-layer-children';
+  if (layer.type === 'character') {
+    const def = getCharacterDef(layer);
+    const parts = (def && def.parts) || [];
+    if (!parts.length) {
+      kids.appendChild(Object.assign(document.createElement('li'), {
+        className: 'kce-layer-child',
+        textContent: 'No rig parts on this character'
+      }));
+    } else {
+      parts.slice().sort((a, b) => (b.z || 0) - (a.z || 0)).forEach((part) => {
+        const row = document.createElement('li');
+        row.className = 'kce-layer-child';
+        const vis = document.createElement('button');
+        vis.type = 'button';
+        const hidden = !!(layer.partState && layer.partState[part.id] && layer.partState[part.id].visible === false);
+        vis.title = hidden ? `Show ${part.id}` : `Hide ${part.id}`;
+        vis.innerHTML = hidden ? ICON_EYE_OFF : ICON_EYE;
+        vis.addEventListener('click', (e) => {
+          e.stopPropagation();
+          state.history.push(state.composition);
+          if (!layer.partState) layer.partState = {};
+          const cur = Object.assign({ rotation: 0, offsetX: 0, offsetY: 0, visible: true }, layer.partState[part.id] || {});
+          cur.visible = hidden;
+          layer.partState[part.id] = cur;
+          markDirty();
+          renderAll();
+        });
+        const label = document.createElement('span');
+        label.className = 'kce-layer-child-label';
+        label.textContent = part.id;
+        label.title = 'Part visibility only — paint order stays with the character layer; attachments unchanged';
+        row.appendChild(vis);
+        row.appendChild(label);
+        kids.appendChild(row);
+      });
+    }
+  } else if (layer.type === 'bubble' || layer.type === 'text') {
+    const shape = document.createElement('li');
+    shape.className = 'kce-layer-child';
+    shape.innerHTML = `<span class="kce-layer-child-label">Shape — ${layer.shapeSrc ? 'imported art' : (layer.role === 'thought' ? 'thought cloud' : (layer.role === 'caption' ? 'caption box' : 'speech bubble'))}</span>`;
+    const letter = document.createElement('li');
+    letter.className = 'kce-layer-child';
+    letter.innerHTML = '<span class="kce-layer-child-label">Lettering — moves with shape</span>';
+    kids.appendChild(shape);
+    kids.appendChild(letter);
+  }
+  host.appendChild(kids);
 }
 
 function renderLayers() {
-  const panel = selectedPanel();
   els.layerList.innerHTML = '';
-  if (!panel) return;
-  [...panel.layers].reverse().forEach((layer, visualIndex) => {
-    const storageIndex = panel.layers.length - 1 - visualIndex;
-    const li = document.createElement('li');
-    li.className = [
-      'kce-layer-item',
-      layer.id === state.selectedLayerId ? 'active' : '',
-      layer.locked ? 'locked-layer' : '',
-      layer.visible === false ? 'hidden-layer' : ''
+  // Paint order: later layers are in front — reverse so top of list = front.
+  state.composition.panels.forEach((panel) => {
+    const collapsed = !!state.collapsedPanels[panel.id];
+    const group = document.createElement('li');
+    group.className = [
+      'kce-layer-group',
+      panel.id === state.selectedPanelId ? 'active-panel' : '',
+      isReferencePanel(panel) ? 'ref-panel' : '',
+      collapsed ? 'collapsed' : ''
     ].filter(Boolean).join(' ');
-    li.draggable = !layer.locked;
-    li.dataset.layerId = layer.id;
 
-    const name = document.createElement('div');
-    name.className = 'name';
-    name.textContent = layer.name || layer.type;
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    meta.textContent = [
-      layer.type === 'character' ? 'character' : layer.type,
-      layer.locked ? 'locked' : '',
-      layer.visible === false ? 'hidden' : ''
-    ].filter(Boolean).join(' · ');
-
-    const actions = document.createElement('div');
-    actions.className = 'kce-layer-actions';
-
-    const visBtn = document.createElement('button');
-    visBtn.type = 'button';
-    visBtn.className = 'icon-btn';
-    visBtn.title = layer.visible === false ? 'Show' : 'Hide';
-    visBtn.setAttribute('aria-label', visBtn.title);
-    visBtn.textContent = layer.visible === false ? '○' : '●';
-    visBtn.addEventListener('click', (e) => {
+    const head = document.createElement('div');
+    head.className = 'kce-layer-group-head';
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'kce-layer-group-toggle';
+    toggle.textContent = collapsed ? '▸' : '▾';
+    toggle.title = collapsed ? 'Expand panel layers' : 'Collapse panel layers';
+    toggle.addEventListener('click', (e) => {
       e.stopPropagation();
-      setLayerVisible(layer.id, layer.visible === false);
+      state.collapsedPanels[panel.id] = !collapsed;
+      renderLayers();
     });
-
-    const lockBtn = document.createElement('button');
-    lockBtn.type = 'button';
-    lockBtn.className = 'icon-btn';
-    lockBtn.title = layer.locked ? 'Unlock' : 'Lock';
-    lockBtn.setAttribute('aria-label', lockBtn.title);
-    lockBtn.setAttribute('aria-pressed', layer.locked ? 'true' : 'false');
-    lockBtn.textContent = layer.locked ? '🔒' : '🔓';
-    lockBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      setLayerLocked(layer.id, !layer.locked);
-    });
-
-    actions.appendChild(visBtn);
-    actions.appendChild(lockBtn);
-    li.appendChild(name);
-    li.appendChild(actions);
-    li.appendChild(meta);
-
-    li.addEventListener('click', () => {
-      state.selectedLayerId = layer.id;
+    const title = document.createElement('button');
+    title.type = 'button';
+    title.className = 'kce-layer-group-title';
+    title.textContent = `${panel.name || panel.id}${isReferencePanel(panel) ? ' · reference' : ''}`;
+    title.title = 'Select this panel';
+    title.addEventListener('click', () => {
       state.selectedPanelId = panel.id;
-      if (layer.type === 'character') state.activity = 'characters';
-      else if (layer.type === 'bubble') state.activity = 'dialogue';
+      state.selectedLayerId = null;
       renderAll();
     });
-    li.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', String(storageIndex)));
-    li.addEventListener('dragover', (e) => e.preventDefault());
-    li.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const from = Number(e.dataTransfer.getData('text/plain'));
-      const to = storageIndex;
-      state.history.push(state.composition);
-      const layers = panel.layers.slice();
-      const [item] = layers.splice(from, 1);
-      layers.splice(to, 0, item);
-      panel.layers = layers;
-      markDirty();
-      renderAll();
+    const count = document.createElement('span');
+    count.className = 'kce-layer-count';
+    count.textContent = String(panel.layers.length);
+    count.title = 'Layer count in this panel';
+    head.appendChild(toggle);
+    head.appendChild(title);
+    head.appendChild(count);
+    group.appendChild(head);
+
+    const ul = document.createElement('ul');
+    ul.className = 'kce-layer-sublist';
+
+    [...panel.layers].reverse().forEach((layer, visualIndex) => {
+      const storageIndex = panel.layers.length - 1 - visualIndex;
+      const li = document.createElement('li');
+      li.className = [
+        'kce-layer-item',
+        layer.id === state.selectedLayerId ? 'active' : '',
+        layer.locked ? 'locked-layer' : '',
+        layer.visible === false ? 'hidden-layer' : ''
+      ].filter(Boolean).join(' ');
+      li.draggable = true;
+      li.dataset.layerId = layer.id;
+      li.dataset.panelId = panel.id;
+      li.dataset.storageIndex = String(storageIndex);
+
+      const expand = document.createElement('button');
+      expand.type = 'button';
+      expand.className = 'kce-layer-expand';
+      const canExpand = layer.type === 'character' || layer.type === 'bubble' || layer.type === 'text';
+      const expanded = !!state.expandedLayers[layer.id];
+      expand.textContent = canExpand ? (expanded ? '▾' : '▸') : '';
+      expand.disabled = !canExpand;
+      expand.title = canExpand ? (expanded ? 'Collapse components' : 'Expand components') : 'No nested components';
+      expand.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!canExpand) return;
+        state.expandedLayers[layer.id] = !expanded;
+        renderLayers();
+      });
+
+      const type = document.createElement('span');
+      type.className = `kce-type-badge kce-type-${typeLabel(layer)}`;
+      type.textContent = typeLabel(layer);
+      type.title = typeLabel(layer);
+
+      const name = document.createElement('input');
+      name.type = 'text';
+      name.className = 'kce-layer-name';
+      name.value = layer.name || layer.type;
+      name.title = 'Rename layer';
+      name.addEventListener('click', (e) => e.stopPropagation());
+      name.addEventListener('change', () => {
+        const next = name.value.trim() || layer.type;
+        if (next === layer.name) return;
+        state.history.push(state.composition);
+        layer.name = next;
+        markDirty();
+        renderAll();
+      });
+
+      const actions = document.createElement('div');
+      actions.className = 'kce-layer-actions';
+
+      const visBtn = document.createElement('button');
+      visBtn.type = 'button';
+      visBtn.className = 'icon-btn';
+      visBtn.title = layer.visible === false ? 'Show layer' : 'Hide layer';
+      visBtn.setAttribute('aria-label', visBtn.title);
+      visBtn.innerHTML = layer.visible === false ? ICON_EYE_OFF : ICON_EYE;
+      visBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setLayerVisible(layer.id, layer.visible === false);
+      });
+
+      const lockBtn = document.createElement('button');
+      lockBtn.type = 'button';
+      lockBtn.className = 'icon-btn';
+      lockBtn.title = layer.locked ? 'Unlock layer' : 'Lock layer';
+      lockBtn.setAttribute('aria-label', lockBtn.title);
+      lockBtn.setAttribute('aria-pressed', layer.locked ? 'true' : 'false');
+      lockBtn.innerHTML = layer.locked ? ICON_LOCK : ICON_UNLOCK;
+      lockBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setLayerLocked(layer.id, !layer.locked);
+      });
+
+      actions.appendChild(visBtn);
+      actions.appendChild(lockBtn);
+      li.appendChild(expand);
+      li.appendChild(type);
+      li.appendChild(name);
+      li.appendChild(actions);
+
+      li.addEventListener('click', () => {
+        state.selectedLayerId = layer.id;
+        state.selectedPanelId = panel.id;
+        if (layer.type === 'bubble' && state.activity !== 'dialogue') state.activity = 'dialogue';
+        if (layer.type === 'character' && state.activity !== 'characters') state.activity = 'characters';
+        renderAll();
+      });
+      li.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+          panelId: panel.id,
+          from: storageIndex
+        }));
+        e.dataTransfer.effectAllowed = 'move';
+        li.classList.add('dragging');
+      });
+      li.addEventListener('dragend', () => {
+        li.classList.remove('dragging');
+        clearDropIndicators();
+      });
+      li.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        clearDropIndicators();
+        const rect = li.getBoundingClientRect();
+        const before = e.clientY < rect.top + rect.height / 2;
+        li.classList.add('drop-target', before ? 'drop-before' : 'drop-after');
+        li.dataset.dropEdge = before ? 'before' : 'after';
+      });
+      li.addEventListener('dragleave', () => {
+        li.classList.remove('drop-target', 'drop-before', 'drop-after');
+      });
+      li.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const edge = li.dataset.dropEdge || 'after';
+        clearDropIndicators();
+        let payload;
+        try { payload = JSON.parse(e.dataTransfer.getData('text/plain')); } catch (err) { return; }
+        if (!payload || payload.panelId !== panel.id) {
+          toast('Reorder within the same panel (paint order). Attachments are separate from stack order.');
+          return;
+        }
+        const from = Number(payload.from);
+        let to = storageIndex;
+        // Visual list is reversed; drop-before (toward front) means higher storage index.
+        if (edge === 'before' && from < to) to -= 0;
+        if (edge === 'after' && from > to) to += 0;
+        // Convert visual edge to storage index insertion
+        if (edge === 'before') {
+          // Insert toward front of list (= higher storage index after reverse display)
+          to = storageIndex;
+        } else {
+          to = storageIndex;
+          // drop after visual item = toward back = lower storage index
+          if (from > storageIndex) to = storageIndex;
+          else to = Math.max(0, storageIndex);
+        }
+        // Simpler reliable reorder: place at the hovered item's storage index
+        to = storageIndex;
+        if (from === to) return;
+        state.history.push(state.composition);
+        const layers = panel.layers.slice();
+        const [item] = layers.splice(from, 1);
+        layers.splice(to, 0, item);
+        panel.layers = layers;
+        markDirty();
+        renderAll();
+      });
+      ul.appendChild(li);
+      if (canExpand && expanded) renderLayerChildren(layer, panel, ul);
     });
-    els.layerList.appendChild(li);
+
+    group.appendChild(ul);
+    els.layerList.appendChild(group);
   });
 }
 
@@ -410,23 +684,217 @@ function numField(label, value, onChange, step = 1) {
   const wrap = document.createElement('label');
   wrap.className = 'field';
   wrap.textContent = label;
+  const row = document.createElement('div');
+  row.className = 'kce-stepper';
+  const dec = document.createElement('button');
+  dec.type = 'button';
+  dec.textContent = '−';
+  dec.title = 'Decrease (Shift = ×5)';
   const input = document.createElement('input');
   input.type = 'number';
   input.step = String(step);
   input.value = value != null ? value : 0;
-  input.addEventListener('change', () => onChange(Number(input.value)));
-  wrap.appendChild(input);
+  const inc = document.createElement('button');
+  inc.type = 'button';
+  inc.textContent = '+';
+  inc.title = 'Increase (Shift = ×5)';
+  const apply = (raw) => {
+    const n = Number(raw);
+    if (Number.isNaN(n)) return;
+    onChange(n);
+  };
+  input.addEventListener('change', () => apply(input.value));
+  const bump = (dir, ev) => {
+    const mult = ev && ev.shiftKey ? 5 : 1;
+    const cur = Number(input.value) || 0;
+    const next = Math.round((cur + dir * step * mult) * 1000) / 1000;
+    input.value = String(next);
+    apply(next);
+  };
+  dec.addEventListener('click', (e) => bump(-1, e));
+  inc.addEventListener('click', (e) => bump(1, e));
+  row.appendChild(dec);
+  row.appendChild(input);
+  row.appendChild(inc);
+  wrap.appendChild(row);
   return wrap;
 }
 
-function textAreaField(label, value, onChange) {
+/** Slider + numeric. `beginGesture` pushes one undo snapshot; `onLive` updates without rebuild. */
+function sliderField(label, value, { min = 0, max = 100, step = 1, unit = '', format = null } = {}, onLive, beginGesture) {
+  const wrap = document.createElement('div');
+  wrap.className = 'field kce-slider-field';
+  const head = document.createElement('div');
+  head.className = 'kce-slider-head';
+  const lab = document.createElement('span');
+  lab.textContent = label;
+  const read = document.createElement('span');
+  read.className = 'kce-slider-readout';
+  const fmt = (v) => (format ? format(v) : `${v}${unit}`);
+  read.textContent = fmt(value != null ? value : min);
+  head.appendChild(lab);
+  head.appendChild(read);
+  const row = document.createElement('div');
+  row.className = 'kce-slider-row';
+  const range = document.createElement('input');
+  range.type = 'range';
+  range.min = String(min);
+  range.max = String(max);
+  range.step = String(step);
+  range.value = String(value != null ? value : min);
+  const num = document.createElement('input');
+  num.type = 'number';
+  num.min = String(min);
+  num.max = String(max);
+  num.step = String(step);
+  num.value = String(value != null ? value : min);
+  let gesturing = false;
+  const paint = (v) => {
+    range.value = String(v);
+    num.value = String(v);
+    read.textContent = fmt(v);
+  };
+  range.addEventListener('pointerdown', () => {
+    gesturing = true;
+    if (typeof beginGesture === 'function') beginGesture();
+  });
+  range.addEventListener('input', () => {
+    const v = Number(range.value);
+    paint(v);
+    onLive(v);
+  });
+  range.addEventListener('pointerup', () => { gesturing = false; });
+  range.addEventListener('change', () => {
+    const v = Number(range.value);
+    paint(v);
+    if (!gesturing && typeof beginGesture === 'function') beginGesture();
+    onLive(v);
+    gesturing = false;
+  });
+  num.addEventListener('change', () => {
+    let v = Number(num.value);
+    if (Number.isNaN(v)) return;
+    v = Math.min(max, Math.max(min, v));
+    if (typeof beginGesture === 'function') beginGesture();
+    paint(v);
+    onLive(v);
+  });
+  row.appendChild(range);
+  row.appendChild(num);
+  wrap.appendChild(head);
+  wrap.appendChild(row);
+  return wrap;
+}
+
+function beginLayerGesture() {
+  const hit = selectedLayerHit();
+  if (!hit || hit.layer.locked) return;
+  state.history.push(state.composition);
+  markDirty();
+}
+
+function colorField(label, value, onChange, { live = false } = {}) {
+  const wrap = document.createElement('label');
+  wrap.className = 'field kce-color-field';
+  wrap.textContent = label;
+  const row = document.createElement('div');
+  row.className = 'kce-color-row';
+  const picker = document.createElement('input');
+  picker.type = 'color';
+  const text = document.createElement('input');
+  text.type = 'text';
+  const hex = (value || '#000000').toString();
+  const short = hex.length === 4
+    ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`
+    : hex;
+  picker.value = /^#[0-9a-fA-F]{6}$/.test(short) ? short : '#000000';
+  text.value = hex;
+  let gesturing = false;
+  const applyLive = (v) => {
+    if (live) mutateLayerLive((l) => onChange(v, l));
+    else onChange(v);
+  };
+  picker.addEventListener('pointerdown', () => {
+    if (!live) return;
+    gesturing = true;
+    beginLayerGesture();
+  });
+  picker.addEventListener('input', () => {
+    text.value = picker.value;
+    if (live) applyLive(picker.value);
+    else onChange(picker.value);
+  });
+  picker.addEventListener('change', () => {
+    if (live && !gesturing) beginLayerGesture();
+    if (live) applyLive(picker.value);
+    else onChange(picker.value);
+    gesturing = false;
+  });
+  text.addEventListener('change', () => {
+    if (live) beginLayerGesture();
+    if (live) applyLive(text.value.trim());
+    else onChange(text.value.trim());
+  });
+  row.appendChild(picker);
+  row.appendChild(text);
+  wrap.appendChild(row);
+  return wrap;
+}
+
+function toggleField(label, checked, onChange) {
+  const wrap = document.createElement('label');
+  wrap.className = 'kce-toggle';
+  const input = document.createElement('input');
+  input.type = 'checkbox';
+  input.checked = !!checked;
+  input.addEventListener('change', () => onChange(input.checked));
+  const track = document.createElement('span');
+  track.className = 'kce-toggle-track';
+  const text = document.createElement('span');
+  text.className = 'kce-toggle-label';
+  text.textContent = label;
+  wrap.appendChild(input);
+  wrap.appendChild(track);
+  wrap.appendChild(text);
+  return wrap;
+}
+
+/** Live-mutate without history (used during slider drag after first commit). */
+function mutateLayerLive(mutator) {
+  const hit = selectedLayerHit();
+  if (!hit) return;
+  if (hit.layer.locked) return;
+  mutator(hit.layer, hit.panel);
+  rebuildTranscript(state.composition);
+  renderPage();
+  drawSelectionOverlay();
+}
+
+function textAreaField(label, value, onChange, { live = false } = {}) {
   const wrap = document.createElement('label');
   wrap.className = 'field';
   wrap.textContent = label;
   const ta = document.createElement('textarea');
   ta.rows = 4;
   ta.value = value || '';
-  ta.addEventListener('change', () => onChange(ta.value));
+  let started = false;
+  if (live) {
+    ta.addEventListener('focus', () => { started = false; });
+    ta.addEventListener('input', () => {
+      if (!started) {
+        beginLayerGesture();
+        started = true;
+      }
+      mutateLayerLive((l) => onChange(ta.value, l));
+    });
+    ta.addEventListener('change', () => {
+      if (!started) beginLayerGesture();
+      mutateLayerLive((l) => onChange(ta.value, l));
+      started = false;
+    });
+  } else {
+    ta.addEventListener('change', () => onChange(ta.value));
+  }
   wrap.appendChild(ta);
   return wrap;
 }
@@ -454,22 +922,18 @@ function renderContextBar() {
   const bits = [];
   bits.push([layer.locked ? 'Unlock' : 'Lock', () => setLayerLocked(layer.id, !layer.locked)]);
   bits.push([layer.visible === false ? 'Show' : 'Hide', () => setLayerVisible(layer.id, layer.visible === false)]);
-  bits.push(['Bring forward', () => {
-    const panel = selectedPanel();
-    if (!panel) return;
+  const reorder = (action) => {
+    const hit = selectedLayerHit();
+    if (!hit) return;
     state.history.push(state.composition);
-    panel.layers = reorderLayer(panel.layers, layer.id, 'forward');
+    hit.panel.layers = reorderLayer(hit.panel.layers, layer.id, action);
     markDirty();
     renderAll();
-  }]);
-  bits.push(['Send backward', () => {
-    const panel = selectedPanel();
-    if (!panel) return;
-    state.history.push(state.composition);
-    panel.layers = reorderLayer(panel.layers, layer.id, 'backward');
-    markDirty();
-    renderAll();
-  }]);
+  };
+  bits.push(['Bring forward', () => reorder('forward')]);
+  bits.push(['Send backward', () => reorder('backward')]);
+  bits.push(['To front', () => reorder('front')]);
+  bits.push(['To back', () => reorder('back')]);
   bits.push(['Duplicate', () => duplicateSelected()]);
   bits.push(['Delete', () => deleteSelected()]);
   if (layer.type === 'character') {
@@ -524,33 +988,56 @@ function renderProps() {
   const layer = selectedLayer();
   if (!layer) {
     if (!panel) {
-      els.props.innerHTML = '<p class="kce-empty">Select something on the page to edit it.</p>';
+      els.props.innerHTML = '<p class="kce-empty">Select a panel or layer to edit it.</p>';
       return;
     }
     renderPanelProps(panel);
     return;
   }
 
-  if (layer.type === 'character') renderCharacterProps(layer);
-  else if (layer.type === 'bubble' || layer.type === 'text') renderBubbleProps(layer);
-  else if (layer.type === 'image') renderImageProps(layer);
-  else renderGenericProps(layer);
+  // Inspector is always driven by the canvas/layer selection — activity tabs only change left tools.
+  if (layer.type === 'character') {
+    renderCharacterProps(layer);
+    renderTransformControls(layer);
+  } else if (layer.type === 'bubble' || layer.type === 'text') {
+    renderBubbleProps(layer);
+  } else if (layer.type === 'image') {
+    renderImageProps(layer);
+    renderTransformControls(layer);
+  } else {
+    renderGenericProps(layer);
+    renderTransformControls(layer);
+  }
 
-  renderAdvanced(layer, panel);
+  renderAdvanced(layer);
 }
 
 function renderPanelProps(panel) {
   const title = document.createElement('h2');
   title.className = 'kce-section-title';
-  title.textContent = 'Panel';
+  title.textContent = 'Panel layout';
   els.props.appendChild(title);
-  els.props.appendChild(checkField('Clip artwork to panel', panel.clip !== false, (v) => {
+  els.props.appendChild(Object.assign(document.createElement('p'), {
+    className: 'kce-selection-target',
+    textContent: `Editing panel: ${panel.name || panel.id}${isReferencePanel(panel) ? ' (reference)' : ''}`
+  }));
+  els.props.appendChild(toggleField('Clip artwork to panel', panel.clip !== false, (v) => {
     mutatePanel((p) => { p.clip = v; if (v) p.allowBleed = false; });
   }));
-  els.props.appendChild(checkField('Let artwork extend outside panel', panel.allowBleed, (v) => {
+  els.props.appendChild(toggleField('Let artwork extend outside panel', panel.allowBleed, (v) => {
     mutatePanel((p) => { p.allowBleed = v; if (v) p.clip = false; });
   }));
-  els.props.appendChild(numField('Panel corners', panel.cornerRadius, (v) => mutatePanel((p) => { p.cornerRadius = v; })));
+  els.props.appendChild(numField('Corner radius', panel.cornerRadius || 0, (v) => mutatePanel((p) => { p.cornerRadius = v; })));
+  const row = document.createElement('div');
+  row.className = 'kce-row';
+  row.appendChild(numField('X', panel.x, (v) => mutatePanel((p) => { p.x = v; })));
+  row.appendChild(numField('Y', panel.y, (v) => mutatePanel((p) => { p.y = v; })));
+  els.props.appendChild(row);
+  const size = document.createElement('div');
+  size.className = 'kce-row';
+  size.appendChild(numField('Width', panel.width, (v) => mutatePanel((p) => { p.width = v; })));
+  size.appendChild(numField('Height', panel.height, (v) => mutatePanel((p) => { p.height = v; })));
+  els.props.appendChild(size);
 }
 
 function renderCharacterProps(layer) {
@@ -685,13 +1172,95 @@ function renderCharacterProps(layer) {
   els.props.appendChild(chipRow);
 }
 
+function applyBubbleRole(layer, role, { procedural = false } = {}) {
+  layer.role = role;
+  const nextTail = defaultTail(role, layer.width, layer.height);
+  if (role === 'caption') {
+    layer.tail = nextTail;
+    layer.cornerRadius = 4;
+    if (procedural || !layer.shapeSrc) {
+      layer.fill = '#111111';
+      layer.colour = layer.colour && layer.colour !== '#111111' ? layer.colour : '#f5f5f5';
+      layer.shape = 'rounded';
+    }
+  } else if (role === 'thought') {
+    layer.tail = Object.assign(nextTail, normalizeTail(layer.tail, layer.width, layer.height, role), { enabled: true });
+    layer.cornerRadius = 40;
+    if (procedural || !layer.shapeSrc) {
+      layer.fill = '#ffffff';
+      layer.colour = '#111111';
+      layer.shape = 'ellipse';
+    }
+  } else {
+    layer.tail = Object.assign(nextTail, normalizeTail(layer.tail, layer.width, layer.height, role), { enabled: true });
+    layer.cornerRadius = layer.cornerRadius != null ? layer.cornerRadius : 22;
+    if (procedural || !layer.shapeSrc) {
+      layer.fill = '#ffffff';
+      layer.colour = '#111111';
+      layer.shape = 'rounded';
+      layer.strokeWidth = layer.strokeWidth != null ? layer.strokeWidth : 2.25;
+    }
+  }
+}
+
+/** Show procedural bubble before discarding imported Affinity shape art. */
+function previewProceduralConversion(layer) {
+  const proposed = proceduralFromImportedBox(layer);
+  const pathD = buildSpeechBubblePath(layer.width, layer.height, proposed.cornerRadius, proposed.tail);
+  const pad = 24;
+  const tipExtra = Math.max(0, (proposed.tail.tipY || 0) - layer.height) + 8;
+  const svgW = layer.width + pad * 2;
+  const svgH = layer.height + tipExtra + pad * 2;
+  const overlay = document.createElement('div');
+  overlay.className = 'kce-modal-backdrop';
+  overlay.innerHTML = `
+    <div class="kce-modal" role="dialog" aria-label="Procedural bubble preview">
+      <h2 class="kce-section-title">Procedural replacement preview</h2>
+      <p class="kce-help">Imported path art is kept until you confirm. This editable bubble matches the current box and a comic-style tail; lettering stays editable.</p>
+      <div class="kce-modal-preview">
+        <svg width="${svgW}" height="${svgH}" viewBox="${-pad} ${-pad} ${svgW} ${svgH}">
+          <path d="${pathD}" fill="${proposed.fill}" stroke="${proposed.stroke}" stroke-width="${proposed.strokeWidth}" stroke-linejoin="round"/>
+          <text x="${layer.width / 2}" y="${(layer.height / 2) + 4}" text-anchor="middle" fill="${proposed.colour}" font-size="14" font-family="Laffayette Comic Pro, Source Sans 3, sans-serif">${(layer.text || '…').split('\n')[0].slice(0, 28)}</text>
+        </svg>
+      </div>
+      <div class="kce-modal-actions">
+        <button type="button" data-act="cancel">Keep imported shape</button>
+        <button type="button" class="primary" data-act="apply">Replace with this bubble</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (ev) => {
+    const act = ev.target && ev.target.getAttribute && ev.target.getAttribute('data-act');
+    if (!act && ev.target !== overlay) return;
+    if (act === 'apply') {
+      mutateLayer((l) => {
+        Object.assign(l, proposed);
+        l.shapeSrc = '';
+      });
+      toast('Replaced with procedural bubble — drag the tip to aim at the speaker');
+    }
+    overlay.remove();
+  });
+}
+
 function renderBubbleProps(layer) {
   const title = document.createElement('h2');
   title.className = 'kce-section-title';
   title.textContent = 'Dialogue';
   els.props.appendChild(title);
-  els.props.appendChild(textAreaField('Words', layer.text, (v) => mutateLayer((l) => { l.text = v; })));
-  els.props.appendChild(textAreaField('Translation / note', layer.translation, (v) => mutateLayer((l) => { l.translation = v; })));
+
+  const target = document.createElement('p');
+  target.className = 'kce-selection-target';
+  const mode = layer.shapeSrc ? 'imported shape + lettering' : `${layer.role || 'speech'} (procedural)`;
+  target.textContent = `Editing: ${layer.name || layer.id} · ${mode}`;
+  els.props.appendChild(target);
+
+  els.props.appendChild(textAreaField('Words', layer.text, (v, l) => { l.text = v; }, { live: true }));
+
+  const styleTitle = document.createElement('div');
+  styleTitle.className = 'kce-section-title';
+  styleTitle.textContent = layer.shapeSrc ? 'Role (lettering mode)' : 'Bubble style';
+  els.props.appendChild(styleTitle);
 
   const styles = document.createElement('div');
   styles.className = 'kce-chip-row';
@@ -700,27 +1269,118 @@ function renderBubbleProps(layer) {
     b.type = 'button';
     b.className = `kce-chip${layer.role === role ? ' selected' : ''}`;
     b.textContent = label;
-    b.addEventListener('click', () => mutateLayer((l) => {
-      l.role = role;
-      if (role === 'caption') {
-        l.tail = Object.assign({}, l.tail || {}, { enabled: false });
-        l.fill = '#111111';
-        l.colour = '#f5f5f5';
-        l.cornerRadius = 4;
-      } else {
-        l.tail = Object.assign({}, l.tail || {}, { enabled: true });
-        l.fill = '#ffffff';
-        l.colour = '#111111';
-        l.cornerRadius = role === 'thought' ? 40 : 18;
-      }
-    }));
+    b.title = layer.shapeSrc
+      ? 'Changes role metadata only — imported Affinity shape is preserved until you replace it'
+      : `Switch to ${label.toLowerCase()} procedural style`;
+    b.addEventListener('click', () => mutateLayer((l) => applyBubbleRole(l, role, { procedural: !l.shapeSrc })));
     styles.appendChild(b);
   });
   els.props.appendChild(styles);
-  els.props.appendChild(numField('Text size', layer.fontSize, (v) => mutateLayer((l) => { l.fontSize = v; })));
-  els.props.appendChild(numField('Line height', layer.lineHeight != null ? layer.lineHeight : 1.25, (v) => mutateLayer((l) => { l.lineHeight = v; }), 0.05));
-  els.props.appendChild(numField('Letter spacing', layer.letterSpacing != null ? layer.letterSpacing : 0, (v) => mutateLayer((l) => { l.letterSpacing = v; }), 0.1));
-  els.props.appendChild(checkField('Auto-wrap lines', layer.textWrap !== false, (v) => mutateLayer((l) => { l.textWrap = v; })));
+
+  if (layer.shapeSrc) {
+    const note = document.createElement('p');
+    note.className = 'kce-help';
+    note.textContent = `Imported shape: ${layer.shapeSrc.split('/').pop()}. Edit lettering and transform freely. Fill, tail and corner controls stay unavailable until you replace the shape.`;
+    els.props.appendChild(note);
+    const replace = document.createElement('button');
+    replace.type = 'button';
+    replace.style.width = '100%';
+    replace.style.marginBottom = '0.55rem';
+    replace.textContent = 'Preview procedural replacement…';
+    replace.title = 'Show the editable procedural bubble before replacing imported Affinity art';
+    replace.addEventListener('click', () => previewProceduralConversion(layer));
+    els.props.appendChild(replace);
+  } else {
+    if (layer.role !== 'caption') {
+      const tail = normalizeTail(layer.tail, layer.width, layer.height, layer.role || 'speech');
+      els.props.appendChild(toggleField('Show tail / thought trail', !!tail.enabled, (v) => {
+        mutateLayer((l) => {
+          const t = normalizeTail(l.tail, l.width, l.height, l.role || 'speech');
+          t.enabled = v;
+          l.tail = t;
+        });
+      }));
+      if (tail.enabled) {
+        const geomTitle = document.createElement('div');
+        geomTitle.className = 'kce-section-title';
+        geomTitle.textContent = 'Tail geometry';
+        els.props.appendChild(geomTitle);
+        els.props.appendChild(Object.assign(document.createElement('p'), {
+          className: 'kce-help',
+          textContent: 'Drag tip / attach / width / curve handles on the canvas. On body resize, tip scales with width/height; attach and base width stay put.'
+        }));
+        els.props.appendChild(numField('Tip X', Math.round(tail.tipX), (v) => {
+          mutateLayer((l) => { l.tail = Object.assign(normalizeTail(l.tail, l.width, l.height, l.role), { tipX: v }); });
+        }));
+        els.props.appendChild(numField('Tip Y', Math.round(tail.tipY), (v) => {
+          mutateLayer((l) => { l.tail = Object.assign(normalizeTail(l.tail, l.width, l.height, l.role), { tipY: v }); });
+        }));
+        els.props.appendChild(sliderField(
+          'Attach around body', Math.round(tail.attach * 100),
+          { min: 0, max: 100, step: 1, unit: '%', format: (v) => `${v}%` },
+          (v) => mutateLayerLive((l) => {
+            l.tail = Object.assign(normalizeTail(l.tail, l.width, l.height, l.role), { attach: v / 100 });
+          }),
+          beginLayerGesture
+        ));
+        els.props.appendChild(sliderField(
+          'Base width', Math.round(tail.baseWidth),
+          { min: 8, max: 80, step: 1, unit: 'px' },
+          (v) => mutateLayerLive((l) => {
+            l.tail = Object.assign(normalizeTail(l.tail, l.width, l.height, l.role), { baseWidth: v });
+          }),
+          beginLayerGesture
+        ));
+        els.props.appendChild(sliderField(
+          'Curvature', Math.round(tail.curve * 100),
+          { min: 0, max: 100, step: 1, unit: '%', format: (v) => `${v}%` },
+          (v) => mutateLayerLive((l) => {
+            l.tail = Object.assign(normalizeTail(l.tail, l.width, l.height, l.role), { curve: v / 100 });
+          }),
+          beginLayerGesture
+        ));
+      }
+    }
+    els.props.appendChild(colorField('Fill', layer.fill || '#ffffff', (v, l) => { l.fill = v; }, { live: true }));
+    els.props.appendChild(colorField('Stroke', layer.stroke || '#111111', (v, l) => { l.stroke = v; }, { live: true }));
+    els.props.appendChild(sliderField(
+      'Stroke width', layer.strokeWidth != null ? layer.strokeWidth : 2,
+      { min: 0, max: 8, step: 0.5, unit: 'px' },
+      (v) => mutateLayerLive((l) => { l.strokeWidth = v; }),
+      beginLayerGesture
+    ));
+    if (layer.role !== 'thought') {
+      els.props.appendChild(sliderField(
+        'Corner radius', layer.cornerRadius != null ? layer.cornerRadius : 18,
+        { min: 0, max: 48, step: 1, unit: 'px' },
+        (v) => mutateLayerLive((l) => { l.cornerRadius = v; }),
+        beginLayerGesture
+      ));
+    }
+  }
+
+  els.props.appendChild(colorField('Text colour', layer.colour || '#111111', (v, l) => { l.colour = v; }, { live: true }));
+
+  els.props.appendChild(sliderField(
+    'Font size', layer.fontSize || 18,
+    { min: 8, max: 48, step: 1, unit: 'px' },
+    (v) => mutateLayerLive((l) => { l.fontSize = v; }),
+    beginLayerGesture
+  ));
+  els.props.appendChild(sliderField(
+    'Line height', layer.lineHeight != null ? layer.lineHeight : 1.25,
+    { min: 0.9, max: 2.2, step: 0.05, format: (v) => `${Number(v).toFixed(2)}×` },
+    (v) => mutateLayerLive((l) => { l.lineHeight = v; }),
+    beginLayerGesture
+  ));
+  els.props.appendChild(sliderField(
+    'Letter spacing', layer.letterSpacing != null ? layer.letterSpacing : 0,
+    { min: -1, max: 4, step: 0.1, unit: 'px' },
+    (v) => mutateLayerLive((l) => { l.letterSpacing = v; }),
+    beginLayerGesture
+  ));
+  els.props.appendChild(toggleField('Auto-wrap lines', layer.textWrap !== false, (v) => mutateLayer((l) => { l.textWrap = v; })));
+
   const alignRow = document.createElement('div');
   alignRow.className = 'kce-chip-row';
   [['Left', 'left'], ['Center', 'center'], ['Right', 'right']].forEach(([label, align]) => {
@@ -736,19 +1396,17 @@ function renderBubbleProps(layer) {
   alignLab.textContent = 'Text align';
   alignLab.appendChild(alignRow);
   els.props.appendChild(alignLab);
+
   if (layer.textX != null || layer.shapeSrc) {
+    const letterTitle = document.createElement('div');
+    letterTitle.className = 'kce-section-title';
+    letterTitle.textContent = 'Lettering placement';
+    els.props.appendChild(letterTitle);
     els.props.appendChild(numField('Text X (baseline)', layer.textX != null ? layer.textX : 0, (v) => mutateLayer((l) => { l.textX = v; })));
     els.props.appendChild(numField('Text Y (baseline)', layer.textY != null ? layer.textY : 0, (v) => mutateLayer((l) => { l.textY = v; })));
   }
-  if (layer.shapeSrc) {
-    const note = document.createElement('p');
-    note.className = 'kce-help';
-    note.textContent = `Shape art: ${layer.shapeSrc.split('/').pop()} (moves with this bubble)`;
-    els.props.appendChild(note);
-  }
-  if (layer.tail && !layer.shapeSrc) {
-    els.props.appendChild(checkField('Show speech tail', layer.tail.enabled, (v) => mutateLayer((l) => { l.tail.enabled = v; })));
-  }
+
+  renderTransformControls(layer);
 }
 
 function renderImageProps(layer) {
@@ -772,7 +1430,9 @@ function renderImageProps(layer) {
     help.textContent = 'Whole figure stays one selectable layer. Open to hide/show source path groups without flattening.';
     enter.appendChild(help);
     const doc = new DOMParser().parseFromString(state.svgCache[layer.src], 'image/svg+xml');
-    const parts = [...doc.querySelectorAll('g[id], path[id]')].slice(0, 80);
+    const parts = [...doc.querySelectorAll('g[id], path[id]')].filter((node) => (
+      !node.closest('defs, mask, clipPath, symbol, pattern, linearGradient, radialGradient, filter, marker')
+    )).slice(0, 80);
     const hidden = new Set(layer.hiddenPartIds || []);
     parts.forEach((node, idx) => {
       const id = node.getAttribute('id') || `${node.nodeName}-${idx}`;
@@ -835,29 +1495,99 @@ function renderGenericProps(layer) {
   }));
 }
 
-function renderAdvanced(layer, panel) {
+function renderTransformControls(layer) {
+  const title = document.createElement('div');
+  title.className = 'kce-section-title';
+  title.textContent = 'Transform';
+  els.props.appendChild(title);
+
+  const row = document.createElement('div');
+  row.className = 'kce-row';
+  row.appendChild(numField('X', layer.x, (v) => mutateLayer((l) => { l.x = v; })));
+  row.appendChild(numField('Y', layer.y, (v) => mutateLayer((l) => { l.y = v; })));
+  els.props.appendChild(row);
+
+  const sizeRow = document.createElement('div');
+  sizeRow.className = 'kce-row';
+  sizeRow.appendChild(numField('Width', layer.width, (v) => {
+    mutateLayer((l) => {
+      if (l.preserveAspectRatio !== false && l.width) {
+        const ratio = l.height / l.width;
+        l.width = v;
+        l.height = Math.round(v * ratio);
+      } else {
+        l.width = v;
+      }
+    });
+  }));
+  sizeRow.appendChild(numField('Height', layer.height, (v) => {
+    mutateLayer((l) => {
+      if (l.preserveAspectRatio !== false && l.height) {
+        const ratio = l.width / l.height;
+        l.height = v;
+        l.width = Math.round(v * ratio);
+      } else {
+        l.height = v;
+      }
+    });
+  }));
+  els.props.appendChild(sizeRow);
+
+  if (layer.type === 'image' || layer.type === 'character') {
+    els.props.appendChild(toggleField('Lock aspect ratio', layer.preserveAspectRatio !== false, (v) => {
+      mutateLayer((l) => { l.preserveAspectRatio = v; }, { allowWhileLocked: true });
+    }));
+  }
+
+  const rotWrap = document.createElement('div');
+  rotWrap.className = 'kce-rot-wrap';
+  rotWrap.appendChild(sliderField(
+    'Rotation', layer.rotation || 0,
+    { min: -180, max: 180, step: 1, unit: '°' },
+    (v) => mutateLayerLive((l) => { l.rotation = v; }),
+    beginLayerGesture
+  ));
+  const resetRot = document.createElement('button');
+  resetRot.type = 'button';
+  resetRot.className = 'kce-chip';
+  resetRot.textContent = 'Reset rotation';
+  resetRot.addEventListener('click', () => mutateLayer((l) => { l.rotation = 0; }));
+  rotWrap.appendChild(resetRot);
+  els.props.appendChild(rotWrap);
+
+  els.props.appendChild(sliderField(
+    'Opacity', Math.round((layer.opacity != null ? layer.opacity : 1) * 100),
+    { min: 0, max: 100, step: 1, unit: '%', format: (v) => `${v}%` },
+    (v) => mutateLayerLive((l) => { l.opacity = v / 100; }),
+    beginLayerGesture
+  ));
+
+  const stateRow = document.createElement('div');
+  stateRow.className = 'kce-chip-row';
+  els.props.appendChild(toggleField('Visible', layer.visible !== false, (v) => setLayerVisible(layer.id, v)));
+  els.props.appendChild(toggleField('Locked', !!layer.locked, (v) => setLayerLocked(layer.id, v)));
+}
+
+function renderAdvanced(layer) {
   const details = document.createElement('details');
   details.className = 'kce-advanced';
-  details.innerHTML = '<summary>Advanced</summary>';
+  const summary = document.createElement('summary');
+  summary.textContent = 'Advanced';
+  details.appendChild(summary);
   const body = document.createElement('div');
-  body.appendChild(numField('X', layer.x, (v) => mutateLayer((l) => { l.x = v; })));
-  body.appendChild(numField('Y', layer.y, (v) => mutateLayer((l) => { l.y = v; })));
-  body.appendChild(numField('Width', layer.width, (v) => mutateLayer((l) => { l.width = v; })));
-  body.appendChild(numField('Height', layer.height, (v) => mutateLayer((l) => { l.height = v; })));
-  body.appendChild(numField('Rotation', layer.rotation, (v) => mutateLayer((l) => { l.rotation = v; })));
-  body.appendChild(numField('Opacity', layer.opacity, (v) => mutateLayer((l) => { l.opacity = v; }), 0.05));
-  body.appendChild(checkField('Locked', layer.locked, (v) => setLayerLocked(layer.id, v)));
-  body.appendChild(checkField('Visible', layer.visible !== false, (v) => setLayerVisible(layer.id, v)));
-  if (panel) {
-    body.appendChild(numField('Panel X', panel.x, (v) => mutatePanel((p) => { p.x = v; })));
-    body.appendChild(numField('Panel Y', panel.y, (v) => mutatePanel((p) => { p.y = v; })));
-    body.appendChild(numField('Panel width', panel.width, (v) => mutatePanel((p) => { p.width = v; })));
-    body.appendChild(numField('Panel height', panel.height, (v) => mutatePanel((p) => { p.height = v; })));
-  }
+  body.appendChild(Object.assign(document.createElement('p'), {
+    className: 'kce-help',
+    textContent: 'Technical values for this selection only. Panel layout is edited when a panel (not a layer) is selected.'
+  }));
+  body.appendChild(Object.assign(document.createElement('p'), {
+    className: 'kce-help',
+    textContent: `Layer id: ${layer.id}`
+  }));
+  body.appendChild(textAreaField('Translation / note', layer.translation || '', (v) => mutateLayer((l) => { l.translation = v; })));
   const fx = layer.effects || {};
-  body.appendChild(checkField('Drop shadow', fx.dropShadow?.enabled, (v) => mutateLayer((l) => { l.effects.dropShadow.enabled = v; })));
-  body.appendChild(checkField('Glow', fx.glow?.enabled, (v) => mutateLayer((l) => { l.effects.glow.enabled = v; })));
-  body.appendChild(checkField('Pulse glow (web)', fx.pulseGlow?.enabled, (v) => mutateLayer((l) => { l.effects.pulseGlow.enabled = v; })));
+  body.appendChild(toggleField('Drop shadow', fx.dropShadow?.enabled, (v) => mutateLayer((l) => { l.effects.dropShadow.enabled = v; })));
+  body.appendChild(toggleField('Glow', fx.glow?.enabled, (v) => mutateLayer((l) => { l.effects.glow.enabled = v; })));
+  body.appendChild(toggleField('Pulse glow (web only)', fx.pulseGlow?.enabled, (v) => mutateLayer((l) => { l.effects.pulseGlow.enabled = v; })));
   details.appendChild(body);
   els.props.appendChild(details);
 }
@@ -1052,36 +1782,129 @@ function renderSceneActivity(root) {
   root.appendChild(row);
 }
 
+function addDialogue(role) {
+  const panel = panelForContent();
+  if (!panel) {
+    toast('Add or select a panel first (Layout tab)');
+    return;
+  }
+  if (isReferencePanel(panel)) {
+    toast('Select an art panel — not the reference sheet — then add dialogue');
+    return;
+  }
+  state.history.push(state.composition);
+  const isCaption = role === 'caption';
+  const isThought = role === 'thought';
+  const width = isCaption
+    ? Math.max(120, Math.min(panel.width - 40, panel.width - 80))
+    : Math.min(isThought ? 200 : 220, Math.max(100, panel.width - 40));
+  const height = isCaption ? 56 : (isThought ? 100 : 92);
+  const tailExtra = isCaption ? 0 : (isThought ? 36 : 26);
+  const existing = panel.layers.filter((l) => l.type === 'bubble' || l.type === 'text').length;
+  let x = Math.max(12, (panel.width - width) / 2) + (existing % 3) * 18;
+  let y = isCaption
+    ? Math.max(12, panel.height - height - 16)
+    : Math.max(12, Math.min(40, panel.height - height - tailExtra - 8)) + (existing % 4) * 22;
+  if (!isCaption && y + height + tailExtra > panel.height - 4) {
+    y = Math.max(8, panel.height - height - tailExtra - 4);
+  }
+  x = Math.min(x, Math.max(8, panel.width - width - 8));
+  const layer = createBubbleLayer({
+    role,
+    name: isCaption ? 'Caption' : (isThought ? 'Thought' : 'Speech'),
+    text: isCaption ? 'Caption…' : (isThought ? 'Hmm…' : 'New dialogue…'),
+    x,
+    y,
+    width,
+    height,
+    fill: isCaption ? '#111111' : '#ffffff',
+    colour: isCaption ? '#f5f5f5' : '#111111',
+    cornerRadius: isCaption ? 4 : (isThought ? 40 : 18),
+    shape: isThought ? 'ellipse' : 'rounded',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    textWrap: true,
+    shapeSrc: '',
+    strokeWidth: 2.25,
+    cornerRadius: isCaption ? 4 : (isThought ? 40 : 22),
+    tail: defaultTail(role, width, height)
+  });
+  panel.layers.push(layer);
+  state.selectedPanelId = panel.id;
+  state.selectedLayerId = layer.id;
+  state.activity = 'dialogue';
+  state.expandedLayers[layer.id] = true;
+  state.collapsedPanels[panel.id] = false;
+  markDirty();
+  renderAll();
+  requestAnimationFrame(() => {
+    const item = els.layerList.querySelector(`[data-layer-id="${layer.id}"]`);
+    if (item) item.scrollIntoView({ block: 'nearest' });
+    const words = els.props.querySelector('textarea');
+    if (words) {
+      words.focus();
+      words.select();
+    }
+  });
+  toast(`Added ${layer.name} in ${panel.name || panel.id} — edit words in Properties`);
+}
+
 function renderDialogueActivity(root) {
-  root.innerHTML = '<h2 class="kce-section-title">Dialogue</h2><p class="kce-help">Add a bubble, then type in the inspector.</p>';
-  [['Speech bubble', 'speech'], ['Thought bubble', 'thought'], ['Caption', 'caption']].forEach(([label, role]) => {
+  root.innerHTML = '';
+  const title = document.createElement('h2');
+  title.className = 'kce-section-title';
+  title.textContent = 'Dialogue';
+  root.appendChild(title);
+
+  const panel = panelForContent();
+  const target = document.createElement('p');
+  target.className = 'kce-selection-target';
+  if (!panel) {
+    target.textContent = 'No panel selected — open Layout and add a panel first.';
+  } else if (isReferencePanel(panel)) {
+    target.textContent = 'Reference panel selected — choose an art panel below.';
+  } else {
+    target.textContent = `New bubbles go into: ${panel.name || panel.id}`;
+  }
+  root.appendChild(target);
+
+  if (productionPanels().length) {
+    const sel = document.createElement('select');
+    productionPanels().forEach((p) => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = p.name || p.id;
+      if (p.id === (panel && panel.id)) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener('change', () => {
+      state.selectedPanelId = sel.value;
+      state.selectedLayerId = null;
+      renderAll();
+    });
+    const lab = document.createElement('label');
+    lab.className = 'field';
+    lab.textContent = 'Target panel';
+    lab.appendChild(sel);
+    root.appendChild(lab);
+  }
+
+  root.appendChild(Object.assign(document.createElement('p'), {
+    className: 'kce-help',
+    textContent: 'Creates a visible, selected bubble in the target panel. Imported page lettering keeps its Affinity shape until you replace it.'
+  }));
+
+  [['Speech bubble', 'speech', 'primary'], ['Thought bubble', 'thought', ''], ['Caption', 'caption', '']].forEach(([label, role, cls]) => {
     const b = document.createElement('button');
     b.type = 'button';
+    if (cls) b.className = cls;
     b.style.width = '100%';
     b.style.marginBottom = '0.4rem';
     b.textContent = `+ ${label}`;
-    b.addEventListener('click', () => {
-      const panel = selectedPanel();
-      if (!panel) return;
-      state.history.push(state.composition);
-      const layer = createBubbleLayer({
-        role,
-        name: label,
-        text: role === 'caption' ? 'Caption…' : 'New dialogue…',
-        x: 40,
-        y: role === 'caption' ? panel.height - 70 : 40,
-        width: role === 'caption' ? panel.width - 80 : 220,
-        height: role === 'caption' ? 56 : 100,
-        fill: role === 'caption' ? '#111' : '#fff',
-        colour: role === 'caption' ? '#f5f5f5' : '#111',
-        cornerRadius: role === 'caption' ? 4 : 18,
-        tail: { enabled: role === 'speech' || role === 'thought', x: 40, y: 110, direction: 'down' }
-      });
-      panel.layers.push(layer);
-      state.selectedLayerId = layer.id;
-      markDirty();
-      renderAll();
-    });
+    b.disabled = !productionPanels().length;
+    b.title = b.disabled ? 'No art panels available' : `Add ${label.toLowerCase()} to the target panel`;
+    b.addEventListener('click', () => addDialogue(role));
     root.appendChild(b);
   });
 }
@@ -1110,9 +1933,32 @@ function renderEffectsActivity(root) {
   });
 }
 
+async function openLivePreview() {
+  if (!state.composition) return toast('Nothing to preview');
+  try {
+    rebuildTranscript(state.composition);
+    const text = serializeComposition(state.composition);
+    const data = await api('/preview', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: state.composition.id || 'preview',
+        text,
+        sourcePath: state.path || '',
+        dirty: !!state.dirty
+      })
+    });
+    const url = `/comics-editor/preview.html?token=${encodeURIComponent(data.token)}&t=${Date.now()}`;
+    window.open(url, 'kce-preview');
+    toast(state.dirty ? 'Preview includes unsaved edits' : 'Preview opened');
+  } catch (e) {
+    toast(e.message || 'Preview failed — is npm run editor running?');
+  }
+}
+
 function renderPreviewActivity(root) {
-  root.innerHTML = '<h2 class="kce-section-title">Preview & export</h2><p class="kce-help">Open the public reader demo, or export a still image. Editor handles never appear in exports.</p>';
-  [['Open reader preview', () => window.open('/comics/composition-demo.html', '_blank')],
+  root.innerHTML = '<h2 class="kce-section-title">Preview & export</h2><p class="kce-help">Live preview uses the shared reader renderer with the composition open now (including unsaved edits). Editor handles never appear.</p>';
+  [['Open live preview', () => openLivePreview()],
     ['Export PNG', () => document.getElementById('btn-export-png').click()],
     ['Export SVG', () => document.getElementById('btn-export-svg').click()]
   ].forEach(([label, fn]) => {
@@ -1128,8 +1974,9 @@ function renderPreviewActivity(root) {
 }
 
 async function addAssetToPanel(asset) {
-  const panel = selectedPanel();
+  const panel = panelForContent();
   if (!panel) return toast('Select a panel first');
+  if (isReferencePanel(panel)) return toast('Select an art panel, not the reference sheet');
   if (asset.kind === 'reference-sheet') {
     toast('That’s a reference sheet — use the poseable Jim for posing, or add as static art from Scene if you really need the sheet');
     // Allow adding as static image if user confirms
@@ -1181,8 +2028,9 @@ async function addAssetToPanel(asset) {
 }
 
 function renderAll() {
-  if (!state.selectedPanelId && state.composition.panels[0]) {
-    state.selectedPanelId = state.composition.panels[0].id;
+  if (!state.selectedPanelId || !state.composition.panels.some((p) => p.id === state.selectedPanelId)) {
+    const prod = firstProductionPanel();
+    state.selectedPanelId = prod ? prod.id : (state.composition.panels[0]?.id || null);
   }
   renderPage();
   renderPanelSelect();
@@ -1254,6 +2102,25 @@ function bindCanvasInteraction() {
       return;
     }
 
+    const bubbleHandle = e.target.closest('.kce-bubble-handle');
+    if (bubbleHandle && state.selectedLayerId) {
+      const hit = selectedLayerHit();
+      if (hit && !hit.layer.locked && !hit.layer.shapeSrc) {
+        state.history.push(state.composition);
+        const tail = normalizeTail(hit.layer.tail, hit.layer.width, hit.layer.height, hit.layer.role || 'speech');
+        hit.layer.tail = tail;
+        state.drag = {
+          type: 'bubble',
+          mode: bubbleHandle.dataset.bubbleHandle,
+          start: pagePt,
+          layerRef: hit.layer,
+          panel: hit.panel,
+          origTail: Object.assign({}, tail)
+        };
+      }
+      return;
+    }
+
     const handle = e.target.closest('.kce-handle');
     if (handle && state.selectedLayerId) {
       const hit = selectedLayerHit();
@@ -1263,7 +2130,13 @@ function bindCanvasInteraction() {
           type: 'resize',
           handle: handle.dataset.handle,
           start: pagePt,
-          orig: { x: hit.layer.x, y: hit.layer.y, width: hit.layer.width, height: hit.layer.height },
+          orig: {
+            x: hit.layer.x,
+            y: hit.layer.y,
+            width: hit.layer.width,
+            height: hit.layer.height,
+            tail: hit.layer.tail ? Object.assign({}, hit.layer.tail) : null
+          },
           layerRef: hit.layer
         };
       }
@@ -1319,6 +2192,7 @@ function bindCanvasInteraction() {
       state.drag.layerRef.y = ny;
       markDirty();
       renderPage();
+      drawSelectionOverlay();
     } else if (state.drag.type === 'resize') {
       const o = state.drag.orig;
       const layer = state.drag.layerRef;
@@ -1332,8 +2206,44 @@ function bindCanvasInteraction() {
       if (h.includes('n')) { y = o.y + dy; ht = Math.max(8, o.height - dy); }
       if (e.shiftKey && layer.preserveAspectRatio !== false) ht = Math.round(w * (o.height / o.width));
       Object.assign(layer, { x, y, width: w, height: ht });
+      // Body resize: tip scales with width/height; attach/baseWidth/curve unchanged.
+      if ((layer.type === 'bubble' || layer.type === 'text') && o.tail) {
+        layer.tail = scaleTailForBodyResize(o.tail, o.width, o.height, w, ht);
+      }
       markDirty();
       renderPage();
+      drawSelectionOverlay();
+    } else if (state.drag.type === 'bubble') {
+      const layer = state.drag.layerRef;
+      const lx = pagePt.x - state.drag.panel.x - layer.x;
+      const ly = pagePt.y - state.drag.panel.y - layer.y;
+      const tail = Object.assign({}, layer.tail || {});
+      const mode = state.drag.mode;
+      if (mode === 'tip') {
+        tail.tipX = lx;
+        tail.tipY = ly;
+      } else if (mode === 'attach') {
+        tail.attach = attachFromPoint(layer.width, layer.height, layer.cornerRadius || 18, lx, ly);
+      } else if (mode === 'baseWidth') {
+        const mid = bubbleHandlePoints(layer.width, layer.height, layer.cornerRadius || 18, tail);
+        if (mid) {
+          const dx = lx - mid.attach.x;
+          const dy = ly - mid.attach.y;
+          // Project onto tangent roughly via distance from attach
+          tail.baseWidth = Math.max(8, Math.min(layer.width * 0.6, Math.hypot(dx, dy) * 2));
+        }
+      } else if (mode === 'curve') {
+        const mid = bubbleHandlePoints(layer.width, layer.height, layer.cornerRadius || 18, tail);
+        if (mid) {
+          const along = Math.hypot(lx - mid.attach.x, ly - mid.attach.y);
+          const tipDist = Math.hypot(tail.tipX - mid.attach.x, tail.tipY - mid.attach.y) || 1;
+          tail.curve = Math.max(0, Math.min(1, along / tipDist));
+        }
+      }
+      layer.tail = normalizeTail(tail, layer.width, layer.height, layer.role || 'speech');
+      markDirty();
+      renderPage();
+      drawSelectionOverlay();
     } else if (state.drag.type === 'joint') {
       const layer = state.drag.layerRef;
       const panel = state.drag.panel;
@@ -1365,9 +2275,10 @@ function bindCanvasInteraction() {
   });
 
   window.addEventListener('pointerup', () => {
-    if (state.drag && (state.drag.type === 'move' || state.drag.type === 'resize' || state.drag.type === 'joint')) {
+    if (state.drag && (state.drag.type === 'move' || state.drag.type === 'resize' || state.drag.type === 'joint' || state.drag.type === 'bubble')) {
       renderProps();
       renderContextBar();
+      drawSelectionOverlay();
     }
     state.drag = null;
     els.wrap.classList.remove('panning');
@@ -1405,8 +2316,9 @@ async function loadComposition(relPath) {
   state.dirty = false;
   state.history.clear();
   state.poseMode = false;
-  state.selectedPanelId = composition.panels[0]?.id || null;
-  state.selectedLayerId = composition.panels[0]?.layers.slice(-1)[0]?.id || null;
+  const prod = composition.panels.find((p) => !isReferencePanel(p)) || composition.panels[0];
+  state.selectedPanelId = prod?.id || null;
+  state.selectedLayerId = prod?.layers.slice(-1)[0]?.id || null;
   setStatus(`Saved — ${state.path}`);
   renderAll();
   fitZoom();
@@ -1433,7 +2345,12 @@ function bindToolbar() {
     btn.addEventListener('click', () => {
       state.activity = btn.dataset.activity;
       if (state.activity !== 'characters') state.poseMode = false;
-      renderAll();
+      // Activity tabs only change the left tools — selection/inspector stay on the current object.
+      renderActivityPanel();
+      document.querySelectorAll('.kce-activity').forEach((b) => {
+        b.classList.toggle('active', b.dataset.activity === state.activity);
+      });
+      els.hint.textContent = HINTS[state.activity] || '';
     });
   });
 
@@ -1479,14 +2396,7 @@ function bindToolbar() {
   document.getElementById('btn-zoom-in').onclick = () => { state.zoom = Math.min(3, state.zoom * 1.15); applyViewTransform(); drawSelectionOverlay(); };
   document.getElementById('btn-zoom-out').onclick = () => { state.zoom = Math.max(0.1, state.zoom / 1.15); applyViewTransform(); drawSelectionOverlay(); };
   document.getElementById('btn-zoom-fit').onclick = () => { fitZoom(); drawSelectionOverlay(); };
-  document.getElementById('btn-preview').onclick = () => {
-    const path = state.path || '';
-    if (path.includes('page_8_reconstruction')) {
-      window.open('/comics/page_8_compare.html', '_blank');
-    } else {
-      window.open('/comics/composition-demo.html', '_blank');
-    }
-  };
+  document.getElementById('btn-preview').onclick = () => openLivePreview();
   document.getElementById('btn-export-png').onclick = async () => {
     try {
       await ensureCharacterDefs();

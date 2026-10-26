@@ -5,6 +5,10 @@
  */
 
 import { applyPoseToState, resolvePartTransforms } from './character-rig.js';
+import {
+  buildSpeechBubblePath,
+  normalizeTail
+} from './bubble-geometry.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
@@ -193,23 +197,12 @@ function renderBubble(layer, effectInfo, options) {
   const shape = layer.shape || (role === 'thought' ? 'ellipse' : 'rounded');
   const hasShapeSrc = !!(layer.shapeSrc || (layer.src && layer.shape === 'path'));
 
-  if (!hasShapeSrc && layer.tail && layer.tail.enabled && (role === 'speech' || role === 'thought')) {
-    const tipX = layer.tail.x != null ? layer.tail.x : layer.width * 0.3;
-    const tipY = layer.tail.y != null ? layer.tail.y : layer.height + 24;
-    const baseY = layer.height * ((shape === 'ellipse' || role === 'thought') ? 0.78 : 0.96);
-    const midX = Math.min(Math.max(tipX, 16), layer.width - 16);
-    const half = (shape === 'ellipse' || role === 'thought') ? 8 : 12;
-    g.appendChild(el('polygon', {
-      points: `${midX - half},${baseY} ${tipX},${tipY} ${midX + half},${baseY}`,
-      fill: layer.fill || '#fff',
-      stroke: layer.stroke || '#111',
-      'stroke-width': layer.strokeWidth != null ? layer.strokeWidth : 2
-    }));
-  }
-
   const strokeWidth = layer.strokeWidth != null ? layer.strokeWidth : 2;
   const fill = layer.fill != null ? layer.fill : '#fff';
   const stroke = layer.stroke != null ? layer.stroke : '#111';
+  const cornerRadius = layer.cornerRadius != null ? layer.cornerRadius : (role === 'caption' ? 4 : 18);
+  const tail = normalizeTail(layer.tail, layer.width, layer.height, role);
+
   // Per-bubble Affinity/path art travels with the layer (shapeSrc).
   if (hasShapeSrc) {
     const href = assetUrl(layer.shapeSrc || layer.src, options.assetBase);
@@ -223,18 +216,56 @@ function renderBubble(layer, effectInfo, options) {
       class: 'kce-bubble-shape'
     }));
   } else {
-    // shape "none" / "text": lettering only
     const drawBody = shape !== 'none' && shape !== 'text';
     if (drawBody) {
-      if (shape === 'ellipse' || role === 'thought') {
+      if (role === 'thought' || shape === 'ellipse') {
+        const cx = layer.width / 2;
+        const cy = layer.height / 2;
+        const rx = layer.width / 2;
+        const ry = layer.height / 2;
+        if (role === 'thought') {
+          const bumps = [
+            [cx - rx * 0.45, cy - ry * 0.15, rx * 0.42, ry * 0.55],
+            [cx + rx * 0.4, cy - ry * 0.1, rx * 0.4, ry * 0.52],
+            [cx, cy - ry * 0.35, rx * 0.48, ry * 0.48],
+            [cx - rx * 0.2, cy + ry * 0.2, rx * 0.5, ry * 0.5],
+            [cx + rx * 0.22, cy + ry * 0.18, rx * 0.48, ry * 0.48]
+          ];
+          bumps.forEach(([bx, by, brx, bry]) => {
+            g.appendChild(el('ellipse', {
+              cx: bx, cy: by, rx: brx, ry: bry,
+              fill, stroke, 'stroke-width': strokeWidth, class: 'kce-thought-bump'
+            }));
+          });
+        }
         g.appendChild(el('ellipse', {
-          cx: layer.width / 2,
-          cy: layer.height / 2,
-          rx: layer.width / 2,
-          ry: layer.height / 2,
+          cx, cy, rx, ry,
+          fill, stroke, 'stroke-width': strokeWidth, class: 'kce-thought-body'
+        }));
+        if (tail.enabled) {
+          const tipX = tail.tipX;
+          const tipY = tail.tipY;
+          const baseX = Math.min(Math.max(tipX, 18), layer.width - 18);
+          const baseY = layer.height * 0.82;
+          [[baseX, baseY, 7], [baseX * 0.55 + tipX * 0.45, baseY * 0.45 + tipY * 0.55, 5], [tipX, tipY, 3.2]].forEach(([tcx, tcy, tr]) => {
+            g.appendChild(el('circle', {
+              cx: tcx, cy: tcy, r: tr,
+              fill, stroke,
+              'stroke-width': Math.max(1, strokeWidth * 0.85),
+              class: 'kce-thought-trail'
+            }));
+          });
+        }
+      } else if (role === 'speech' || (tail.enabled && role !== 'caption')) {
+        // One continuous outline: body + tail (no triangle-over-oval seam).
+        const d = buildSpeechBubblePath(layer.width, layer.height, cornerRadius, tail);
+        g.appendChild(el('path', {
+          d,
           fill,
           stroke,
-          'stroke-width': strokeWidth
+          'stroke-width': strokeWidth,
+          'stroke-linejoin': 'round',
+          class: 'kce-speech-shape'
         }));
       } else {
         g.appendChild(el('rect', {
@@ -245,8 +276,8 @@ function renderBubble(layer, effectInfo, options) {
           fill,
           stroke,
           'stroke-width': strokeWidth,
-          rx: layer.cornerRadius != null ? layer.cornerRadius : (role === 'caption' ? 4 : 18),
-          ry: layer.cornerRadius != null ? layer.cornerRadius : (role === 'caption' ? 4 : 18)
+          rx: cornerRadius,
+          ry: cornerRadius
         }));
       }
     }
@@ -450,11 +481,39 @@ function renderImageLayer(layer, effectInfo, options, missingIds) {
   const markup = isSvg
     ? (cache[layer.src] || cache[href] || cache[layer.assetId] || cache[href.replace(/^\//, '')])
     : null;
+  const sourceRect = layer.sourceRect;
 
-  if (markup) {
+  if (markup && !sourceRect) {
     // Inline SVG so nested FilB / texture images load in the page document.
     // SVG-as-<image> blocks those nested references and leaves clothing white.
     appendInlinedSvg(g, layer, markup, href);
+  } else if (sourceRect && sourceRect.width > 0 && sourceRect.height > 0) {
+    // Shared raster/SVG with a source region — instance stores crop, not a new file.
+    const sx = sourceRect.x || 0;
+    const sy = sourceRect.y || 0;
+    const sw = sourceRect.width;
+    const sh = sourceRect.height;
+    const nested = el('svg', {
+      x: 0,
+      y: 0,
+      width: layer.width,
+      height: layer.height,
+      viewBox: `${sx} ${sy} ${sw} ${sh}`,
+      preserveAspectRatio: layer.preserveAspectRatio === false ? 'none' : 'xMidYMid meet',
+      class: 'kce-source-rect'
+    });
+    // Place full asset in its native coords; viewBox crops the instance.
+    const fullW = sourceRect.assetWidth || (sx + sw);
+    const fullH = sourceRect.assetHeight || (sy + sh);
+    nested.appendChild(el('image', {
+      href,
+      x: 0,
+      y: 0,
+      width: fullW,
+      height: fullH,
+      preserveAspectRatio: 'none'
+    }));
+    g.appendChild(nested);
   } else {
     const image = el('image', {
       href,
